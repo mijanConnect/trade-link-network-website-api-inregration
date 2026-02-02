@@ -249,9 +249,9 @@ export default function NavRes() {
               <div className="relative">
                 <button
                   onClick={() => setShowProfileModal(!showProfileModal)}
-                  className="rounded-sm overflow-hidden border border-primary hover:border-blue-600 transition-colors flex items-center justify-center px-4 py-2 gap-2"
+                  className="rounded-sm overflow-hidden border border-primary hover:bg-primary/5 transition-colors flex items-center justify-center px-4 py-2 gap-2 cursor-pointer"
                 >
-                  <p>My Account</p>
+                  <p className="text-[16px] text-primaryText">My Account</p>
                   <svg
                     className="h-6 w-6 hamburger-icon"
                     xmlns="http://www.w3.org/2000/svg"
