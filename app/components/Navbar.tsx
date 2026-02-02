@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Button from "./ui/Button";
 import { LogoNav, LogoNavMobile } from "./Svg";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const navbarStyles = `
   .nav-link {
@@ -68,8 +69,23 @@ export default function NavRes() {
   const [open, setOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return !!localStorage.getItem("accessToken");
+  });
   const pathname = usePathname();
   const router = useRouter();
+
+  // Listen for storage changes (logout from other tabs)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const token = localStorage.getItem("accessToken");
+      setIsLoggedIn(!!token);
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   const handleClose = () => {
     setIsClosing(true);
@@ -177,110 +193,159 @@ export default function NavRes() {
 
           {/* Right Side Buttons - Visible on all devices */}
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
-            <div className="hidden lg:flex items-center gap-2 lg:gap-6">
-              <Link
-                href="/login"
-                className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
-                  isActive("/post-job") ? "active" : ""
-                }`}
-                onClick={() => setOpen(false)}
-              >
-                Post a Job
-              </Link>
-              <Link
-                href="/login"
-                className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
-                  isActive("/login") ? "active" : ""
-                }`}
-                onClick={() => setOpen(false)}
-              >
-                Login
-              </Link>
-            </div>
+            {/* Logged In: Show My Jobs and My Account */}
+            {isLoggedIn && (
+              <div className="hidden lg:flex items-center gap-2 lg:gap-6">
+                <Link
+                  href="/my-jobs"
+                  className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
+                    isActive("/my-jobs") ? "active" : ""
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  My Jobs
+                </Link>
+              </div>
+            )}
 
-            <Button
-              onClick={() => router.push("/trade-person/leads")}
-              variant="primary"
-              size="sm"
-              className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
-            >
-              Join as Tradeperson
-            </Button>
+            {/* Not Logged In: Show Post a Job and Login */}
+            {!isLoggedIn && (
+              <div className="hidden lg:flex items-center gap-2 lg:gap-6">
+                <Link
+                  href="/login"
+                  className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
+                    isActive("/post-job") ? "active" : ""
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  Post a Job
+                </Link>
+                <Link
+                  href="/login"
+                  className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
+                    isActive("/login") ? "active" : ""
+                  }`}
+                  onClick={() => setOpen(false)}
+                >
+                  Login
+                </Link>
+              </div>
+            )}
 
-            {/* Profile Icon with Modal */}
-            <div className="relative w-8 h-8 sm:w-10 sm:h-10">
-              <button
-                onClick={() => setShowProfileModal(!showProfileModal)}
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-primary hover:border-blue-600 transition-colors"
+            {/* Not Logged In: Join as Tradeperson Button */}
+            {!isLoggedIn && (
+              <Button
+                onClick={() => router.push("/trade-person/leads")}
+                variant="primary"
+                size="sm"
+                className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
               >
-                <Image
-                  src="/assets/avatar.png"
-                  alt="Profile"
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-cover"
-                />
-              </button>
+                Join as Tradeperson
+              </Button>
+            )}
 
-              {/* Profile Modal */}
-              {showProfileModal && (
-                <>
-                  <div
-                    className="fixed inset-0 z-30"
-                    onClick={() => setShowProfileModal(false)}
-                  />
-                  <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-40 overflow-hidden">
-                    <div className="p-4 flex flex-col items-center border-b border-gray-200">
-                      <div className="w-16 h-16 rounded-full overflow-hidden mb-2">
-                        <Image
-                          src="/assets/avatar.png"
-                          alt="Profile"
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                        />
+            {/* Logged In: Show My Account */}
+            {isLoggedIn && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileModal(!showProfileModal)}
+                  className="rounded-sm overflow-hidden border border-primary hover:border-blue-600 transition-colors flex items-center justify-center px-4 py-2 gap-2"
+                >
+                  <p>My Account</p>
+                  <svg
+                    className="h-6 w-6 hamburger-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    style={{
+                      transform: showProfileModal
+                        ? "rotate(90deg)"
+                        : "rotate(0deg)",
+                      transition: "transform 0.2s ease",
+                    }}
+                  >
+                    {showProfileModal ? (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    ) : (
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+                      />
+                    )}
+                  </svg>
+                </button>
+
+                {/* Profile Modal */}
+                {showProfileModal && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-30"
+                      onClick={() => setShowProfileModal(false)}
+                    />
+                    <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-40 overflow-hidden">
+                      <div className="p-4 flex flex-col items-center border-b border-gray-200">
+                        <div className="w-16 h-16 rounded-full overflow-hidden mb-2">
+                          <Image
+                            src="/assets/avatar.png"
+                            alt="Profile"
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <h3 className="font-semibold text-primaryText">
+                          Danai Gurira
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          example@example.com
+                        </p>
                       </div>
-                      <h3 className="font-semibold text-primaryText">
-                        Danai Gurira
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        example@example.com
-                      </p>
+                      <div className="p-2">
+                        <button
+                          onClick={() => {
+                            router.push("/my-jobs");
+                            setShowProfileModal(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
+                        >
+                          My Jobs
+                        </button>
+                        <button
+                          onClick={() => {
+                            router.push("/profile");
+                            setShowProfileModal(false);
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
+                        >
+                          View Profile
+                        </button>
+                        <button
+                          onClick={() => {
+                            // Clear token from localStorage
+                            localStorage.removeItem("accessToken");
+                            localStorage.removeItem("token");
+                            setIsLoggedIn(false);
+                            toast.success("Logged out successfully!");
+                            setShowProfileModal(false);
+                            router.push("/login");
+                          }}
+                          className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-red-600"
+                        >
+                          Logout
+                        </button>
+                      </div>
                     </div>
-                    <div className="p-2">
-                      <button
-                        onClick={() => {
-                          router.push("/my-jobs");
-                          setShowProfileModal(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
-                      >
-                        My Jobs
-                      </button>
-                      <button
-                        onClick={() => {
-                          router.push("/profile");
-                          setShowProfileModal(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
-                      >
-                        View Profile
-                      </button>
-                      <button
-                        onClick={() => {
-                          // Add logout logic here
-                          router.push("/login");
-                          setShowProfileModal(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-red-600"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Mobile Hamburger Toggler */}
             <button
@@ -372,20 +437,47 @@ export default function NavRes() {
               </nav>
 
               <div className="flex items-center gap-2 lg:gap-6">
-                <Link
-                  href="/login"
-                  className="bg-primary p-2 text-white font-semibold text-center flex-1"
-                  onClick={() => setOpen(false)}
-                >
-                  Post a Job
-                </Link>
-                <Link
-                  href="/login"
-                  className="bg-primary p-2 text-white font-semibold text-center flex-1"
-                  onClick={() => setOpen(false)}
-                >
-                  Login
-                </Link>
+                {/* Logged In: Show My Jobs in mobile */}
+                {isLoggedIn && (
+                  <Link
+                    href="/my-jobs"
+                    className="bg-primary p-2 text-white font-semibold text-center flex-1"
+                    onClick={() => setOpen(false)}
+                  >
+                    My Jobs
+                  </Link>
+                )}
+
+                {/* Not Logged In: Show Post a Job and Login in mobile */}
+                {!isLoggedIn && (
+                  <>
+                    <Link
+                      href="/login"
+                      className="bg-primary p-2 text-white font-semibold text-center flex-1"
+                      onClick={() => setOpen(false)}
+                    >
+                      Post a Job
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="bg-primary p-2 text-white font-semibold text-center flex-1"
+                      onClick={() => setOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    {/* <Button
+                      onClick={() => {
+                        router.push("/trade-person/leads");
+                        handleClose();
+                      }}
+                      variant="primary"
+                      size="sm"
+                      className="font-semibold w-full"
+                    >
+                      Join as Tradeperson
+                    </Button> */}
+                  </>
+                )}
               </div>
             </div>
           </>

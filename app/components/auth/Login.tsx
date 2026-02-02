@@ -7,44 +7,46 @@ import Button from "@/app/components/ui/Button";
 import Image from "next/image";
 import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
+import { useLoginMutation } from "@/store/slice/authSlice";
+import { toast } from "sonner";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [login, { isLoading }] = useLoginMutation();
+  const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError("Please fill in all fields");
+      toast.error("Please fill out both fields.");
       return;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long");
-      return;
-    }
-
-    setIsLoading(true);
-    setError("");
-
     try {
-      // Handle login logic here
-      console.log("Logging in user:", { email });
-      // After login, navigate to dashboard or home page
-      router.push("/");
-    } catch (error) {
-      setError("Failed to login. Please try again.");
-      console.error("Login failed:", error);
-    } finally {
-      setIsLoading(false);
+      const response = await login({ email, password }).unwrap();
+
+      // Save token to localStorage if present in response
+      if (response?.data?.accessToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        toast.success("Login successful!");
+      }
+
+      router.push("/"); // Redirect to dashboard or any desired page after login
+    } catch (err) {
+      // Handle error if login fails
+      const error = err as Record<string, unknown>;
+      console.error("Full error:", error);
+      console.error("Error data:", error?.data);
+
+      let errorMessage = "Login failed. Please check your credentials.";
+
+      // RTK Query error structure: { status, data: { message, success, ... } }
+      const errorData = error?.data as Record<string, unknown> | undefined;
+      if (errorData?.message && typeof errorData.message === "string") {
+        errorMessage = errorData.message;
+      }
+
+      console.log("Toast message:", errorMessage);
+      toast.error(errorMessage);
     }
   };
 
@@ -55,13 +57,13 @@ export default function LoginPage() {
         header="Welcome back"
         description="Login to your account below"
       />
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-[14px]">
-          {error}
-        </div>
-      )}
       <div>
-        <Button fullWidth variant="outline" size="md" className="mb-8 border-gray-200!">
+        <Button
+          fullWidth
+          variant="outline"
+          size="md"
+          className="mb-8 border-gray-200!"
+        >
           <Image
             src="/assets/google.png"
             alt="Login Image"
@@ -77,21 +79,14 @@ export default function LoginPage() {
           type="email"
           placeholder="Enter your email"
           initialValue={email}
-          onChange={(value) => {
-            setEmail(value);
-            setError("");
-          }}
+          onChange={(v) => setEmail(v)}
         />
-
         <InputField
           title="Password"
           type="password"
           placeholder="Enter your password"
           initialValue={password}
-          onChange={(value) => {
-            setPassword(value);
-            setError("");
-          }}
+          onChange={(v) => setPassword(v)}
         />
       </div>
       <p
@@ -105,10 +100,11 @@ export default function LoginPage() {
           fullWidth
           variant="primary"
           size="md"
-          onClick={handleLogin}
-          disabled={isLoading}
+          onClick={handleLogin} // Handle login on button click
+          loading={isLoading} // Show loading spinner while logging in
         >
-          {isLoading ? "Logging in..." : "Login"}
+          {isLoading ? "Logging in..." : "Login"}{" "}
+          {/* Button text changes based on loading state */}
         </Button>
       </div>
       <div className="mt-6 text-center">
