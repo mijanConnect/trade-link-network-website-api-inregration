@@ -1,7 +1,19 @@
+"use client";
+
+import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
 import ServiceList from "../ui/ServiceList";
-import { categories } from "./Categories";
 
 export default function Services() {
+  const { data, isLoading, isError } = useGetCategoriesQuery({});
+
+  if (isLoading) {
+    return <p className="text-center py-10">Loading categories</p>;
+  }
+
+  if (isError) {
+    return <p className="text-center py-10">Failed to load categories</p>;
+  }
+
   return (
     <>
       <div>
@@ -15,7 +27,7 @@ export default function Services() {
         </h3>
 
         <div className="mt-4 lg:mt-8">
-          <ServiceList categories={categories} route="services" />
+          <ServiceList categories={data || []} route="services" />
         </div>
       </div>
     </>

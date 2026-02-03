@@ -2,23 +2,31 @@
 
 import { useRouter, useParams } from "next/navigation";
 import Button from "../ui/Button";
-import { categories } from "./Categories";
+import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
 
 export default function ServiceDetails() {
   const router = useRouter();
   const params = useParams();
   const serviceId = params?.id as string | undefined;
-  const selectedCategory = categories.find((c) => c.slug === serviceId) || {
-    name: "Selected",
-  };
+  const { data, isLoading, isError } = useGetCategoriesQuery({});
+  const categories = data || [];
+  const selectedCategory =
+    categories.find(
+      (c: { slug: string; name: string }) => c.slug === serviceId,
+    ) || ({ name: "Selected" } as { name: string });
 
   return (
     <>
       <div className="container mx-auto px-4">
         <div className="mb-8 lg:mb-25">
           <h2 className="text-[22px] lg:text-[40px] font-bold text-primaryText">
-            Find Trusted {selectedCategory.name} Professionals <br /> Across the
-            UK
+            Fint Trusted {" "}
+            {isLoading
+              ? "Loading"
+              : isError
+                ? "Category"
+                : selectedCategory.name}{" "}
+            Professionals <br /> Across the UK
           </h2>
           <p className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10">
             Find trusted, verified tradespeople across Greater London for
