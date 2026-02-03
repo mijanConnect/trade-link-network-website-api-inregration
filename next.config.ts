@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "fakestoreapi.com",
       },
+      {
+        protocol: "https",
+        hostname: "44kb593x-5004.inc1.devtunnels.ms",
+      },
     ],
   },
 };
