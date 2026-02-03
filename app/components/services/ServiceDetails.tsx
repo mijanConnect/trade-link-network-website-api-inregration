@@ -2,7 +2,11 @@
 
 import { useRouter, useParams } from "next/navigation";
 import Button from "../ui/Button";
-import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
+import {
+  useGetCategoriesQuery,
+  useGetCategoriesServicesQuery,
+} from "@/store/slice/categoriesSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 export default function ServiceDetails() {
   const router = useRouter();
@@ -15,12 +19,25 @@ export default function ServiceDetails() {
       (c: { slug: string; name: string }) => c.slug === serviceId,
     ) || ({ name: "Selected" } as { name: string });
 
+  // Ensure we have a valid ObjectId, not a slug
+  const categoryId = selectedCategory?._id;
+
+  console.log("Category Id: " + categoryId);
+
+  // Only fetch services if we have a valid categoryId - use skipToken to skip the query
+  const { data: servicesData } = useGetCategoriesServicesQuery(
+    categoryId || skipToken,
+  );
+
+  const services =
+    (servicesData as { id: string; name: string }[] | undefined) || [];
+
   return (
     <>
       <div className="container mx-auto px-4">
         <div className="mb-8 lg:mb-25">
           <h2 className="text-[22px] lg:text-[40px] font-bold text-primaryText">
-            Fint Trusted {" "}
+            Fint Trusted{" "}
             {isLoading
               ? "Loading"
               : isError
@@ -37,7 +54,9 @@ export default function ServiceDetails() {
 
           <Button
             className="mt-6 lg:mt-10"
-            onClick={() => router.push("/post-service")}
+            onClick={() =>
+              router.push("/post-service/" + selectedCategory.slug)
+            }
           >
             Post a {selectedCategory.name} Job
           </Button>
@@ -47,19 +66,21 @@ export default function ServiceDetails() {
               What’s Included
             </h3>
             <h4 className="text-[18px] lg:text-[20px] font-semibold text-primaryText mb-4 lg:mb-6">
-              Outdoor & Landscape Jobs include:
+              {isLoading
+                ? "Loading"
+                : isError
+                  ? "Category"
+                  : selectedCategory.name}{" "}
+              Jobs include:
             </h4>
             <ul className="list-disc list-inside text-[14px] lg:text-[18px] text-primaryTextLight space-y-4 lg:space-y-5">
-              <li>Access to a network of trusted, verified tradespeople</li>
-              <li>Easy online comparison of quotes and services</li>
-              <li>Secure online booking and payment options</li>
-              <li>Customer reviews and ratings for informed decisions</li>
-              <li>Dedicated customer support for assistance</li>
-              <li>Access to a network of trusted, verified tradespeople</li>
-              <li>Easy online comparison of quotes and services</li>
-              <li>Secure online booking and payment options</li>
-              <li>Customer reviews and ratings for informed decisions</li>
-              <li>Dedicated customer support for assistance</li>
+              {services.length > 0 ? (
+                services.map((service) => (
+                  <li key={service.id}>{service.name}</li>
+                ))
+              ) : (
+                <li>No services available.</li>
+              )}
             </ul>
           </div>
         </div>

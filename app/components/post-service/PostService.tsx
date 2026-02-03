@@ -1,20 +1,56 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import Button from "../ui/Button";
 import { CustomSelect } from "../ui/CustomSelect";
 import QuestionProgressBar from "./QuestionProgressBar";
 import Questions from "./Questions";
 import Checkbox from "./Checkbox";
 import CreateAccount from "./CreateAccount";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+import {
+  useGetCategoriesQuery,
+  useGetCategoriesServicesQuery,
+  useGetCategoriesServicesQuestionsQuery,
+} from "@/store/slice/categoriesSlice";
 
 export default function PostService() {
+  const params = useParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const {
+    data: categoriesData,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+  } = useGetCategoriesQuery({});
+  const serviceId = params?.id as string | undefined;
+
+  const categories = categoriesData || [];
+  const selectedCategory = categories.find(
+    (c: { slug: string; name: string; _id: string }) => c.slug === serviceId,
+  );
+
+  // Ensure we have a valid ObjectId, not a slug
+  const categoryId = selectedCategory?._id;
+
+  console.log("Category Id: " + categoryId);
+
+  // Only fetch services if we have a valid categoryId - use skipToken to skip the query
+  const { data: servicesData } = useGetCategoriesServicesQuery(
+    categoryId || skipToken,
+  );
+
+  const services = (servicesData as unknown[] | undefined) || [];
+
   const [currentStep, setCurrentStep] = useState(1);
   const [totalSteps, setTotalSteps] = useState(10);
   const [currentSection, setCurrentSection] = useState<
     "initial" | "questions" | "createAccount"
   >("initial");
-  const [initialSelection, setInitialSelection] = useState<string | null>(null);
+  const [initialSelection, setInitialSelection] = useState<string | null>(
+    searchParams.get("service"),
+  );
 
   const handleProgressChange = (current: number, total: number) => {
     setCurrentStep(current);
@@ -31,18 +67,25 @@ export default function PostService() {
     setCurrentSection("createAccount");
   };
 
-  const options = [
-    { value: "new-garden", label: "New garden / blank canvas" },
-    { value: "garden-redesign", label: "Garden redesign / makeover" },
-    { value: "patios-paving", label: "Patios & paving" },
-    { value: "decking", label: "Decking (timber or composite)" },
-    { value: "fencing", label: "Fencing" },
-    { value: "turfing", label: "Turfing / artificial grass" },
-    { value: "groundworks-drainage", label: "Groundworks & drainage" },
-    { value: "garden-maintenance", label: "Garden maintenance" },
-    { value: "tree-surgery", label: "Tree surgery / tree work" },
-    { value: "need-advice", label: "Not sure yet – need advice" },
-  ];
+  const handleSelectionChange = (value: string | null) => {
+    setInitialSelection(value);
+    if (value) {
+      router.push(`?service=${value}`);
+    }
+  };
+
+  const options =
+    (services as Array<{ _id: string; slug: string; name: string }>).map(
+      (service) => ({
+        serviceId: service._id,
+        value: service.slug,
+        label: service.name,
+      }),
+    ) || [];
+
+  const { data: questionsData } = useGetCategoriesServicesQuestionsQuery(
+    categoryId || skipToken,
+  );
 
   return (
     <>
@@ -50,17 +93,23 @@ export default function PostService() {
         <QuestionProgressBar current={currentStep} total={totalSteps} />
         <div className="max-w-4xl">
           <h3 className="text-[22px] lg:text-[36px] font-bold text-primary leading-7 lg:leading-11 mb-4 lg:mb-8">
-            Post an Outdoor & Landscaping <br /> Services Job
+            Post a{" "}
+            {isCategoriesLoading
+              ? "Loading"
+              : isCategoriesError
+                ? "Service"
+                : selectedCategory?.name || "Service"}{" "}
+            <br /> Job
           </h3>
 
           <div className="mb-6 lg:mb-10">
             <CustomSelect
-              label="What best describes your Outdoor & landscaping project?"
+              label={`What best describes your ${selectedCategory?.name || "service"} project?`}
               options={options}
               header="Select a category"
               placeholder="Choose a service category"
               value={initialSelection}
-              onChange={(value) => setInitialSelection(value)}
+              onChange={handleSelectionChange}
             />
             {currentSection === "initial" && (
               <div className="mt-4 lg:mt-8 flex gap-4">
@@ -81,10 +130,17 @@ export default function PostService() {
             <Questions
               onProgressChange={handleProgressChange}
               onComplete={handleQuestionsComplete}
+              categoryId={categoryId}
+              serviceSelection={initialSelection}
             />
           )}
 
-          {currentSection === "createAccount" && <CreateAccount />}
+          {currentSection === "createAccount" && (
+            <CreateAccount
+              categoryId={categoryId}
+              serviceSelection={initialSelection}
+            />
+          )}
         </div>
         <Checkbox />
       </div>

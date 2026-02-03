@@ -4,7 +4,17 @@ import InputField from "../ui/InputField";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 
-export default function CreateAccount() {
+interface CreateAccountProps {
+  categoryId?: string;
+  serviceSelection?: string | null;
+}
+
+export default function CreateAccount(
+  {
+    // categoryId,
+    // serviceSelection,
+  }: CreateAccountProps,
+) {
   const [phoneValue, setPhoneValue] = useState<string | undefined>("");
 
   return (
@@ -72,7 +82,7 @@ export default function CreateAccount() {
             placeholder="Your full name"
             onChange={(val) => console.log("Input changed:", val)}
           />
-          <h4 className="block text-[14px] lg:text-[16px] text-primaryText mb-2" >
+          <h4 className="block text-[14px] lg:text-[16px] text-primaryText mb-2">
             Phone number
           </h4>
           <PhoneInput

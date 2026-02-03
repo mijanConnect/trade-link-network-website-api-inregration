@@ -64,7 +64,10 @@ export default function Category() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 10}
               >
-                <a href={"/post-service/"} className="group block h-full">
+                <a
+                  href={"/post-service/" + category.slug}
+                  className="group block h-full"
+                >
                   <div className="bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-300 ease-out h-full flex flex-col">
                     <div className="relative w-full h-[100px] sm:h-[265px] overflow-hidden rounded-t-sm bg-gray-100">
                       {imageErrors[category._id] ? (

@@ -1,3 +1,6 @@
+import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
+import { useParams } from "next/navigation";
+
 interface QuestionProgressBarProps {
   current?: number;
   total?: number;
@@ -7,13 +10,23 @@ export default function QuestionProgressBar({
   current = 1,
   total = 10,
 }: QuestionProgressBarProps) {
+  const params = useParams();
+  const { data, isLoading, isError } = useGetCategoriesQuery({});
+  const serviceId = params?.id as string | undefined;
+  const categories = data || [];
+  const selectedCategory =
+    categories.find(
+      (c: { slug: string; name: string }) => c.slug === serviceId,
+    ) || ({ name: "Selected" } as { name: string });
+
   const progressPercentage = (current / total) * 100;
 
   return (
     <>
       <div className="mb-6 lg:mb-8 sticky top-0 z-30 bg-cardBg pt-2">
         <h2 className="text-[16px] lg:text-[18px] font-semibold text-primaryTextLight mb-2">
-          Outdoor & Landscaping Service
+          {isLoading ? "Loading" : isError ? "Category" : selectedCategory.name}{" "}
+          Service
         </h2>
         <div className="w-full bg-gray-200 border-2 border-gray-300 rounded-full h-3 mb-1 overflow-hidden">
           <div

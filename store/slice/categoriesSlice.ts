@@ -16,7 +16,39 @@ export const categoriesApi = baseApi.injectEndpoints({
 
       providesTags: ["Categories"],
     }),
+    // ---------------------------------------
+    // GET CATEGORIES SERVICES
+    // ---------------------------------------
+    getCategoriesServices: builder.query({
+      query: (id: string) => ({
+        url: `/categories/${id}/services`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["Categories"],
+    }),
+    // ---------------------------------------
+    // GET CATEGORIES SERVICES
+    // ---------------------------------------
+    getCategoriesServicesQuestions: builder.query({
+      query: (id: string) => ({
+        url: `/serviceQuestions/services/${id}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["Categories"],
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = categoriesApi;
+export const {
+  useGetCategoriesQuery,
+  useGetCategoriesServicesQuery,
+  useGetCategoriesServicesQuestionsQuery,
+} = categoriesApi;
