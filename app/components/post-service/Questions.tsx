@@ -5,44 +5,22 @@ import { ChevronDown } from "lucide-react";
 import { CustomSelect } from "../ui/CustomSelect";
 import Button from "../ui/Button";
 
-const questions = [
-  {
-    order: 1,
-    question: "What type of garden service do you need?",
-    options: [
-      { value: "new-garden", label: "New garden / blank canvas" },
-      { value: "garden-redesign", label: "Garden redesign / makeover" },
-      { value: "patios-paving", label: "Patios & paving" },
-      { value: "decking", label: "Decking (timber or composite)" },
-    ],
-  },
-  {
-    order: 2,
-    question: "Which outdoor service are you looking for?",
-    options: [
-      { value: "fencing", label: "Fencing" },
-      { value: "turfing", label: "Turfing / artificial grass" },
-      { value: "groundworks-drainage", label: "Groundworks & drainage" },
-      { value: "garden-maintenance", label: "Garden maintenance" },
-    ],
-  },
-  {
-    order: 3,
-    question: "Do you need advice on your garden project?",
-    options: [
-      { value: "need-advice", label: "Not sure yet – need advice" },
-      { value: "patios-paving", label: "Patios & paving" },
-      { value: "tree-surgery", label: "Tree surgery / tree work" },
-      { value: "garden-redesign", label: "Garden redesign / makeover" },
-    ],
-  },
-];
+interface Question {
+  _id?: string;
+  order?: number;
+  questionText: string;
+  type?: string;
+  options: Array<{ label: string; _id?: string; value?: string }>;
+}
 
 interface QuestionsProps {
   onProgressChange?: (current: number, total: number) => void;
-  onComplete?: () => void;
+  onComplete?: (
+    answers: Array<{ question: string; answer: string | string[] }>,
+  ) => void;
   categoryId?: string;
   serviceSelection?: string | null;
+  questions?: Question[];
 }
 
 export default function Questions({
@@ -50,14 +28,28 @@ export default function Questions({
   onComplete,
   // categoryId,
   // serviceSelection,
+  questions: apiQuestions,
 }: QuestionsProps) {
+  // Use API questions if available, otherwise fall back to empty array
+  const questionsData =
+    apiQuestions && apiQuestions.length > 0 ? apiQuestions : [];
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const totalQuestions = questions.length;
+  // Early return if no questions are available
+  if (!questionsData || questionsData.length === 0) {
+    return (
+      <div className="space-y-4 lg:space-y-6">
+        <p className="text-primaryText">No questions available.</p>
+      </div>
+    );
+  }
+
+  const currentQuestion = questionsData[currentQuestionIndex];
+  const totalQuestions = questionsData.length;
   const isFirstQuestion = currentQuestionIndex === 0;
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const isAnswerSelected = !!selectedAnswers[currentQuestionIndex];
@@ -68,7 +60,22 @@ export default function Questions({
       setCurrentQuestionIndex(newIndex);
       onProgressChange?.(newIndex + 1, totalQuestions);
     } else if (isLastQuestion && isAnswerSelected) {
-      onComplete?.();
+      // Prepare answered questions in the required format
+      const answeredQuestions = questionsData
+        .map((question, index) => {
+          const selectedAnswer = selectedAnswers[index];
+          const answerOption = question.options.find(
+            (opt) => (opt.value || opt.label) === selectedAnswer,
+          );
+
+          return {
+            question: question._id || "",
+            answer: answerOption?._id || selectedAnswer,
+          };
+        })
+        .filter((item) => item.question !== "");
+
+      onComplete?.(answeredQuestions);
     }
   };
 
@@ -89,7 +96,7 @@ export default function Questions({
             {Array.from({ length: currentQuestionIndex }).map((_, index) => (
               <div key={index} className="space-y-2">
                 <p className="block text-[16px] lg:text-[18px] font-semibold text-primaryText mb-3">
-                  {questions[index].question}
+                  {questionsData[index].questionText}
                 </p>
                 <div
                   className="w-full px-5 py-3 text-[14px] lg:text-[16px] text-left border border-primaryTextLight rounded-sm bg-transparent text-primaryText cursor-pointer hover:bg-gray-300 hover:bg-opacity-5 transition-colors flex items-center justify-between"
@@ -100,7 +107,7 @@ export default function Questions({
                 >
                   <span>
                     {
-                      questions[index].options.find(
+                      questionsData[index].options.find(
                         (opt) => opt.value === selectedAnswers[index],
                       )?.label
                     }
@@ -114,9 +121,12 @@ export default function Questions({
 
         <CustomSelect
           key={currentQuestionIndex}
-          label={currentQuestion.question}
-          options={currentQuestion.options}
-          placeholder="Choose a service category"
+          label={currentQuestion.questionText}
+          options={currentQuestion.options.map((opt) => ({
+            label: opt.label,
+            value: opt.value || opt.label,
+          }))}
+          placeholder="Choose an option"
           value={selectedAnswers[currentQuestionIndex] || null}
           onChange={(value) =>
             setSelectedAnswers((prev) => ({

@@ -21,7 +21,7 @@ const ServiceList: React.FC<ServiceListProps> = ({
         <ul className="flex flex-wrap justify-between gap-y-4 md:gap-y-8">
           {items.map((item) => (
             <li
-              key={item._id}
+              key={item._id ?? item.slug}
               className="w-full sm:basis-[48%] lg:basis-[30%] "
             >
               <Link

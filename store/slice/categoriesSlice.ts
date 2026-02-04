@@ -44,6 +44,34 @@ export const categoriesApi = baseApi.injectEndpoints({
 
       providesTags: ["Categories"],
     }),
+    // ---------------------------------------
+    // CREATE CUSTOMER
+    // ---------------------------------------
+    createCustomer: builder.mutation({
+      query: (payload) => ({
+        url: `/customers`,
+        method: "POST",
+        body: payload,
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+    }),
+    // ---------------------------------------
+    // CREATE JOB POST
+    // ---------------------------------------
+    createJobPost: builder.mutation({
+      query: (payload) => ({
+        url: `/jobPosts`,
+        method: "POST",
+        body: payload,
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["Categories"],
+    }),
   }),
 });
 
@@ -51,4 +79,6 @@ export const {
   useGetCategoriesQuery,
   useGetCategoriesServicesQuery,
   useGetCategoriesServicesQuestionsQuery,
+  useCreateCustomerMutation,
+  useCreateJobPostMutation,
 } = categoriesApi;

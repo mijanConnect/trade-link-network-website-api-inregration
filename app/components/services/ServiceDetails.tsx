@@ -30,7 +30,7 @@ export default function ServiceDetails() {
   );
 
   const services =
-    (servicesData as { id: string; name: string }[] | undefined) || [];
+    (servicesData as { _id: string; name: string }[] | undefined) || [];
 
   return (
     <>
@@ -76,7 +76,7 @@ export default function ServiceDetails() {
             <ul className="list-disc list-inside text-[14px] lg:text-[18px] text-primaryTextLight space-y-4 lg:space-y-5">
               {services.length > 0 ? (
                 services.map((service) => (
-                  <li key={service.id}>{service.name}</li>
+                  <li key={service._id}>{service.name}</li>
                 ))
               ) : (
                 <li>No services available.</li>
