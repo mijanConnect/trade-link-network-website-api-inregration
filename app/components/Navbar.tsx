@@ -12,12 +12,11 @@ const navbarStyles = `
   .nav-link {
     position: relative;
     z-index: 1;
-    text-decoration: none; /* remove underline */
+    text-decoration: none;
     transition: color 0.25s ease, -webkit-text-stroke 0.25s ease;
-    -webkit-text-stroke: 0 currentColor; /* default: no stroke */
+    -webkit-text-stroke: 0 currentColor;
   }
 
-  /* Hover/Active styling with subtle stroke (no layout shift) */
   .nav-link:hover,
   .nav-link.active {
     color: #1e3a5f;
@@ -63,35 +62,41 @@ const navbarStyles = `
   }
 `;
 
-export default function NavRes() {
+export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [open, setOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return !!localStorage.getItem("accessToken");
-  });
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // Listen for storage changes (logout from other tabs)
   useEffect(() => {
     const handleStorageChange = () => {
-      const token = localStorage.getItem("accessToken");
-      setIsLoggedIn(!!token);
+      if (typeof window !== "undefined") {
+        const token = localStorage.getItem("accessToken");
+        setIsLoggedIn(!!token);
+      }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("accessToken");
+      setIsLoggedIn(!!token);
+    }
   }, []);
 
   const handleClose = () => {
     setIsClosing(true);
-    // Close the menu immediately so the hamburger icon rotates without delay
     setOpen(false);
-    // Keep the menu rendered to play the closing animation
     setTimeout(() => {
       setIsClosing(false);
     }, 500);
@@ -115,11 +120,9 @@ export default function NavRes() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Show navbar when scrolling up or at the top
       if (currentScrollY < lastScrollY || currentScrollY < 50) {
         setIsVisible(true);
       } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // Hide navbar when scrolling down
         setIsVisible(false);
       }
 
@@ -129,6 +132,10 @@ export default function NavRes() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  if (typeof window === "undefined") {
+    return null;
+  }
 
   return (
     <>
@@ -156,7 +163,6 @@ export default function NavRes() {
             </div>
           </div>
 
-          {/* Navigation Links - Hidden on mobile, visible on md+ */}
           <nav className="hidden lg:flex lg:flex-1 items-center justify-center gap-12">
             <Link
               href="/"
@@ -167,6 +173,7 @@ export default function NavRes() {
             >
               Home
             </Link>
+
             <Link
               href="/services"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
@@ -178,6 +185,7 @@ export default function NavRes() {
             >
               Services
             </Link>
+
             <Link
               href="/areas"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
@@ -191,9 +199,7 @@ export default function NavRes() {
             </Link>
           </nav>
 
-          {/* Right Side Buttons - Visible on all devices */}
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
-            {/* Logged In: Show My Jobs and My Account */}
             {isLoggedIn && (
               <div className="hidden lg:flex items-center gap-2 lg:gap-6">
                 <Link
@@ -208,7 +214,6 @@ export default function NavRes() {
               </div>
             )}
 
-            {/* Not Logged In: Show Post a Job and Login */}
             {!isLoggedIn && (
               <div className="hidden lg:flex items-center gap-2 lg:gap-6">
                 <Link
@@ -220,6 +225,7 @@ export default function NavRes() {
                 >
                   Post a Job
                 </Link>
+
                 <Link
                   href="/login"
                   className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
@@ -232,7 +238,6 @@ export default function NavRes() {
               </div>
             )}
 
-            {/* Not Logged In: Join as Tradeperson Button */}
             {!isLoggedIn && (
               <Button
                 onClick={() => router.push("/trade-person/leads")}
@@ -244,7 +249,6 @@ export default function NavRes() {
               </Button>
             )}
 
-            {/* Logged In: Show My Account */}
             {isLoggedIn && (
               <div className="relative">
                 <button
@@ -252,6 +256,7 @@ export default function NavRes() {
                   className="rounded-sm overflow-hidden border border-primary hover:bg-primary/5 transition-colors flex items-center justify-center px-4 py-2 gap-2 cursor-pointer"
                 >
                   <p className="text-[16px] text-primaryText">My Account</p>
+
                   <svg
                     className="h-6 w-6 hamburger-icon"
                     xmlns="http://www.w3.org/2000/svg"
@@ -282,13 +287,13 @@ export default function NavRes() {
                   </svg>
                 </button>
 
-                {/* Profile Modal */}
                 {showProfileModal && (
                   <>
                     <div
                       className="fixed inset-0 z-30"
                       onClick={() => setShowProfileModal(false)}
                     />
+
                     <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-40 overflow-hidden">
                       <div className="p-4 flex flex-col items-center border-b border-gray-200">
                         <div className="w-16 h-16 rounded-full overflow-hidden mb-2">
@@ -300,13 +305,16 @@ export default function NavRes() {
                             className="w-full h-full object-cover"
                           />
                         </div>
+
                         <h3 className="font-semibold text-primaryText">
                           Danai Gurira
                         </h3>
+
                         <p className="text-sm text-gray-500">
                           example@example.com
                         </p>
                       </div>
+
                       <div className="p-2">
                         <button
                           onClick={() => {
@@ -317,6 +325,7 @@ export default function NavRes() {
                         >
                           My Jobs
                         </button>
+
                         <button
                           onClick={() => {
                             router.push("/profile");
@@ -326,9 +335,9 @@ export default function NavRes() {
                         >
                           View Profile
                         </button>
+
                         <button
                           onClick={() => {
-                            // Clear token from localStorage
                             localStorage.removeItem("accessToken");
                             localStorage.removeItem("token");
                             setIsLoggedIn(false);
@@ -347,7 +356,6 @@ export default function NavRes() {
               </div>
             )}
 
-            {/* Mobile Hamburger Toggler */}
             <button
               type="button"
               className="lg:hidden inline-flex items-center justify-center rounded-md text-primary hover:bg-blue-200 transition-colors p-2"
@@ -384,10 +392,8 @@ export default function NavRes() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {(open || isClosing) && (
           <>
-            {/* Backdrop */}
             <div
               className={`lg:hidden fixed inset-0 bg-black z-30 transition-opacity duration-500 ${
                 isClosing ? "opacity-0" : "opacity-0"
@@ -398,9 +404,10 @@ export default function NavRes() {
               }}
             />
 
-            {/* Menu */}
             <div
-              className={`lg:hidden fixed top-[63px] left-0 right-0 bg-white z-40 max-h-[calc(100vh-88px)] overflow-y-auto ${isClosing ? "mobile-menu closing" : "mobile-menu"}`}
+              className={`lg:hidden fixed top-[63px] left-0 right-0 bg-white z-40 max-h-[calc(100vh-88px)] overflow-y-auto ${
+                isClosing ? "mobile-menu closing" : "mobile-menu"
+              }`}
             >
               <nav className="container mx-auto px-4 py-2 flex flex-col text-center">
                 <Link
@@ -412,6 +419,7 @@ export default function NavRes() {
                 >
                   Home
                 </Link>
+
                 <Link
                   href="/services"
                   className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
@@ -423,6 +431,7 @@ export default function NavRes() {
                 >
                   Services
                 </Link>
+
                 <Link
                   href="/areas"
                   className={`nav-link py-4 text-[16px] font-normal transition-all ${
@@ -437,7 +446,6 @@ export default function NavRes() {
               </nav>
 
               <div className="flex items-center gap-2 lg:gap-6">
-                {/* Logged In: Show My Jobs in mobile */}
                 {isLoggedIn && (
                   <Link
                     href="/my-jobs"
@@ -448,7 +456,6 @@ export default function NavRes() {
                   </Link>
                 )}
 
-                {/* Not Logged In: Show Post a Job and Login in mobile */}
                 {!isLoggedIn && (
                   <>
                     <Link
@@ -458,6 +465,7 @@ export default function NavRes() {
                     >
                       Post a Job
                     </Link>
+
                     <Link
                       href="/login"
                       className="bg-primary p-2 text-white font-semibold text-center flex-1"
@@ -465,17 +473,6 @@ export default function NavRes() {
                     >
                       Login
                     </Link>
-                    {/* <Button
-                      onClick={() => {
-                        router.push("/trade-person/leads");
-                        handleClose();
-                      }}
-                      variant="primary"
-                      size="sm"
-                      className="font-semibold w-full"
-                    >
-                      Join as Tradeperson
-                    </Button> */}
                   </>
                 )}
               </div>

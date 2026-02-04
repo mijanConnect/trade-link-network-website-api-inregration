@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import InputFieldOriginal from "../ui/InputField";
 import Button from "../ui/Button";
 
@@ -96,10 +96,10 @@ export default function CreateAccount({
       setName("");
       setPhoneValue("");
       setPassword("");
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error:", err);
       const errorMessage =
-        err?.data?.message || err?.message || "An error occurred";
+        err instanceof Error ? err.message : "An error occurred";
       setError(errorMessage);
     }
   };
@@ -115,7 +115,7 @@ export default function CreateAccount({
         </p>
         <InputField
           placeholder="Eg. SW1A 2AB"
-          value={postcode}
+          // value={postcode}
           onChange={(val: string) => setPostcode(val)}
         />
       </div>
@@ -128,33 +128,38 @@ export default function CreateAccount({
           number with them
         </p>
         <div className="space-y-4 lg:space-y-6">
-          <InputField
-            title="Email Address"
-            placeholder="example.email@gmail.com"
-            value={email}
-            onChange={(val: string) => setEmail(val)}
-          />
-          <h4 className="block text-[14px] lg:text-[16px] text-primaryText mb-2">
-            Phone number
-          </h4>
-          <PhoneInput
-            international
-            countryCallingCodeEditable={false}
-            countries={["GB"]}
-            defaultCountry="GB"
-            value={phoneValue}
-            onChange={setPhoneValue}
-            placeholder="Enter your phone number"
-            className="phone-input-no-focus"
-            style={{
-              height: 58,
-              border: "1px solid #1f2933",
-              borderRadius: "6px",
-              paddingLeft: "12px",
-              fontSize: "16px",
-              fontFamily: "inherit",
-            }}
-          />
+          <div>
+            <label className="block text-[14px] lg:text-[16px] text-primaryText mb-2">
+              Email Address
+            </label>
+            <InputField
+              placeholder="example.email@gmail.com"
+              onChange={(val: string) => setEmail(val)}
+            />
+          </div>
+          <div>
+            <h4 className="block text-[14px] lg:text-[16px] text-primaryText mb-2">
+              Phone number
+            </h4>
+            <PhoneInput
+              international
+              countryCallingCodeEditable={false}
+              countries={["GB"]}
+              defaultCountry="GB"
+              value={phoneValue}
+              onChange={setPhoneValue}
+              placeholder="Enter your phone number"
+              className="phone-input-no-focus"
+              style={{
+                height: 58,
+                border: "1px solid #1f2933",
+                borderRadius: "6px",
+                paddingLeft: "12px",
+                fontSize: "16px",
+                fontFamily: "inherit",
+              }}
+            />
+          </div>
         </div>
       </div>
       {/* Create an account */}

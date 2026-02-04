@@ -14,7 +14,14 @@ export default function Areas() {
         </h3>
 
         <div className="mt-4 lg:mt-8">
-          <ServiceList locations={locations} route="areas" />
+          <ServiceList
+            locations={locations.map(({ id, name, slug }) => ({
+              _id: id,
+              name,
+              slug,
+            }))}
+            route="areas"
+          />
         </div>
       </div>
     </>
