@@ -64,7 +64,9 @@ export default function InterestedTradeperson() {
           key={job.id}
           title={job.title}
           postedOn={job.postedOn}
-          description={job.description}
+          description={
+            "Verified professionals have responded to your request. Compare their profiles and book with confidence."
+          }
           actions={job.actions.map((action) =>
             action.label === "View Profile"
               ? { ...action, onClick: handleViewProfile }

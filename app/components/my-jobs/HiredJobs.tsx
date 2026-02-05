@@ -149,7 +149,9 @@ export default function HiredJobs() {
             id={job.id}
             title={job.title}
             postedOn={job.postedOn}
-            description={job.description}
+            description={
+              "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."
+            }
             actions={job.actions.map((action) =>
               action.label === "View Profile"
                 ? { ...action, onClick: handleViewProfile }
@@ -166,7 +168,9 @@ export default function HiredJobs() {
             id={job.id}
             title={job.title}
             postedOn={job.postedOn}
-            description={job.description}
+            description={
+              "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."
+            }
             actions={job.actions.map((action) =>
               action.label === "View Profile"
                 ? { ...action, onClick: handleViewProfile }

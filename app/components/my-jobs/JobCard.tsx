@@ -1,6 +1,7 @@
 import Button from "../ui/Button";
 import { ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { formatDateTime } from "@/app/utils/TimeDateFormat";
 
 type JobAction = {
   id?: string;
@@ -66,7 +67,7 @@ export default function JobCard({
           {title}
         </h1>
         <p className="mt-0 text-[14px] text-gray-400 lg:mt-2 lg:text-[16px]">
-          {postedOn}
+          {"Posted on " + formatDateTime(postedOn)}
         </p>
         <p className="mt-4 text-[14px] text-primaryText lg:mt-4 lg:text-[16px]">
           {description}
