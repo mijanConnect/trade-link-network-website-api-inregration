@@ -3,6 +3,8 @@
 import { useGetPendingJobsQuery } from "@/store/slice/myJobsSlice";
 import JobCard from "./JobCard";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
+import { Skeleton } from "@/components/ui/skeleton";
+import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
 
 interface Job {
   _id: string;
@@ -22,7 +24,11 @@ export default function PendingJobs() {
   } = useGetPendingJobsQuery("OPEN");
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col gap-6">
+        <MyJobSkeleton />
+      </div>
+    );
   }
 
   if (error) {

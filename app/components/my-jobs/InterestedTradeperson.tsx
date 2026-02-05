@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import JobCard from "./JobCard";
 import { useGetInterestedJobsQuery } from "@/store/slice/myJobsSlice";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
+import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
 
 interface InterestedTradeperson {
   _id: string;
@@ -42,7 +43,11 @@ export default function InterestedTradeperson() {
     : interestedJobs?.data || [];
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col gap-6">
+        <MyJobSkeleton />
+      </div>
+    );
   }
 
   if (error) {
