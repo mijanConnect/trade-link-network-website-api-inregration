@@ -67,7 +67,7 @@ export default function JobCard({
           {title}
         </h1>
         <p className="mt-0 text-[14px] text-gray-400 lg:mt-2 lg:text-[16px]">
-          {"Posted on " + formatDateTime(postedOn)}
+          {postedOn}
         </p>
         <p className="mt-4 text-[14px] text-primaryText lg:mt-4 lg:text-[16px]">
           {description}

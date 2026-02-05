@@ -3,7 +3,7 @@ import { baseApi } from "../baseApi";
 export const myJobsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // ---------------------------------------
-    // GET CATEGORIES
+    // GET PENDING JOBS
     // ---------------------------------------
     getPendingJobs: builder.query({
       query: (status: string) => ({
@@ -15,6 +15,20 @@ export const myJobsApi = baseApi.injectEndpoints({
         response?.data ?? response?.user ?? response,
 
       providesTags: ["PendingJobs"],
+    }),
+    // ---------------------------------------
+    // GET INTERESTED JOBS
+    // ---------------------------------------
+    getInterestedJobs: builder.query({
+      query: () => ({
+        url: `/jobRequests/interested-trade-persons`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["InterestedJobs"],
     }),
     // ---------------------------------------
     // GET CATEGORIES SERVICES
@@ -77,6 +91,7 @@ export const myJobsApi = baseApi.injectEndpoints({
 
 export const {
   useGetPendingJobsQuery,
+  useGetInterestedJobsQuery,
   useGetCategoriesServicesQuery,
   useGetCategoriesServicesQuestionsQuery,
   useCreateCustomerMutation,
