@@ -3,7 +3,6 @@
 import { useGetPendingJobsQuery } from "@/store/slice/myJobsSlice";
 import JobCard from "./JobCard";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
-import { Skeleton } from "@/components/ui/skeleton";
 import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
 
 interface Job {
