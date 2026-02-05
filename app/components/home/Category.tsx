@@ -36,11 +36,15 @@ export default function Category() {
   }, []);
 
   if (isLoading) {
-    return <p className="text-center py-10">Loading categories</p>;
+    return <p className="text-center py-10">Loading categories..</p>;
   }
 
   if (isError) {
-    return <p className="text-center py-10">Failed to load categories</p>;
+    return (
+      <p className="text-center text-red-500 py-10">
+        Failed to load categories!
+      </p>
+    );
   }
 
   const categories = data || [];

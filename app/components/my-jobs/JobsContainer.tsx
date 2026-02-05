@@ -1,18 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import PendingJobs from "./PendingJobs";
 import InterestedTradeperson from "./InterestedTradeperson";
 import HiredJobs from "./HiredJobs";
 
 const tabs = [
   { id: "pending", label: "Pending Jobs" },
-  { id: "interested", label: "Interested Tradepeople" },
+  { id: "interested", label: "Interested Tradespeople" },
   { id: "hired", label: "Hired" },
 ];
 
 export default function JobsContainer() {
-  const [activeTab, setActiveTab] = useState<string>("pending");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabFromUrl = searchParams.get("tab") || "pending";
+  const [activeTab, setActiveTab] = useState<string>(tabFromUrl);
+
+  useEffect(() => {
+    const currentTab = searchParams.get("tab");
+
+    if (!currentTab) {
+      router.replace(`?tab=pending`, { scroll: false });
+    }
+  }, [searchParams, router]);
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    router.push(`?tab=${tabId}`, { scroll: false });
+  };
   return (
     <>
       <h1 className="text-[28px] md:text-[40px] font-bold text-primaryText mb-4 lg:mb-6">
@@ -24,7 +41,7 @@ export default function JobsContainer() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`relative rounded-md py-1 text-[18px] lg:text-[20px] font-semibold text-nowrap transition-all duration-300 cursor-pointer ${
                 activeTab === tab.id
                   ? "text-primaryText"
