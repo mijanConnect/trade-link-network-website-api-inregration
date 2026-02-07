@@ -6,13 +6,27 @@ export const myJobsApi = baseApi.injectEndpoints({
     // GET PENDING JOBS
     // ---------------------------------------
     getPendingJobs: builder.query({
-      query: (status: string) => ({
-        url: `/jobPosts/mine?status=${status}`,
+      query: ({
+        status,
+        page = 1,
+        limit = 10,
+      }: {
+        status: string;
+        page?: number;
+        limit?: number;
+      }) => ({
+        url: `/jobPosts/mine?status=${status}&page=${page}&limit=${limit}`,
         method: "GET",
       }),
 
-      transformResponse: (response) =>
-        response?.data ?? response?.user ?? response,
+      transformResponse: (response: {
+        data?: unknown;
+        pagination?: unknown;
+        user?: unknown;
+      }) => ({
+        data: response?.data ?? response?.user ?? response,
+        pagination: response?.pagination,
+      }),
 
       providesTags: ["PendingJobs"],
     }),

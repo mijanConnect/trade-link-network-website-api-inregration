@@ -1,9 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { useGetPendingJobsQuery } from "@/store/slice/myJobsSlice";
 import JobCard from "./JobCard";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
 import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
+import { PaginationTradeLink } from "../ui/PaginationTradeLink";
+import { ReactNode } from "react";
+
+type JobAction = {
+  id?: string;
+  label: string;
+  variant: "primary" | "outline";
+  onClick?: () => void;
+  className?: string;
+  icon?: ReactNode;
+};
 
 interface Job {
   _id: string;
@@ -11,16 +23,34 @@ interface Job {
     name: string;
   };
   description?: string;
-  actions: any;
+  actions?: JobAction[];
   createdAt: string;
 }
 
+interface PaginationData {
+  total: number;
+  limit: number;
+  page: number;
+  totalPage: number;
+}
+
+interface PendingJobsResponse {
+  data: Job[];
+  pagination?: PaginationData;
+}
+
 export default function PendingJobs() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(2);
+
   const {
-    data: pendingJobs,
+    data: response,
     error,
     isLoading,
-  } = useGetPendingJobsQuery("OPEN");
+  } = useGetPendingJobsQuery({ status: "OPEN", page: currentPage, limit });
+
+  const pendingJobs = (response as PendingJobsResponse)?.data || [];
+  const pagination = (response as PendingJobsResponse)?.pagination;
 
   if (isLoading) {
     return (
@@ -53,6 +83,19 @@ export default function PendingJobs() {
             actions={job.actions}
           />
         ))}
+
+        {pagination && (
+          <PaginationTradeLink
+            currentPage={currentPage}
+            totalPages={pagination.totalPage}
+            limit={limit}
+            onPageChange={setCurrentPage}
+            onLimitChange={(newLimit) => {
+              setLimit(newLimit);
+              setCurrentPage(1);
+            }}
+          />
+        )}
       </div>
     </div>
   );
