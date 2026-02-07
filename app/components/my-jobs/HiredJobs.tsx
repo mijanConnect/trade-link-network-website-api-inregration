@@ -6,6 +6,12 @@ import ReviewViewModal from "./ReviewViewModal";
 import { Star } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  useGetHiredHistoryJobsQuery,
+  useGetHiredRecentJobsQuery,
+} from "@/store/slice/myJobsSlice";
+import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
+import { formatDateTime } from "@/app/utils/TimeDateFormat";
 
 type ReviewData = {
   rating: number;
@@ -14,99 +20,103 @@ type ReviewData = {
   date?: string;
 };
 
-const RecentJobs = [
-  {
-    id: "job-004",
-    title: "Electrical safety inspection",
-    postedOn: "Posted 08 Jan, 2026",
-    description:
-      "A thorough inspection of your electrical system to identify potential hazards, faulty wiring, and code compliance issues. We ensure your home or workplace is safe, reliable, and up to current safety standards.",
-    actions: [
-      {
-        label: "View Profile",
-        variant: "outline" as const,
-      },
-      { label: "Mark as Completed", variant: "primary" as const },
-    ],
-  },
-  {
-    id: "job-005",
-    title: "Kitchen cabinetry install",
-    postedOn: "Posted 05 Jan, 2026",
-    description:
-      "A thorough inspection of your electrical system to identify potential hazards, faulty wiring, and code compliance issues. We ensure your home or workplace is safe, reliable, and up to current safety standards.",
-    actions: [
-      {
-        label: "View Profile",
-        variant: "outline" as const,
-      },
-      { label: "Mark as Completed", variant: "primary" as const },
-    ],
-  },
-];
+// interface HiredJobResponse {
+//   success: boolean;
+//   message: string;
+//   pagination: {
+//     total: number;
+//     limit: number;
+//     page: number;
+//     totalPage: number;
+//   };
+//   data: HiredJob[];
+// }
 
-const HistoryJobs = [
-  {
-    id: "job-003",
-    title: "2-bedroom interior painting",
-    postedOn: "Posted 10 Jan, 2026",
-    description:
-      "Painters notified. Expect interest soon; review color palette before confirming.",
-    review: null,
-    actions: [
-      {
-        id: "rating-003",
-        label: "Review",
-        variant: "outline" as const,
-        className:
-          "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
-      },
-      {
-        label: "Completed",
-        variant: "primary" as const,
-        className:
-          "bg-[#4CAF50]! border-[#4CAF50]! hover:bg-[#4CAF50]/90! hover:text-white",
-      },
-    ],
-  },
-  {
-    id: "job-004",
-    title: "Electrical safety inspection",
-    postedOn: "Posted 08 Jan, 2026",
-    description:
-      "Licensed electricians will reach out to confirm appointment slots.",
-    review: {
-      rating: 4.5,
-      text: "Great communication and punctual. Work was neat and to spec.",
-      reviewer: "You",
-      date: "12 Jan, 2026",
-    } satisfies ReviewData,
-    actions: [
-      {
-        id: "rating-004",
-        label: "4.5",
-        icon: (
-          <Star className="h-4 w-4 fill-[#FF8D28] text-[#FF8D28] group-hover:fill-white group-hover:text-white" />
-        ),
-        variant: "outline" as const,
-        className:
-          "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
-      },
-      {
-        label: "Completed",
-        variant: "primary" as const,
-        className:
-          "bg-[#4CAF50]! border-[#4CAF50]! hover:bg-[#4CAF50]/90! hover:text-white",
-      },
-    ],
-  },
-];
+interface HiredJob {
+  _id: string;
+  id: string;
+
+  jobPost: {
+    _id: string;
+    jobNumber: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+
+    service: {
+      _id: string;
+      name: string;
+    };
+  };
+
+  sender: {
+    _id: string;
+    name: string;
+    phone: string;
+  };
+
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+
+  review?: {
+    _id: string;
+    jobRequest: string;
+    rating: number;
+    comment: string;
+  };
+}
 
 export default function HiredJobs() {
   const router = useRouter();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isReviewViewModalOpen, setIsReviewViewModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewData | null>(null);
+
+  const {
+    data: hiredRecentJobs,
+    error: recentJobsError,
+    isLoading: recentJobsLoading,
+  } = useGetHiredRecentJobsQuery("COMPLETED");
+
+  const {
+    data: hiredHistoryJobs,
+    error: historyJobsError,
+    isLoading: historyJobsLoading,
+  } = useGetHiredHistoryJobsQuery("COMPLETED");
+
+  if (recentJobsLoading) {
+    return (
+      <div className="flex flex-col gap-6">
+        <MyJobSkeleton />
+      </div>
+    );
+  }
+
+  if (recentJobsError) {
+    return <div className="text-red-500">Error loading recent hired jobs</div>;
+  }
+
+  if (hiredRecentJobs?.length === 0) {
+    return <div className="text-gray-500">No recent hired jobs yet</div>;
+  }
+
+  if (historyJobsLoading) {
+    return (
+      <div className="flex flex-col gap-6">
+        <MyJobSkeleton />
+      </div>
+    );
+  }
+
+  if (historyJobsError) {
+    return <div className="text-red-500">Error loading history hired jobs</div>;
+  }
+
+  if (hiredHistoryJobs?.length === 0) {
+    return <div className="text-gray-500">No history hired jobs yet</div>;
+  }
 
   const handleViewProfile = () => {
     router.push("/provider-profile");
@@ -143,44 +153,76 @@ export default function HiredJobs() {
       />
       <div className="flex flex-col gap-6">
         <h3 className="text-[22px] font-bold text-primaryText">Recent</h3>
-        {RecentJobs.map((job) => (
+        {(hiredRecentJobs ?? []).map((job: HiredJob) => (
           <JobCard
-            key={job.id}
-            id={job.id}
-            title={job.title}
-            postedOn={job.postedOn}
+            key={job._id}
+            id={job._id}
+            title={job.jobPost?.service?.name}
+            postedOn={`Interested on ${formatDateTime(job.createdAt)}`}
             description={
               "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."
             }
-            actions={job.actions.map((action) =>
-              action.label === "View Profile"
-                ? { ...action, onClick: handleViewProfile }
-                : action,
-            )}
+            actions={[
+              {
+                label: "View Profile",
+                variant: "outline" as const,
+                onClick: handleViewProfile,
+              },
+              {
+                label: "Mark as Completed",
+                variant: "primary" as const,
+                onClick: () =>
+                  console.log("Mark as Completed clicked for job:", job._id),
+              },
+            ]}
           />
         ))}
       </div>
       <div className="flex flex-col gap-6 mt-10 lg:mt-20">
         <h3 className="text-[22px] font-bold text-primaryText">History</h3>
-        {HistoryJobs.map((job) => (
+        {(hiredHistoryJobs ?? []).map((job: HiredJob) => (
           <JobCard
-            key={job.id}
-            id={job.id}
-            title={job.title}
-            postedOn={job.postedOn}
+            key={job._id}
+            id={job._id}
+            title={job.jobPost?.service?.name}
+            postedOn={`Interested on ${formatDateTime(job.createdAt)}`}
             description={
               "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."
             }
-            actions={job.actions.map((action) =>
-              action.label === "View Profile"
-                ? { ...action, onClick: handleViewProfile }
-                : action.id?.startsWith("rating-")
-                  ? {
-                      ...action,
-                      onClick: () => handleReviewClick(job.review ?? null),
-                    }
-                  : action,
-            )}
+            actions={[
+              job.review
+                ? {
+                    id: `rating-${job._id}`,
+                    label: job.review.rating.toString(),
+                    icon: (
+                      <Star className="h-4 w-4 fill-[#FF8D28] text-[#FF8D28] group-hover:fill-white group-hover:text-white" />
+                    ),
+                    variant: "outline" as const,
+                    className:
+                      "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
+                    onClick: () =>
+                      handleReviewClick({
+                        rating: job?.review?.rating ?? 0,
+                        text: job?.review?.comment ?? "",
+                        reviewer: "You",
+                        date: formatDateTime(job.completedAt || job.updatedAt),
+                      }),
+                  }
+                : {
+                    id: `rating-${job._id}`,
+                    label: "Review",
+                    variant: "outline" as const,
+                    className:
+                      "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
+                    onClick: () => handleReviewClick(null),
+                  },
+              {
+                label: "Completed",
+                variant: "primary" as const,
+                className:
+                  "bg-[#4CAF50]! border-[#4CAF50]! hover:bg-[#4CAF50]/90! hover:text-white",
+              },
+            ]}
           />
         ))}
       </div>

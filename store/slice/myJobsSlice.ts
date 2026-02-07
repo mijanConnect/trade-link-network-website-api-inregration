@@ -31,6 +31,34 @@ export const myJobsApi = baseApi.injectEndpoints({
       providesTags: ["InterestedJobs"],
     }),
     // ---------------------------------------
+    // GET HIRED HISTORY JOBS
+    // ---------------------------------------
+    getHiredHistoryJobs: builder.query({
+      query: (status: string) => ({
+        url: `/jobPosts/mine/hired?completedStatus=${status}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["HiredJobs"],
+    }),
+    // ---------------------------------------
+    // GET HIRED RECENT JOBS
+    // ---------------------------------------
+    getHiredRecentJobs: builder.query({
+      query: (status: string) => ({
+        url: `/jobPosts/mine/hired?completedStatus=${status}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["HiredJobs"],
+    }),
+    // ---------------------------------------
     // GET CATEGORIES SERVICES
     // ---------------------------------------
     getCategoriesServices: builder.query({
@@ -92,6 +120,8 @@ export const myJobsApi = baseApi.injectEndpoints({
 export const {
   useGetPendingJobsQuery,
   useGetInterestedJobsQuery,
+  useGetHiredHistoryJobsQuery,
+  useGetHiredRecentJobsQuery,
   useGetCategoriesServicesQuery,
   useGetCategoriesServicesQuestionsQuery,
   useCreateCustomerMutation,
