@@ -31,6 +31,23 @@ export const myJobsApi = baseApi.injectEndpoints({
       providesTags: ["PendingJobs"],
     }),
     // ---------------------------------------
+    // GET JOBS DETAILS
+    // ---------------------------------------
+    getJobsDetails: builder.query({
+      query: ({ id }: { id: string }) => ({
+        url: `/jobPosts/${id}/mine`,
+        method: "GET",
+      }),
+
+      transformResponse: (response: {
+        data?: unknown;
+        success?: boolean;
+        message?: string;
+      }) => response,
+
+      providesTags: ["PendingJobs"],
+    }),
+    // ---------------------------------------
     // GET INTERESTED JOBS
     // ---------------------------------------
     getInterestedJobs: builder.query({
@@ -139,6 +156,7 @@ export const myJobsApi = baseApi.injectEndpoints({
 
 export const {
   useGetPendingJobsQuery,
+  useGetJobsDetailsQuery,
   useGetInterestedJobsQuery,
   useGetHiredHistoryJobsQuery,
   useGetHiredRecentJobsQuery,

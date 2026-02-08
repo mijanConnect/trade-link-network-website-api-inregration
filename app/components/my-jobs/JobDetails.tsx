@@ -3,37 +3,44 @@
 import { ChevronLeft } from "lucide-react";
 import Button from "../ui/Button";
 import Link from "next/link";
+import { useGetJobsDetailsQuery } from "@/store/slice/myJobsSlice";
+import { useParams } from "next/navigation";
+import { formatDateTime } from "@/app/utils/TimeDateFormat";
 
 type DetailItem = { label: string; value: string };
 
-type JobDetailsProps = {
-  title?: string;
-  postedOn?: string;
-  details?: DetailItem[];
-  locationDetails?: DetailItem[];
-  personalDetails?: DetailItem[];
+type AnsweredQuestion = {
+  questionText: string;
+  answerText: string;
+  _id: string;
 };
 
-const defaultDetails: DetailItem[] = [
-  { label: "Category", value: "Outdoor & Landscaping" },
-  { label: "Service Type", value: "Landscaping" },
-  {
-    label: "Work Description",
-    value:
-      "Landscaping involves the process of designing, arranging, and maintaining outdoor spaces to enhance their aesthetic appeal, functionality, and environmental sustainability. It encompasses various tasks such as planting trees, shrubs, flowers, and grass; constructing hardscapes like pathways, patios, and retaining walls; installing irrigation systems; and maintaining garden beds. Landscaping also involves the management of natural features like water bodies, soil quality, and terrain, creating outdoor environments that are both beautiful and practical.",
-  },
-  { label: "Garden Size", value: "Medium" },
-  { label: "Include Groundwork or Drainage", value: "Yes" },
-  { label: "Property Type", value: "Residential" },
-  { label: "Approximate Budget", value: "$500 - $1000" },
-];
+type JobDetailsData = {
+  _id: string;
+  jobNumber: string;
+  status: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  service?: {
+    _id: string;
+    name: string;
+  };
+  creator?: {
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
+  postcode?: string;
+  answeredQuestions?: AnsweredQuestion[];
+};
 
-const defaultLocation: DetailItem[] = [{ label: "Post Code", value: "00263" }];
-
-const defaultPersonal: DetailItem[] = [
-  { label: "Email", value: "user@example.com" },
-  { label: "Mobile Number", value: "+263 71 234 5678" },
-];
+type JobDetailsResponse = {
+  success: boolean;
+  message: string;
+  data?: JobDetailsData;
+};
 
 function DetailTable({ items }: { items: DetailItem[] }) {
   return (
@@ -57,13 +64,57 @@ function DetailTable({ items }: { items: DetailItem[] }) {
   );
 }
 
-export default function JobDetails({
-  title = "Full garden renovation",
-  postedOn = "Posted 14 Jan, 2026",
-  details = defaultDetails,
-  locationDetails = defaultLocation,
-  personalDetails = defaultPersonal,
-}: JobDetailsProps) {
+export default function JobDetails() {
+  const params = useParams();
+  const id = params.id as string;
+
+  const {
+    data: response,
+    error,
+    isLoading,
+  } = useGetJobsDetailsQuery({ id: id || "" });
+
+  if (isLoading) {
+    return <div className="text-gray-500">Loading job details...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error loading job details</div>;
+  }
+
+  const jobDetails = (response as JobDetailsResponse)?.data;
+
+  if (!jobDetails) {
+    return <div className="text-gray-500">No job details available</div>;
+  }
+
+  // Transform API data to DetailItem format
+  const apiDetails: DetailItem[] = [
+    { label: "Job Number", value: jobDetails.jobNumber || "N/A" },
+    { label: "Service Type", value: jobDetails.service?.name || "N/A" },
+    { label: "Status", value: jobDetails.status || "N/A" },
+    { label: "Work Description", value: jobDetails.description || "N/A" },
+    ...(jobDetails.answeredQuestions?.map((q: AnsweredQuestion) => ({
+      label: q.questionText,
+      value: q.answerText,
+    })) || []),
+  ];
+
+  const apiPersonalDetails: DetailItem[] = [
+    { label: "Name", value: jobDetails.creator?.name || "N/A" },
+    { label: "Email", value: jobDetails.creator?.email || "N/A" },
+    { label: "Mobile Number", value: jobDetails.creator?.phone || "N/A" },
+  ];
+
+  const apiLocationDetails: DetailItem[] = [
+    { label: "Postcode", value: jobDetails?.postcode || "N/A" },
+  ];
+
+  const displayTitle = jobDetails.service?.name || "Job Details";
+  const displayPostedOn = jobDetails.createdAt
+    ? `Posted on ${formatDateTime(jobDetails.createdAt)}`
+    : "Posted date not available";
+
   return (
     <div>
       <Link href="/my-jobs" className="inline-block">
@@ -73,10 +124,10 @@ export default function JobDetails({
         </div>
       </Link>
       <h1 className="text-[18px] text-primaryText lg:text-[24px] font-semibold mt-0 lg:mt-8">
-        {title}
+        {displayTitle}
       </h1>
       <p className="mb-4 lg:mb-8 mt-0 text-[14px] text-gray-400 lg:mt-2 lg:text-[16px]">
-        {postedOn}
+        {displayPostedOn}
       </p>
 
       <div className="space-y-4 lg:space-y-6">
@@ -84,21 +135,21 @@ export default function JobDetails({
           <h4 className="mb-1 lg:mb-3 text-[16px] lg:text-[18px] font-bold text-primaryText">
             Details
           </h4>
-          <DetailTable items={details} />
+          <DetailTable items={apiDetails} />
         </section>
 
         <section>
           <h4 className="mb-1 lg:mb-3 text-[16px] lg:text-[18px] font-bold text-primaryText">
             Location
           </h4>
-          <DetailTable items={locationDetails} />
+          <DetailTable items={apiLocationDetails} />
         </section>
 
         <section>
           <h4 className="mb-1 lg:mb-3 text-[16px] lg:text-[18px] font-bold text-primaryText">
             Personal Details
           </h4>
-          <DetailTable items={personalDetails} />
+          <DetailTable items={apiPersonalDetails} />
         </section>
       </div>
 
