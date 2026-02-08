@@ -53,13 +53,13 @@ export function PaginationTradeLink({
             >
               {i}
             </PaginationLink>
-          </PaginationItem>
+          </PaginationItem>,
         );
       } else if (i === currentPage - 2 || i === currentPage + 2) {
         items.push(
           <PaginationItem key={i}>
             <PaginationEllipsis />
-          </PaginationItem>
+          </PaginationItem>,
         );
       }
     }
@@ -82,6 +82,7 @@ export function PaginationTradeLink({
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
+              <SelectItem value="2">2</SelectItem>
               <SelectItem value="10">10</SelectItem>
               <SelectItem value="25">25</SelectItem>
               <SelectItem value="50">50</SelectItem>

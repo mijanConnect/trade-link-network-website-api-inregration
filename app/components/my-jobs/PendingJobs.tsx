@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useGetPendingJobsQuery } from "@/store/slice/myJobsSlice";
 import JobCard from "./JobCard";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
@@ -40,8 +40,11 @@ interface PendingJobsResponse {
 }
 
 export default function PendingJobs() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(2);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "2");
 
   const {
     data: response,
@@ -89,10 +92,16 @@ export default function PendingJobs() {
             currentPage={currentPage}
             totalPages={pagination.totalPage}
             limit={limit}
-            onPageChange={setCurrentPage}
+            onPageChange={(page) => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("page", page.toString());
+              router.push(`?${params.toString()}`);
+            }}
             onLimitChange={(newLimit) => {
-              setLimit(newLimit);
-              setCurrentPage(1);
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("limit", newLimit.toString());
+              params.set("page", "1");
+              router.push(`?${params.toString()}`);
             }}
           />
         )}

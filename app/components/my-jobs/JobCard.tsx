@@ -51,10 +51,10 @@ export default function JobCard({
         )
       : [
           {
-            label: "Create Post",
+            label: "Close Post",
             variant: "outline",
             className:
-              "border-red-500 text-red-500 hover:bg-red-500 hover:text-white",
+              "border-red-500 text-red-500 hover:bg-red-600 hover:border-red-600 hover:text-white",
           },
           defaultViewDetailsAction,
         ];

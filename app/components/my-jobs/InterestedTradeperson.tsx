@@ -1,10 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import JobCard from "./JobCard";
 import { useGetInterestedJobsQuery } from "@/store/slice/myJobsSlice";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
 import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
+import { PaginationTradeLink } from "../ui/PaginationTradeLink";
 
 interface InterestedTradeperson {
   _id: string;
@@ -26,21 +27,39 @@ interface InterestedTradeperson {
   completedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  pagination?: PaginationData;
+}
+
+interface PaginationData {
+  total: number;
+  limit: number;
+  page: number;
+  totalPage: number;
+}
+
+interface InterestedJobsResponse {
+  data: InterestedTradeperson[];
+  pagination?: PaginationData;
 }
 
 export default function InterestedTradeperson() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "2");
 
   const {
     data: interestedJobs,
     error,
     isLoading,
-  } = useGetInterestedJobsQuery({});
+  } = useGetInterestedJobsQuery({ page: currentPage, limit });
 
   // The data is already transformed by the API, so it's either an array or an object with data property
   const interestedJobsData = Array.isArray(interestedJobs)
     ? interestedJobs
-    : interestedJobs?.data || [];
+    : (interestedJobs as InterestedJobsResponse)?.data || [];
+  const pagination = (interestedJobs as InterestedJobsResponse)?.pagination;
 
   if (isLoading) {
     return (
@@ -86,6 +105,24 @@ export default function InterestedTradeperson() {
           ]}
         />
       ))}
+      {pagination && (
+        <PaginationTradeLink
+          currentPage={currentPage}
+          totalPages={pagination.totalPage}
+          limit={limit}
+          onPageChange={(page) => {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("page", page.toString());
+            router.push(`?${params.toString()}`);
+          }}
+          onLimitChange={(newLimit) => {
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("limit", newLimit.toString());
+            params.set("page", "1");
+            router.push(`?${params.toString()}`);
+          }}
+        />
+      )}
     </div>
   );
 }

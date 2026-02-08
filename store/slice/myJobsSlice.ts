@@ -34,13 +34,19 @@ export const myJobsApi = baseApi.injectEndpoints({
     // GET INTERESTED JOBS
     // ---------------------------------------
     getInterestedJobs: builder.query({
-      query: () => ({
-        url: `/jobRequests/interested-trade-persons`,
+      query: ({ page = 1, limit = 10 }: { page?: number; limit?: number }) => ({
+        url: `/jobRequests/interested-trade-persons?&page=${page}&limit=${limit}`,
         method: "GET",
       }),
 
-      transformResponse: (response) =>
-        response?.data ?? response?.user ?? response,
+      transformResponse: (response: {
+        data?: unknown;
+        pagination?: unknown;
+        user?: unknown;
+      }) => ({
+        data: response?.data ?? response?.user ?? response,
+        pagination: response?.pagination,
+      }),
 
       providesTags: ["InterestedJobs"],
     }),
