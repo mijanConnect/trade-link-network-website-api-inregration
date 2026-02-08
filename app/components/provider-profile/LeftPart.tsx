@@ -21,6 +21,7 @@ type ProfessionalProfile = {
     _id: string;
     businessName: string;
     businessImage: string;
+    about?: string;
     services: Service[];
     address: string;
     ratingAvg: number;

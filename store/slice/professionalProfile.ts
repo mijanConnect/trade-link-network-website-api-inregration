@@ -3,19 +3,21 @@ import { baseApi } from "../baseApi";
 export const professionalProfileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // ---------------------------------------
-    // GET PENDING JOBS
+    // GET PROFESSIONAL PROFILE REVIEW
     // ---------------------------------------
     getProfessionalProfileReview: builder.query({
       query: ({
-        status,
+        id,
+        jobPostId,
         page = 1,
         limit = 10,
       }: {
-        status: string;
+        id: string;
+        jobPostId: string;
         page?: number;
         limit?: number;
       }) => ({
-        url: `/jobPosts/mine?status=${status}&page=${page}&limit=${limit}`,
+        url: `/customers/professionals/${id}/review?jobPostId=${jobPostId}&page=${page}&limit=${limit}`,
         method: "GET",
       }),
 
@@ -31,7 +33,7 @@ export const professionalProfileApi = baseApi.injectEndpoints({
       providesTags: ["ProfessionalProfile"],
     }),
     // ---------------------------------------
-    // GET JOBS DETAILS
+    // GET PROFESSIONAL PROFILE
     // ---------------------------------------
     getProfessionalProfile: builder.query({
       query: ({ id, jobPostId }: { id: string; jobPostId: string }) => ({

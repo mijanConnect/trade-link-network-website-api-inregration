@@ -1,8 +1,69 @@
-import React from "react";
+"use client";
+
+import {
+  useGetProfessionalProfileQuery,
+  useGetProfessionalProfileReviewQuery,
+} from "@/store/slice/professionalProfile";
+import { useSearchParams } from "next/navigation";
 import SingleReview from "./SingleReview";
 import Button from "../ui/Button";
 
+type ProfessionalProfile = {
+  _id: string;
+  professional: {
+    about?: string;
+  };
+};
+
+type ProfileResponse = {
+  success: boolean;
+  message: string;
+  data?: ProfessionalProfile;
+};
+
 export default function RightSide() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") || "";
+  const jobPostId = searchParams.get("jobPostId") || "";
+
+  const {
+    data: response,
+    error,
+    isLoading,
+  } = useGetProfessionalProfileQuery(
+    { id, jobPostId },
+    { skip: !id || !jobPostId },
+  );
+
+  const {
+    data: reviewResponse,
+    error: reviewError,
+    isLoading: reviewIsLoading,
+  } = useGetProfessionalProfileReviewQuery(
+    { id, jobPostId },
+    { skip: !id || !jobPostId },
+  );
+
+  console.log(reviewResponse);
+
+  const profile = response as ProfileResponse;
+
+  if (!id || !jobPostId) {
+    return null;
+  }
+
+  if (isLoading) {
+    return <div className="text-gray-500">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">Error loading about</div>;
+  }
+
+  const aboutText =
+    profile?.data?.professional?.about ||
+    "No information about this professional available at the moment.";
+
   return (
     <>
       <div>
@@ -11,25 +72,11 @@ export default function RightSide() {
             About
           </h2>
           <p className="text-[14px] lg:text-[16px] text-primaryTextLight leading-6 lg:leading-7 mb-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book. It has survived
-            not only five centuries, but also the leap into electronic
-            typesetting, remaining essentially unchanged.
-          </p>
-          <p className="text-[14px] lg:text-[16px] text-primaryTextLight leading-7 mb-2">
-            It was popularised in the 1960s with the release of Letraset sheets
-            containing Lorem Ipsum passages, and more recently with desktop
-            publishing software like Aldus PageMaker including versions of Lorem
-            Ipsum.
+            {aboutText}
           </p>
         </div>
-
         <div className="mt-6 lg:mt-12">
-          <SingleReview />
-          <SingleReview />
-          <SingleReview />
+          <SingleReview reviewResponse={reviewResponse as any} />
         </div>
         <Button className="mt-6 lg:mt-8">View All Reviews</Button>
       </div>
