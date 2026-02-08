@@ -79,10 +79,6 @@ export default function InterestedTradeperson() {
     return <div className="text-gray-500">No interested tradespeople yet</div>;
   }
 
-  const handleViewProfile = () => {
-    router.push("/provider-profile");
-  };
-
   return (
     <div className="flex flex-col gap-6">
       {(interestedJobsData ?? []).map((interested: InterestedTradeperson) => (
@@ -96,7 +92,7 @@ export default function InterestedTradeperson() {
             {
               label: "View Profile",
               variant: "outline" as const,
-              onClick: handleViewProfile,
+              onClick: () => router.push(`/provider-profile?id=${interested.sender._id}&jobPostId=${interested.jobPost._id}`),
             },
             {
               label: "Accept Request",

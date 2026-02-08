@@ -118,10 +118,6 @@ export default function HiredJobs() {
     return <div className="text-gray-500">No history hired jobs yet</div>;
   }
 
-  const handleViewProfile = () => {
-    router.push("/provider-profile");
-  };
-
   const handleReviewClick = (review: ReviewData | null) => {
     if (review) {
       setSelectedReview(review);
@@ -166,7 +162,10 @@ export default function HiredJobs() {
               {
                 label: "View Profile",
                 variant: "outline" as const,
-                onClick: handleViewProfile,
+                onClick: () =>
+                  router.push(
+                    `/provider-profile?id=${job.sender._id}&jobPostId=${job.jobPost._id}`,
+                  ),
               },
               {
                 label: "Mark as Completed",

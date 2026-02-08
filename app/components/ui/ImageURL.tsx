@@ -1,5 +1,5 @@
 export const getImageUrl = (path: string | null | undefined): string => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://10.10.7.54:3000";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://10.10.7.23:3000";
 
   // Remove /api/v1 from the URL if it exists
   const baseUrl = apiUrl.replace(/\/api\/v1\/?$/, "");
