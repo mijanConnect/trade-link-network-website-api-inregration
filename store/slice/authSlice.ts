@@ -64,27 +64,50 @@ export const authApi = baseApi.injectEndpoints({
     // ---------------------------------------
     forgotPassword: builder.mutation({
       query: (data) => ({
-        url: "/auth/forgot-password",
+        url: "/auth/forget-password",
         method: "POST",
         body: data,
       }),
     }),
 
     // ---------------------------------------
+    // VERIFY EMAIL (FORGOT PASSWORD)
+    // Returns: { resetToken }
+    // ---------------------------------------
+    verifyEmail: builder.mutation({
+      query: (data) => ({
+        url: "/auth/verify-email",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response) => ({
+        resetToken:
+          response?.data?.resetToken ??
+          response?.data?.token ??
+          response?.resetToken ??
+          response?.token ??
+          response?.data,
+      }),
+    }),
+
+    // ---------------------------------------
     // RESET PASSWORD
-    // Uses resetToken in Authorization header
-    // Accepts: { newPassword, confirmPassword, headers }
+    // ---------------------------------------
+    // RESET PASSWORD
+    // Accepts: { newPassword, confirmPassword, resetToken }
+    // Sends resetToken in Authorization header (no Bearer prefix)
     // ---------------------------------------
     resetPassword: builder.mutation({
       query: (data) => {
-        const { headers, ...body } = data;
-        const finalHeaders = headers || {};
+        const { resetToken, ...body } = data;
 
         return {
           url: "/auth/reset-password",
           method: "POST",
           body,
-          headers: finalHeaders,
+          headers: {
+            Authorization: resetToken || "",
+          },
         };
       },
     }),
@@ -164,6 +187,7 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useForgotPasswordMutation,
+  useVerifyEmailMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,

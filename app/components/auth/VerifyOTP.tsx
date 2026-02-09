@@ -5,12 +5,19 @@ import { useRouter } from "next/navigation";
 import Button from "@/app/components/ui/Button";
 import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
+import {
+  useForgotPasswordMutation,
+  useVerifyEmailMutation,
+} from "@/store/slice/authSlice";
 
 export default function VerifyOTPPage() {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
+  const [error, setError] = useState("");
+  const [verifyEmail] = useVerifyEmailMutation();
+  const [forgotPassword] = useForgotPasswordMutation();
 
   const handleOtpChange = (index: number, value: string) => {
     const numericValue = value.replace(/\D/g, "");
@@ -37,27 +44,76 @@ export default function VerifyOTPPage() {
   const handleVerifyOTP = async () => {
     const otpString = otp.join("");
     if (!otpString || otpString.length < 6) {
-      console.error("Invalid OTP");
+      setError("Please enter the 6-digit code");
       return;
     }
 
     setIsLoading(true);
+    setError("");
     try {
-      // Handle verify OTP logic here
-      console.log("Verifying OTP:", otpString);
+      const email =
+        typeof window !== "undefined" ? localStorage.getItem("resetEmail") : "";
+
+      if (!email) {
+        setError("Email not found. Please request a new code.");
+        return;
+      }
+
+      const result = await verifyEmail({
+        email,
+        oneTimeCode: Number(otpString),
+      }).unwrap();
+
+      const resultAny = result as
+        | string
+        | { resetToken?: string; data?: { data?: string } | string }
+        | null;
+
+      const resetToken =
+        typeof resultAny === "string"
+          ? resultAny
+          : (resultAny?.resetToken ??
+            (typeof resultAny?.data === "string"
+              ? resultAny?.data
+              : resultAny?.data?.data));
+
+      if (!resetToken) {
+        setError("Reset token missing. Please request a new code.");
+        return;
+      }
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("resetToken", resetToken);
+      }
+
       // After OTP is verified, navigate to update-password page
       router.push("/update-password");
     } catch (error) {
-      console.error("OTP verification failed:", error);
+      const apiError = error as { data?: { message?: string } };
+      setError(apiError?.data?.message || "OTP verification failed.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleResendOTP = () => {
-    console.log("Resending OTP");
-    setOtp(["", "", "", "", "", ""]);
-    setResendTimer(60);
+  const handleResendOTP = async () => {
+    const email =
+      typeof window !== "undefined" ? localStorage.getItem("resetEmail") : "";
+
+    if (!email) {
+      setError("Email not found. Please request a new code.");
+      return;
+    }
+
+    setError("");
+    try {
+      await forgotPassword({ email }).unwrap();
+      setOtp(["", "", "", "", "", ""]);
+      setResendTimer(60);
+    } catch (err) {
+      const apiError = err as { data?: { message?: string } };
+      setError(apiError?.data?.message || "Failed to resend code.");
+    }
   };
 
   useEffect(() => {
@@ -77,6 +133,11 @@ export default function VerifyOTPPage() {
         header="Verify OTP"
         description="Enter the code sent to your email"
       />
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-[14px]">
+          {error}
+        </div>
+      )}
       <div className="w-full">
         <div className="flex flex-col items-center gap-4">
           <p>Enter Code</p>

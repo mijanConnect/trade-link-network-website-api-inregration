@@ -1,3 +1,4 @@
+import DynamicFAQ from "@/app/components/services/DynamicFAQ";
 import ServiceDetails from "@/app/components/services/ServiceDetails";
 import WhyUs from "@/app/components/services/WhyUs";
 import CTA from "@/app/components/ui/CTA";
@@ -10,6 +11,7 @@ export default function Page() {
         <ServiceDetails />
         <Steps />
         <WhyUs />
+        <DynamicFAQ />
         <CTA />
       </div>
     </>

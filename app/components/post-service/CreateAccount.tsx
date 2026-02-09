@@ -32,6 +32,7 @@ export default function CreateAccount({
     phone: string;
     password: string;
   } | null>(null);
+  const [isAccountVerified, setIsAccountVerified] = useState(false);
 
   const router = useRouter();
   const [createJobPost, { isLoading: isCreatingJobPost }] =
@@ -40,10 +41,9 @@ export default function CreateAccount({
 
   const isLoading = isCreatingJobPost;
 
-  // Check if user is already logged in or has created an account
+  // Check if user is already logged in or has verified their account
   const isUserLoggedIn = !!(profileData?.email || profileData?.name);
-  const hasCreatedAccount = accountData !== null;
-  const shouldShowJobDetails = isUserLoggedIn || hasCreatedAccount;
+  const shouldShowJobDetails = isUserLoggedIn || isAccountVerified;
 
   const handleSubmit = async () => {
     // if (!postcode || !email || !name || !phoneValue || !password) {
@@ -105,9 +105,7 @@ export default function CreateAccount({
       {/* Step 1: Create Account - Show until verified */}
       {!shouldShowJobDetails && (
         <NewAccount
-          onAccountVerified={() =>
-            setAccountData({ name: "", email: "", phone: "", password: "" })
-          }
+          onAccountVerified={() => setIsAccountVerified(true)}
           onDataChange={setAccountData}
         />
       )}

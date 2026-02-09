@@ -6,6 +6,7 @@ import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
 import AuthLoginDescription from "./AuthLoginDescription";
 import AuthLogo from "./AuthLogo";
+import { useResetPasswordMutation } from "@/store/slice/authSlice";
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function UpdatePasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resetPassword] = useResetPasswordMutation();
 
   const handleUpdatePassword = async () => {
     if (!newPassword || !confirmPassword) {
@@ -34,13 +36,35 @@ export default function UpdatePasswordPage() {
     setError("");
 
     try {
-      // Handle update password logic here
-      console.log("Updating password");
+      const resetToken =
+        typeof window !== "undefined" ? localStorage.getItem("resetToken") : "";
+
+      if (!resetToken) {
+        setError("Reset token not found. Please request a new code.");
+        return;
+      }
+
+      console.log(
+        "Resetting password with token:",
+        resetToken.substring(0, 20) + "...",
+      );
+
+      await resetPassword({
+        newPassword,
+        confirmPassword,
+        resetToken,
+      }).unwrap();
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("resetToken");
+        localStorage.removeItem("resetEmail");
+      }
+
       // After password is updated, navigate to success page
-      router.push("/update-password-success");
+      router.push("/login");
     } catch (error) {
-      setError("Failed to update password. Please try again.");
-      console.error("Password update failed:", error);
+      const apiError = error as { data?: { message?: string } };
+      setError(apiError?.data?.message || "Failed to update password.");
     } finally {
       setIsLoading(false);
     }
