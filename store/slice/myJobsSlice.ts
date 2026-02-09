@@ -151,6 +151,71 @@ export const myJobsApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["Categories"],
     }),
+    // ---------------------------------------
+    // CLOSE JOB POST
+    // ---------------------------------------
+    closeJobPost: builder.mutation({
+      query: (jobPostId: string) => ({
+        url: `/jobPosts/${jobPostId}/mine/close`,
+        method: "POST",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["PendingJobs"],
+    }),
+    // ---------------------------------------
+    // ACCEPT JOB REQUEST
+    // ---------------------------------------
+    acceptJobRequest: builder.mutation({
+      query: (jobRequestId: string) => ({
+        url: `/jobRequests/${jobRequestId}/accept`,
+        method: "POST",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["InterestedJobs"],
+    }),
+    // ---------------------------------------
+    // COMPLETE JOB POST
+    // ---------------------------------------
+    completeJobPost: builder.mutation({
+      query: (jobPostId: string) => ({
+        url: `/jobPosts/${jobPostId}/mine/complete`,
+        method: "POST",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["HiredJobs"],
+    }),
+    // ---------------------------------------
+    // CREATE JOB REVIEW
+    // ---------------------------------------
+    createJobReview: builder.mutation({
+      query: ({
+        jobRequestId,
+        rating,
+        comment,
+      }: {
+        jobRequestId: string;
+        rating: number;
+        comment: string;
+      }) => ({
+        url: `/jobRequests/${jobRequestId}/review`,
+        method: "POST",
+        body: { rating, comment },
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["HiredJobs"],
+    }),
   }),
 });
 
@@ -164,4 +229,8 @@ export const {
   useGetCategoriesServicesQuestionsQuery,
   useCreateCustomerMutation,
   useCreateJobPostMutation,
+  useCloseJobPostMutation,
+  useAcceptJobRequestMutation,
+  useCompleteJobPostMutation,
+  useCreateJobReviewMutation,
 } = myJobsApi;

@@ -1,6 +1,9 @@
 import Button from "../ui/Button";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCloseJobPostMutation } from "@/store/slice/myJobsSlice";
+import { toast } from "sonner";
+import ConfirmationModal from "@/components/ui/confirmation-modal";
 
 type JobAction = {
   id?: string;
@@ -27,6 +30,29 @@ export default function JobCard({
   actions,
 }: JobCardProps) {
   const router = useRouter();
+  const [closeJobPost, { isLoading: isClosing }] = useCloseJobPostMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleClosePostConfirm = async () => {
+    if (!id) {
+      toast.error("Job ID is missing");
+      setIsModalOpen(false);
+      return;
+    }
+
+    try {
+      await closeJobPost(id).unwrap();
+      toast.success("Job post closed successfully");
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Error closing job post:", error);
+      toast.error("Failed to close job post");
+    }
+  };
+
+  const handleOpenCloseModal = () => {
+    setIsModalOpen(true);
+  };
 
   const defaultViewDetailsAction = id
     ? {
@@ -55,12 +81,25 @@ export default function JobCard({
             variant: "outline",
             className:
               "border-red-500 text-red-500 hover:bg-red-600 hover:border-red-600 hover:text-white",
+            onClick: handleOpenCloseModal,
           },
           defaultViewDetailsAction,
         ];
 
   return (
-    <div className="flex flex-col gap-6 rounded-lg border border-primary bg-white hover:bg-gray-100 p-4 md:p-6 lg:gap-8 hover:shadow-[0_0_10px_rgba(0,0,0,0.10)] transform transition duration-300">
+    <>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Close Job Post?"
+        description="Are you sure you want to close this job post? This action cannot be undone."
+        confirmLabel="Close Post"
+        cancelLabel="Cancel"
+        isDangerous={true}
+        isLoading={isClosing}
+        onConfirm={handleClosePostConfirm}
+        onCancel={() => setIsModalOpen(false)}
+      />
+      <div className="flex flex-col gap-6 rounded-lg border border-primary bg-white hover:bg-gray-100 p-4 md:p-6 lg:gap-8 hover:shadow-[0_0_10px_rgba(0,0,0,0.10)] transform transition duration-300">
       <div>
         <h1 className="text-[22px] text-primaryText lg:text-[24px] font-semibold">
           {title}
@@ -101,6 +140,7 @@ export default function JobCard({
           })}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

@@ -9,9 +9,13 @@ import { useRouter } from "next/navigation";
 import {
   useGetHiredHistoryJobsQuery,
   useGetHiredRecentJobsQuery,
+  useCompleteJobPostMutation,
+  useCreateJobReviewMutation,
 } from "@/store/slice/myJobsSlice";
 import MyJobSkeleton from "../ui/skeleton/MyJobSkeleton";
 import { formatDateTime } from "@/app/utils/TimeDateFormat";
+import ConfirmationModal from "@/components/ui/confirmation-modal";
+import { toast } from "sonner";
 
 type ReviewData = {
   rating: number;
@@ -73,12 +77,23 @@ export default function HiredJobs() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isReviewViewModalOpen, setIsReviewViewModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewData | null>(null);
+  const [selectedReviewJobRequestId, setSelectedReviewJobRequestId] = useState<
+    string | null
+  >(null);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [selectedJobPostId, setSelectedJobPostId] = useState<string | null>(
+    null,
+  );
+  const [completeJobPost, { isLoading: isCompleting }] =
+    useCompleteJobPostMutation();
+  const [createJobReview, { isLoading: isSubmittingReview }] =
+    useCreateJobReviewMutation();
 
   const {
     data: hiredRecentJobs,
     error: recentJobsError,
     isLoading: recentJobsLoading,
-  } = useGetHiredRecentJobsQuery("COMPLETED");
+  } = useGetHiredRecentJobsQuery("NOT_COMPLETED");
 
   const {
     data: hiredHistoryJobs,
@@ -118,26 +133,99 @@ export default function HiredJobs() {
     return <div className="text-gray-500">No history hired jobs yet</div>;
   }
 
-  const handleReviewClick = (review: ReviewData | null) => {
+  const handleReviewClick = (
+    review: ReviewData | null,
+    jobRequestId?: string,
+  ) => {
     if (review) {
       setSelectedReview(review);
       setIsReviewViewModalOpen(true);
+      return;
+    }
+
+    if (!jobRequestId) {
+      toast.error("Job request ID is missing");
+      return;
     } else {
+      setSelectedReviewJobRequestId(jobRequestId);
       setIsReviewModalOpen(true);
     }
   };
 
-  const handleReviewSubmit = (rating: number, review: string) => {
-    console.log("Review submitted:", { rating, review });
-    // Add your submission logic here
+  const handleReviewSubmit = async (rating: number, review: string) => {
+    if (!selectedReviewJobRequestId) {
+      toast.error("Job request ID is missing");
+      return;
+    }
+
+    try {
+      await createJobReview({
+        jobRequestId: selectedReviewJobRequestId,
+        rating,
+        comment: review,
+      }).unwrap();
+      toast.success("Review submitted successfully");
+      setSelectedReviewJobRequestId(null);
+      setIsReviewModalOpen(false);
+    } catch (error: any) {
+      console.error("Error submitting review:", error);
+      const errorMessage = error?.data?.message || "Failed to submit review";
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleOpenCompleteModal = (jobPostId?: string) => {
+    if (!jobPostId) {
+      toast.error("Job post ID is missing");
+      return;
+    }
+
+    setSelectedJobPostId(jobPostId);
+    setIsCompleteModalOpen(true);
+  };
+
+  const handleConfirmComplete = async () => {
+    if (!selectedJobPostId) {
+      toast.error("Job post ID is missing");
+      setIsCompleteModalOpen(false);
+      return;
+    }
+
+    try {
+      await completeJobPost(selectedJobPostId).unwrap();
+      toast.success("Job marked as completed");
+      setIsCompleteModalOpen(false);
+      setSelectedJobPostId(null);
+    } catch (error) {
+      console.error("Error completing job post:", error);
+      toast.error("Failed to mark job as completed");
+    }
   };
 
   return (
     <>
+      <ConfirmationModal
+        isOpen={isCompleteModalOpen}
+        title="Mark as Completed?"
+        description="Are you sure you want to mark this job as completed?"
+        confirmLabel="Mark as Completed"
+        cancelLabel="Cancel"
+        isDangerous={false}
+        isLoading={isCompleting}
+        onConfirm={handleConfirmComplete}
+        onCancel={() => {
+          setIsCompleteModalOpen(false);
+          setSelectedJobPostId(null);
+        }}
+      />
       <ReviewModal
         isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setSelectedReviewJobRequestId(null);
+        }}
         onSubmit={handleReviewSubmit}
+        isLoading={isSubmittingReview}
       />
       <ReviewViewModal
         isOpen={isReviewViewModalOpen}
@@ -170,8 +258,7 @@ export default function HiredJobs() {
               {
                 label: "Mark as Completed",
                 variant: "primary" as const,
-                onClick: () =>
-                  console.log("Mark as Completed clicked for job:", job._id),
+                onClick: () => handleOpenCompleteModal(job.jobPost?._id),
               },
             ]}
           />
@@ -200,12 +287,17 @@ export default function HiredJobs() {
                     className:
                       "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
                     onClick: () =>
-                      handleReviewClick({
-                        rating: job?.review?.rating ?? 0,
-                        text: job?.review?.comment ?? "",
-                        reviewer: "You",
-                        date: formatDateTime(job.completedAt || job.updatedAt),
-                      }),
+                      handleReviewClick(
+                        {
+                          rating: job?.review?.rating ?? 0,
+                          text: job?.review?.comment ?? "",
+                          reviewer: "You",
+                          date: formatDateTime(
+                            job.completedAt || job.updatedAt,
+                          ),
+                        },
+                        job._id,
+                      ),
                   }
                 : {
                     id: `rating-${job._id}`,
@@ -213,7 +305,7 @@ export default function HiredJobs() {
                     variant: "outline" as const,
                     className:
                       "group border-[#FF8D28]! text-[#FF8D28]! hover:bg-[#FF8D28]! hover:text-white!",
-                    onClick: () => handleReviewClick(null),
+                    onClick: () => handleReviewClick(null, job._id),
                   },
               {
                 label: "Completed",
