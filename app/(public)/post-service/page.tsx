@@ -1,3 +1,4 @@
+"use client";
 import PostService from "@/app/components/post-service/PostService";
 import { Suspense } from "react";
 

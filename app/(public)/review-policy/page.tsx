@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetDisclaimerQuery } from "@/store/slice/termsSlice";
+import { useGetDisclaimerQuery } from "@/store/slice/categoriesSlice";
 
 export default function Page() {
   const { data, isLoading, error } = useGetDisclaimerQuery("review-policy");
