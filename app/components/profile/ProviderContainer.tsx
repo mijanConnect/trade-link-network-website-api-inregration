@@ -1,4 +1,4 @@
-import React from "react";
+
 import LeftPart from "./LeftPart";
 import RightSide from "./RightSide";
 
