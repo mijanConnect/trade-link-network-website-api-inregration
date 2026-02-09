@@ -10,19 +10,24 @@ export default function LeftPart() {
     <>
       <div className="max-w-sm min-w-full lg:min-w-[400px] p-4 lg:p-6 border rounded-lg border-stroke">
         {/* Profile Image or Avatar */}
-        {profileData?.profileImage ? (
-          <Image
-            src={getImageUrl(profileData.profileImage)}
-            alt="Profile"
-            width={150}
-            height={150}
-            className="rounded-full object-cover w-full h-auto"
-          />
-        ) : (
-          <div className="w-[150px] h-[150px] rounded-full bg-primary text-white flex items-center justify-center text-6xl font-bold">
-            {profileData?.name ? profileData.name.charAt(0).toUpperCase() : "U"}
-          </div>
-        )}
+        <div className="w-[150px] h-[150px]">
+          {profileData?.customer?.profileImage ? (
+            <Image
+              src={getImageUrl(profileData?.customer?.profileImage)}
+              alt="Profile"
+              width={150}
+              height={150}
+              className="rounded-full object-cover w-full h-full"
+              unoptimized
+            />
+          ) : (
+            <div className="w-full h-full rounded-full bg-primary text-white flex items-center justify-center text-6xl font-bold">
+              {profileData?.name
+                ? profileData.name.charAt(0).toUpperCase()
+                : "U"}
+            </div>
+          )}
+        </div>
         <h2 className="text-[22px] text-primaryText font-semibold mt-4">
           {profileData?.name || "User Profile"}
         </h2>

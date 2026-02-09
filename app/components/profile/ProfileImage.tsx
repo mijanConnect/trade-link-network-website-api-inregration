@@ -12,8 +12,8 @@ export default function ProfileImage() {
 
   const displayPreview = useMemo(() => {
     if (uploadedPreview) return uploadedPreview;
-    if (profileData?.profileImage) {
-      return getImageUrl(profileData.profileImage);
+    if (profileData?.customer?.profileImage) {
+      return getImageUrl(profileData.customer.profileImage);
     }
     return null;
   }, [profileData, uploadedPreview]);
@@ -35,6 +35,7 @@ export default function ProfileImage() {
           alt="Profile Image"
           fill
           className="rounded-full object-cover border"
+          unoptimized
         />
       ) : (
         <div className="w-full h-full rounded-full bg-primary text-white flex items-center justify-center text-6xl font-bold">
