@@ -27,12 +27,7 @@ export default function RightSide() {
             // onChange={(value) => handleChange("firstName", value)}
           />
 
-          <InputField
-            title="Phone Number"
-            type="tel"
-            placeholder="Enter phone number"
-          />
-
+          <p>Phone Number</p>
           <PhoneInput
             international
             countryCallingCodeEditable={false}

@@ -1,32 +1,47 @@
+import { useProfileQuery } from "@/store/slice/authSlice";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
+import { getImageUrl } from "../ui/ImageURL";
 
 export default function LeftPart() {
+  const { data: profileData } = useProfileQuery({});
+
   return (
     <>
       <div className="max-w-sm min-w-full lg:min-w-[400px] p-4 lg:p-6 border rounded-lg border-stroke">
-        <Image
-          src="/assets/avatar.png"
-          alt="Left Part Image"
-          width={150}
-          height={150}
-          className="rounded-full object-cover"
-        />
+        {/* Profile Image or Avatar */}
+        {profileData?.profileImage ? (
+          <Image
+            src={getImageUrl(profileData.profileImage)}
+            alt="Profile"
+            width={150}
+            height={150}
+            className="rounded-full object-cover w-full h-auto"
+          />
+        ) : (
+          <div className="w-[150px] h-[150px] rounded-full bg-primary text-white flex items-center justify-center text-6xl font-bold">
+            {profileData?.name ? profileData.name.charAt(0).toUpperCase() : "U"}
+          </div>
+        )}
         <h2 className="text-[22px] text-primaryText font-semibold mt-4">
-          ABC Company
+          {profileData?.name || "User Profile"}
         </h2>
         <div className="flex flex-col gap-3 mt-4">
           <div className="flex gap-3 items-center">
             <Mail className="w-5 h-5 text-primaryTextLight" />
-            <p>contact@abccompany.com</p>
+            <p>{profileData?.email || "N/A"}</p>
           </div>
           <div className="flex gap-3 items-center">
             <Phone className="w-5 h-5 text-primaryTextLight" />
-            <p className="text-[16px] text-primaryText">+44 789 *** *** 24</p>
+            <p className="text-[16px] text-primaryText">
+              {profileData?.phone || "N/A"}
+            </p>
           </div>
           <div className="flex gap-3 items-center">
             <MapPin className="w-5 h-5 text-primaryTextLight" />
-            <p className="text-[16px] text-primaryText">London, UK</p>
+            <p className="text-[16px] text-primaryText">
+              {profileData?.location || "N/A"}
+            </p>
           </div>
         </div>
       </div>

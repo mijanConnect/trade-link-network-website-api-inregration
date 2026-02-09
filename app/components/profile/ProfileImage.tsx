@@ -2,28 +2,45 @@
 
 import Image from "next/image";
 import { Camera } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useProfileQuery } from "@/store/slice/authSlice";
+import { getImageUrl } from "../ui/ImageURL";
 
 export default function ProfileImage() {
-  const [preview, setPreview] = useState<string>("/assets/avatar.png");
+  const { data: profileData } = useProfileQuery({});
+  const [uploadedPreview, setUploadedPreview] = useState<string | null>(null);
+
+  const displayPreview = useMemo(() => {
+    if (uploadedPreview) return uploadedPreview;
+    if (profileData?.profileImage) {
+      return getImageUrl(profileData.profileImage);
+    }
+    return null;
+  }, [profileData, uploadedPreview]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const imageUrl = URL.createObjectURL(file);
-    setPreview(imageUrl);
+    setUploadedPreview(imageUrl);
   };
 
   return (
     <div className="relative w-35 h-35">
-      {/* Profile Image */}
-      <Image
-        src={preview}
-        alt="Profile Image"
-        fill
-        className="rounded-full object-cover border"
-      />
+      {/* Profile Image or Avatar */}
+      {displayPreview ? (
+        <Image
+          src={displayPreview}
+          alt="Profile Image"
+          fill
+          className="rounded-full object-cover border"
+        />
+      ) : (
+        <div className="w-full h-full rounded-full bg-primary text-white flex items-center justify-center text-6xl font-bold">
+          {profileData?.name ? profileData.name.charAt(0).toUpperCase() : "U"}
+        </div>
+      )}
 
       {/* Upload Button */}
       <label className="absolute bottom-1 right-1 bg-primary p-2 rounded-full cursor-pointer shadow-md hover:bg-green-600 transition">
