@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -16,6 +16,14 @@ export default function CTA() {
     });
   }, []);
   const router = useRouter();
+  const handleScrollToCategory = useCallback(() => {
+    const target = document.getElementById("browse-category");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    router.push("/#browse-category");
+  }, [router]);
 
   return (
     <>
@@ -34,9 +42,7 @@ export default function CTA() {
               Ready to get started?
             </h1>
             <div data-aos="zoom-in-up" data-aos-delay="200">
-              <Button onClick={() => router.push("/post-service")}>
-                Post a Job
-              </Button>
+              <Button onClick={handleScrollToCategory}>Post a Job</Button>
             </div>
           </div>
         </div>

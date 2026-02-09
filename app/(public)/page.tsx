@@ -14,7 +14,7 @@ export default function Home() {
         <WorksFlow />
         <UseUs />
         <FAQ />
-        <div className="pt-20">
+        <div className="pt-8 lg:pt-20">
           <CTA />
         </div>
       </>

@@ -126,7 +126,7 @@ export default function ShowProfileModal({
                   setIsLoggedIn(false);
                   toast.success("Logged out successfully!");
                   setShowProfileModal(false);
-                  router.push("/login");
+                  router.push("/");
                 }}
                 className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-red-600"
               >

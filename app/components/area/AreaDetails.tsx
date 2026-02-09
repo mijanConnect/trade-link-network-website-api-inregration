@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import PopularServices from "./PopularServices";
 import { locations } from "./Location";
 import Button from "../ui/Button";
@@ -10,6 +11,16 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
   const selectedLocation = locations.find((loc) => loc.slug === areaId);
   const areas = selectedLocation?.areas || [];
   const router = useRouter();
+  const handleScrollToCategory = useCallback(() => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      const target = document.getElementById("browse-category");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    router.push("/#browse-category");
+  }, [router]);
   const popularTowns = [
     "Mansfield",
     "Chesterfield",
@@ -74,10 +85,7 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
             </ul>
           </div>
 
-          <Button
-            className="mt-6 lg:mt-10"
-            onClick={() => router.push("/post-service")}
-          >
+          <Button className="mt-6 lg:mt-10" onClick={handleScrollToCategory}>
             Post a Job in {selectedLocation?.name || "your area"}
           </Button>
 

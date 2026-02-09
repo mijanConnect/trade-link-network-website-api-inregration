@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { StepFour4, StepOne1, StepThree3, StepTwo2 } from "../Svg";
@@ -10,6 +10,16 @@ import { useRouter } from "next/navigation";
 export default function Steps() {
   const [iconSize, setIconSize] = useState(40);
   const router = useRouter();
+  const handleScrollToCategory = useCallback(() => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      const target = document.getElementById("browse-category");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+    }
+    router.push("/#browse-category");
+  }, [router]);
 
   useEffect(() => {
     AOS.init({
@@ -121,7 +131,7 @@ export default function Steps() {
         <div className="flex justify-center">
           <Button
             className="mt-6 lg:mt-15 mb-10 lg:mb-20"
-            onClick={() => router.push("/post-service")}
+            onClick={handleScrollToCategory}
           >
             Post a Job
           </Button>

@@ -107,7 +107,7 @@ export default function LoginPage() {
           {/* Button text changes based on loading state */}
         </Button>
       </div>
-      <div className="mt-6 text-center">
+      {/* <div className="mt-6 text-center">
         <p className="text-[15px]">
           Don&apos;t have an account?{" "}
           <span
@@ -117,7 +117,7 @@ export default function LoginPage() {
             Sign Up for free
           </span>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }
