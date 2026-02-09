@@ -2,11 +2,12 @@
 
 import React from "react";
 import InputField from "../ui/InputField";
+import Button from "../ui/Button";
 
 export default function ChangePassword() {
   return (
     <>
-      <div className="mt-6 lg:mt-12">
+      <div className="mt-6 lg:mt-8">
         <h3 className="text-[18px] text-primaryText font-bold">
           Change Password
         </h3>
@@ -29,6 +30,8 @@ export default function ChangePassword() {
             placeholder="Confirm new password"
           />
         </div>
+
+        <Button className="mt-6 lg:mt-8 w-full">Save Changes</Button>
       </div>
     </>
   );

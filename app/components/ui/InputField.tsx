@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 type InputFieldProps = {
@@ -24,6 +24,11 @@ export default function InputField({
 }: InputFieldProps) {
   const [value, setValue] = useState(initialValue);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Update value when initialValue prop changes
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

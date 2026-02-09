@@ -111,6 +111,16 @@ export default function ShowProfileModal({
 
               <button
                 onClick={() => {
+                  router.push("/trade-person");
+                  setShowProfileModal(false);
+                }}
+                className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
+              >
+                Switch to Tradeperson
+              </button>
+
+              <button
+                onClick={() => {
                   localStorage.removeItem("accessToken");
                   localStorage.removeItem("token");
                   setIsLoggedIn(false);
