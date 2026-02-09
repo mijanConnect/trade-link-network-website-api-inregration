@@ -72,6 +72,18 @@ export const categoriesApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["Categories"],
     }),
+    // ---------------------------------------
+    // GET DISCLAIMER
+    // ---------------------------------------
+    getDisclaimer: builder.query({
+      query: (type: string) => ({
+        url: `/disclaimers/${type}`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response,
+    }),
   }),
 });
 
@@ -81,4 +93,5 @@ export const {
   useGetCategoriesServicesQuestionsQuery,
   useCreateCustomerMutation,
   useCreateJobPostMutation,
+  useGetDisclaimerQuery,
 } = categoriesApi;
