@@ -127,6 +127,34 @@ export const authApi = baseApi.injectEndpoints({
 
       providesTags: ["Profile"],
     }),
+
+    // ---------------------------------------
+    // CREATE CUSTOMER
+    // ---------------------------------------
+    createCustomer: builder.mutation({
+      query: (data) => ({
+        url: "/customers/",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response) => response?.data ?? response,
+    }),
+
+    // ---------------------------------------
+    // VERIFY PHONE
+    // Returns: { accessToken }
+    // ---------------------------------------
+    verifyPhone: builder.mutation({
+      query: (data) => ({
+        url: "/auth/verify-phone",
+        method: "POST",
+        body: data,
+      }),
+      transformResponse: (response) => ({
+        accessToken: response?.data?.accessToken,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -140,4 +168,6 @@ export const {
   useChangePasswordMutation,
   useUpdateProfileMutation,
   useProfileQuery,
+  useCreateCustomerMutation,
+  useVerifyPhoneMutation,
 } = authApi;

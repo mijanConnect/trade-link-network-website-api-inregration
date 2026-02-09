@@ -38,6 +38,7 @@ export default function Questions({
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
+  const [isFinished, setIsFinished] = useState(false);
 
   // Early return if no questions are available
   if (!questionsData || questionsData.length === 0) {
@@ -55,6 +56,10 @@ export default function Questions({
   const isAnswerSelected = !!selectedAnswers[currentQuestionIndex];
 
   const handleNext = () => {
+    if (!isAnswerSelected) {
+      return; // Don't proceed if no answer is selected
+    }
+
     if (!isLastQuestion) {
       const newIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(newIndex);
@@ -75,6 +80,7 @@ export default function Questions({
         })
         .filter((item) => item.question !== "");
 
+      setIsFinished(true);
       onComplete?.(answeredQuestions);
     }
   };
@@ -108,7 +114,8 @@ export default function Questions({
                   <span>
                     {
                       questionsData[index].options.find(
-                        (opt) => opt.value === selectedAnswers[index],
+                        (opt) =>
+                          (opt.value || opt.label) === selectedAnswers[index],
                       )?.label
                     }
                   </span>
@@ -135,25 +142,27 @@ export default function Questions({
             }))
           }
         />
-        <div className="flex gap-4">
-          {!isFirstQuestion && (
+        {!isFinished && (
+          <div className="flex gap-4">
+            {!isFirstQuestion && (
+              <Button
+                variant="outline"
+                className="w-[100px]"
+                onClick={handleBack}
+              >
+                Back
+              </Button>
+            )}
             <Button
-              variant="outline"
+              variant="primary"
               className="w-[100px]"
-              onClick={handleBack}
+              onClick={handleNext}
+              disabled={!isAnswerSelected}
             >
-              Back
+              {isLastQuestion ? "Finish" : "Next"}
             </Button>
-          )}
-          <Button
-            variant="primary"
-            className="w-[100px]"
-            onClick={handleNext}
-            disabled={!isAnswerSelected}
-          >
-            {isLastQuestion ? "Finish" : "Next"}
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
     </>
   );

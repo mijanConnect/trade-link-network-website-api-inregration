@@ -6,7 +6,6 @@ import Button from "../ui/Button";
 import { CustomSelect } from "../ui/CustomSelect";
 import QuestionProgressBar from "./QuestionProgressBar";
 import Questions from "./Questions";
-import Checkbox from "./Checkbox";
 import CreateAccount from "./CreateAccount";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import {
@@ -162,7 +161,6 @@ export default function PostService() {
             />
           )}
         </div>
-        <Checkbox />
       </div>
     </>
   );
