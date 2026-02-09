@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import InputFieldOriginal from "../ui/InputField";
 import Button from "../ui/Button";
 
@@ -6,6 +7,7 @@ const InputField = InputFieldOriginal;
 
 import "react-phone-number-input/style.css";
 import { useCreateJobPostMutation } from "@/store/slice/categoriesSlice";
+import { useProfileQuery } from "@/store/slice/authSlice";
 import Checkbox from "./Checkbox";
 import NewAccount from "./NewAccount";
 
@@ -24,7 +26,6 @@ export default function CreateAccount({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [isAccountVerified, setIsAccountVerified] = useState(false);
   const [accountData, setAccountData] = useState<{
     name: string;
     email: string;
@@ -32,10 +33,17 @@ export default function CreateAccount({
     password: string;
   } | null>(null);
 
+  const router = useRouter();
   const [createJobPost, { isLoading: isCreatingJobPost }] =
     useCreateJobPostMutation();
+  const { data: profileData } = useProfileQuery({});
 
   const isLoading = isCreatingJobPost;
+
+  // Check if user is already logged in or has created an account
+  const isUserLoggedIn = !!(profileData?.email || profileData?.name);
+  const hasCreatedAccount = accountData !== null;
+  const shouldShowJobDetails = isUserLoggedIn || hasCreatedAccount;
 
   const handleSubmit = async () => {
     // if (!postcode || !email || !name || !phoneValue || !password) {
@@ -47,6 +55,13 @@ export default function CreateAccount({
     setSuccess(false);
 
     try {
+      // Get contact info from accountData (for new accounts) or profileData (for logged-in users)
+      const contactInfo = accountData || {
+        name: profileData?.name || "",
+        email: profileData?.email || "",
+        phone: profileData?.phone || "",
+      };
+
       const jobPostPayload = {
         service: serviceSelection,
         category: categoryId,
@@ -61,9 +76,9 @@ export default function CreateAccount({
         answeredQuestions: answeredQuestions || [],
         isUrgent: true,
         description: "Job post from Trade Link Network 2",
-        contactEmail: accountData?.email || "",
-        contactPhone: accountData?.phone || "",
-        clientName: accountData?.name || "",
+        contactEmail: contactInfo?.email || "",
+        contactPhone: contactInfo?.phone || "",
+        clientName: contactInfo?.name || "",
       };
 
       const jobPostResponse = await createJobPost(jobPostPayload).unwrap();
@@ -72,6 +87,11 @@ export default function CreateAccount({
       setSuccess(true);
       // Reset form
       setPostcode("");
+
+      // Redirect to my-jobs pending tab after 1 second
+      setTimeout(() => {
+        router.push("/my-jobs?tab=pending");
+      }, 1000);
     } catch (err) {
       console.error("Error:", err);
       const errorMessage =
@@ -83,15 +103,17 @@ export default function CreateAccount({
   return (
     <div className="mt-6 lg:mt-10 space-y-6 lg:space-y-10">
       {/* Step 1: Create Account - Show until verified */}
-      {!isAccountVerified && (
+      {!shouldShowJobDetails && (
         <NewAccount
-          onAccountVerified={() => setIsAccountVerified(true)}
+          onAccountVerified={() =>
+            setAccountData({ name: "", email: "", phone: "", password: "" })
+          }
           onDataChange={setAccountData}
         />
       )}
 
       {/* Step 2: Job Post Details - Show after account verified */}
-      {isAccountVerified && (
+      {shouldShowJobDetails && (
         <>
           <div>
             <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
