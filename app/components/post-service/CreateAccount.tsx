@@ -92,10 +92,11 @@ export default function CreateAccount({
       setTimeout(() => {
         router.push("/my-jobs?tab=pending");
       }, 1000);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error:", err);
       const errorMessage =
-        err instanceof Error ? err.message : "An error occurred";
+        err?.data?.message ||
+        (err instanceof Error ? err.message : "An error occurred");
       setError(errorMessage);
     }
   };
