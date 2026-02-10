@@ -9,49 +9,33 @@ import LeadDetailLoading from "@/app/components/trade-person/LeadDetailLoading";
 import LeadsFilterDrawer, {
   LeadsFilterButton,
 } from "@/app/components/trade-person/LeadsFilterDrawer";
-import { leadsMock } from "@/lib/trade-person/mock";
 import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
+import { useGetAllLeadsQuery, useGetSingleLeadQuery } from "@/store/slice/leadSlice";
+import {
+  transformApiLeadToMockLead,
+  getDateBucketFromISO,
+  getMinutesAgoFromISO,
+} from "@/lib/trade-person/leadUtils";
+import type { Lead as MockLead } from "@/lib/trade-person/mock";
 
 export type SortOption = "date" | "responses" | "price";
 export type DateFilterKey = "today" | "yesterday" | "last7";
-
-function getMinutesAgo(label: string): number {
-  const match = label.match(/(\d+)\s*(h|d)\s+ago/i);
-  if (!match) return Number.MAX_SAFE_INTEGER;
-  const value = Number(match[1]);
-  const unit = match[2]?.toLowerCase();
-  if (unit === "h") return value * 60;
-  if (unit === "d") return value * 24 * 60;
-  return Number.MAX_SAFE_INTEGER;
-}
-
-function getDateBucket(label: string): "today" | "yesterday" | "last7" | "older" {
-  const match = label.match(/(\d+)\s*(h|d)\s+ago/i);
-  if (!match) return "older";
-  const value = Number(match[1]);
-  const unit = match[2]?.toLowerCase();
-
-  if (unit === "h") {
-    return "today";
-  }
-
-  if (unit === "d") {
-    if (value === 1) return "yesterday";
-    if (value <= 7) return "last7";
-  }
-
-  return "older";
-}
 
 function parsePrice(priceLabel: string): number {
   const numeric = parseFloat(priceLabel.replace(/[^0-9.]/g, ""));
   return Number.isNaN(numeric) ? 0 : numeric;
 }
 
+// Helper function to validate MongoDB ObjectId format
+function isValidObjectId(id: string): boolean {
+  // MongoDB ObjectId is 24 hex characters
+  return /^[0-9a-fA-F]{24}$/.test(id);
+}
+
 export default function LeadDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const leadId = params.leadId as string;
+  const leadIdParam = params.leadId as string;
   const listRef = useRef<HTMLDivElement>(null);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -59,10 +43,34 @@ export default function LeadDetailPage() {
   const [dateFilters, setDateFilters] = useState<DateFilterKey[]>([]);
   const [showDetailOnMobile, setShowDetailOnMobile] = useState(false);
   const [mobileSelectedLeadId, setMobileSelectedLeadId] = useState<string | null>(
-    leadId || null,
+    leadIdParam || null,
   );
-  const [isLoading, setIsLoading] = useState(false);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Fetch all leads
+  const {
+    data: leadsData,
+    isLoading: isLoadingLeads,
+    error: leadsError,
+  } = useGetAllLeadsQuery({});
+
+  // Validate leadId - if it's not a valid ObjectId (like "lead_1"), we'll skip the query
+  const isValidLeadId = leadIdParam && isValidObjectId(leadIdParam);
+  const leadId = isValidLeadId ? leadIdParam : null;
+
+  // Fetch single lead for detail view - only if leadId is valid
+  const {
+    data: singleLeadData,
+    isLoading: isLoadingSingleLead,
+  } = useGetSingleLeadQuery(leadId || "", {
+    skip: !leadId,
+  });
+
+  // Transform API leads to mock format
+  const transformedLeads = useMemo(() => {
+    if (!leadsData?.data) return [];
+    return leadsData.data.map(transformApiLeadToMockLead);
+  }, [leadsData]);
 
   // Save scroll position before navigation
   const handleScroll = () => {
@@ -72,9 +80,14 @@ export default function LeadDetailPage() {
   };
 
   const filteredAndSortedLeads = useMemo(() => {
-    const matchesDateFilter = (label: string) => {
+    const matchesDateFilter = (lead: MockLead) => {
       if (dateFilters.length === 0) return true;
-      const bucket = getDateBucket(label);
+      
+      // Find the original API lead to get createdAt ISO string
+      const apiLead = leadsData?.data?.find((l) => l._id === lead.id);
+      if (!apiLead) return true;
+      
+      const bucket = getDateBucketFromISO(apiLead.createdAt);
 
       // Last 7 days should include today + yesterday + last7 bucket
       if (dateFilters.includes("last7")) {
@@ -89,11 +102,19 @@ export default function LeadDetailPage() {
       return false;
     };
 
-    const sorted = [...leadsMock]
-      .filter((lead) => matchesDateFilter(lead.createdAtLabel))
+    const sorted = [...transformedLeads]
+      .filter(matchesDateFilter)
       .sort((a, b) => {
         if (sortOption === "date") {
-          return getMinutesAgo(a.createdAtLabel) - getMinutesAgo(b.createdAtLabel);
+          // Find original API leads for createdAt comparison
+          const apiLeadA = leadsData?.data?.find((l) => l._id === a.id);
+          const apiLeadB = leadsData?.data?.find((l) => l._id === b.id);
+          
+          if (!apiLeadA || !apiLeadB) return 0;
+          
+          const minsA = getMinutesAgoFromISO(apiLeadA.createdAt);
+          const minsB = getMinutesAgoFromISO(apiLeadB.createdAt);
+          return minsA - minsB;
         }
         if (sortOption === "responses") {
           // 0 responses first, 3/3 last
@@ -106,14 +127,23 @@ export default function LeadDetailPage() {
       });
 
     return sorted;
-  }, [sortOption, dateFilters]);
+  }, [sortOption, dateFilters, transformedLeads, leadsData]);
 
-  const selectedLead = filteredAndSortedLeads.find((l) => l.id === leadId);
+  // Transform single lead if available
+  const selectedLeadTransformed = useMemo(() => {
+    if (!singleLeadData) return null;
+    return transformApiLeadToMockLead(singleLeadData);
+  }, [singleLeadData]);
+
+  // Use single lead if available, otherwise find from list (only if leadId is valid)
+  const selectedLead = selectedLeadTransformed || (leadId ? filteredAndSortedLeads.find((l) => l.id === leadId) : null);
   const defaultLeadId = filteredAndSortedLeads[0]?.id;
   const mobileSelectedLead =
     filteredAndSortedLeads.find((l) => l.id === mobileSelectedLeadId) ??
     selectedLead ??
     null;
+
+  const isLoading = isLoadingLeads || isLoadingSingleLead;
 
   // Handle loading state with timer when lead changes - smooth experience
   useEffect(() => {
@@ -123,44 +153,47 @@ export default function LeadDetailPage() {
       loadingTimerRef.current = null;
     }
 
+    // If data is already loaded, don't show loading
+    if (selectedLead || mobileSelectedLead || !leadId) {
+      return;
+    }
+
     // Start loading timer (200ms delay) - only show loading if data takes time
-    // This prevents UI jerk for fast data loads
     const showLoadingTimer = setTimeout(() => {
       // Only show loading if data is not ready yet
-      if (!selectedLead && !mobileSelectedLead) {
-        setIsLoading(true);
+      if (!selectedLead && !mobileSelectedLead && leadId) {
+        // Loading is handled by RTK Query
       }
     }, 200);
 
     loadingTimerRef.current = showLoadingTimer;
-
-    // Simulate data loading delay (in real app, this would be an API call)
-    // If data is ready quickly, hide loading immediately
-    const dataLoadTimer = setTimeout(() => {
-      setIsLoading(false);
-      if (loadingTimerRef.current) {
-        clearTimeout(loadingTimerRef.current);
-        loadingTimerRef.current = null;
-      }
-    }, 300); // Simulate 300ms data load time
 
     return () => {
       if (loadingTimerRef.current) {
         clearTimeout(loadingTimerRef.current);
         loadingTimerRef.current = null;
       }
-      clearTimeout(dataLoadTimer);
-      // Reset loading state on cleanup
-      setIsLoading(false);
     };
   }, [leadId, mobileSelectedLeadId, selectedLead, mobileSelectedLead]);
 
-  // Redirect to default lead if no lead selected or invalid lead
+  // Redirect to default lead if no lead selected, invalid lead, or invalid leadId format
   useEffect(() => {
-    if (!selectedLead && defaultLeadId) {
+    // Wait for leads to load before redirecting
+    if (isLoadingLeads) return;
+    
+    // If leadId is invalid (like "lead_1"), redirect to first valid lead
+    if (leadIdParam && !isValidObjectId(leadIdParam)) {
+      if (defaultLeadId) {
+        router.replace(`/trade-person/leads/${defaultLeadId}`);
+        return;
+      }
+    }
+    
+    // If no lead selected and we have a default, redirect
+    if (!selectedLead && defaultLeadId && leadId !== defaultLeadId) {
       router.replace(`/trade-person/leads/${defaultLeadId}`);
     }
-  }, [selectedLead, defaultLeadId, router]);
+  }, [selectedLead, defaultLeadId, router, leadIdParam, leadId, isLoadingLeads]);
 
   // Restore scroll position when lead changes
   useEffect(() => {
@@ -186,7 +219,30 @@ export default function LeadDetailPage() {
     setDateFilters([]);
   };
 
-  if (!selectedLead && !defaultLeadId && filteredAndSortedLeads.length === 0) {
+  // Show loading state
+  if (isLoadingLeads && transformedLeads.length === 0) {
+    return (
+      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
+        <div className="text-center">
+          <p className="text-slate-500">Loading leads...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (leadsError) {
+    return (
+      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500">Error loading leads. Please try again.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!selectedLead && !defaultLeadId && filteredAndSortedLeads.length === 0 && !isLoadingLeads) {
     return (
       <div className="flex h-[calc(100vh-120px)] items-center justify-center">
         <p className="text-slate-500">No leads found</p>
@@ -202,15 +258,21 @@ export default function LeadDetailPage() {
         <aside className="flex w-1/3 flex-col overflow-hidden border border-slate-200 bg-tradeBg">
           {/* Summary Header */}
           <div className="bg-primary px-5 py-6 text-white">
-            <h1 className="text-[24px] font-bold">1,050 matching leads</h1>
+            <h1 className="text-[24px] font-bold">
+              {leadsData?.pagination?.total || 0} matching leads
+            </h1>
             <div className="mt-3 flex flex-col gap-2 text-[13px]">
               <div className="flex items-center gap-2">
                 <Briefcase size={14} />
-                <span>02 Services</span>
+                <span>
+                  {new Set(transformedLeads.map((l) => l.title)).size} Services
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={14} />
-                <span>Avondale, Harare</span>
+                <span>
+                  {transformedLeads[0]?.customerAddress.split("•")[1]?.trim() || "Multiple locations"}
+                </span>
               </div>
             </div>
           </div>
@@ -223,7 +285,7 @@ export default function LeadDetailPage() {
           >
             <div className="mb-3 flex items-center justify-between rounded-md bg-white p-4">
               <span className="text-[13px] text-slate-600">
-                Showing {filteredAndSortedLeads.length} of {leadsMock.length} leads
+                Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || transformedLeads.length} leads
               </span>
               <LeadsFilterButton onClick={() => setIsFilterOpen(true)} />
             </div>
@@ -275,15 +337,21 @@ export default function LeadDetailPage() {
           <div className="flex h-full flex-col overflow-hidden border border-slate-200 bg-tradeBg">
             {/* Summary Header */}
             <div className="bg-primary px-4 py-5 text-white">
-              <h1 className="text-[20px] font-bold">1,050 matching leads</h1>
+              <h1 className="text-[20px] font-bold">
+                {leadsData?.pagination?.total || 0} matching leads
+              </h1>
               <div className="mt-3 flex flex-col gap-2 text-[12px]">
                 <div className="flex items-center gap-2">
                   <Briefcase size={14} />
-                  <span>02 Services</span>
+                  <span>
+                    {new Set(transformedLeads.map((l) => l.title)).size} Services
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin size={14} />
-                  <span>Avondale, Harare</span>
+                  <span>
+                    {transformedLeads[0]?.customerAddress.split("•")[1]?.trim() || "Multiple locations"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -292,7 +360,7 @@ export default function LeadDetailPage() {
             <div className="flex-1 overflow-y-auto px-3 py-4">
               <div className="mb-3 flex items-center justify-between rounded-md bg-white p-3">
                 <span className="text-[12px] text-slate-600">
-                  Showing {filteredAndSortedLeads.length} of {leadsMock.length} leads
+                  Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || transformedLeads.length} leads
                 </span>
                 <LeadsFilterButton onClick={() => setIsFilterOpen(true)} />
               </div>

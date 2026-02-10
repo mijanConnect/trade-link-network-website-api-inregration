@@ -7,6 +7,9 @@ import TradePersonBadge from "@/app/components/trade-person/TradePersonBadge";
 import type { Lead } from "@/lib/trade-person/mock";
 // import { CheckCircle2, User, AlertCircle, VerifiedIcon } from "lucide-react";
 import { FrequentUserIcon, UrgentIcon, VerifyIcon } from "./Svg";
+import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
+import { useState } from "react";
+import { toast } from "sonner";
 
 type Props = {
   lead: Lead | null;
@@ -108,6 +111,9 @@ function statusBanner(status: Lead["status"], source?: "leads" | "my-responses",
 }
 
 export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) {
+  const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
+  const [isProcessing, setIsProcessing] = useState(false);
+
   if (!lead) {
     return (
       <div className="flex h-[600px] items-center justify-center rounded-lg border border-slate-200 bg-white">
@@ -127,6 +133,27 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
 
   const displayPhone = isUnlocked ? fullPhone : maskedPhone;
   const displayEmail = isUnlocked ? fullEmail : maskedEmail;
+
+  const handlePurchase = async () => {
+    if (isPurchasing || isProcessing) return;
+    
+    try {
+      setIsProcessing(true);
+      const result = await purchaseLead(lead.id).unwrap();
+      
+      if (result.checkOutUrl) {
+        // Navigate to Stripe checkout
+        window.location.href = result.checkOutUrl;
+      } else {
+        toast.error("Failed to get checkout URL");
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error("Purchase error:", error);
+      toast.error("Failed to purchase lead. Please try again.");
+      setIsProcessing(false);
+    }
+  };
 
   return (
     <div className="space-y-4 bg-background">
@@ -172,12 +199,11 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
               <Button 
                 variant="primary" 
                 size="md" 
-                
-                disabled={lead.responsesCount >= 3}
+                onClick={handlePurchase}
+                disabled={lead.responsesCount >= 3 || isPurchasing || isProcessing}
                 className="cursor-pointer w-[100px]!"
-              
               >
-                Unlock
+                {isPurchasing || isProcessing ? "Processing..." : "Unlock"}
               </Button>
               <p className="mt-2 text-[14px] text-orange-500">
                 You only pay to unlock this lead. No subscription or ongoing fees.
