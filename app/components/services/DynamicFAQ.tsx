@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import {
   useGetCategoriesQuery,
   useGetCategoriesFaqsQuery,
@@ -64,6 +66,16 @@ export default function FAQ() {
 
   const [expandedLeftTop, setExpandedLeftTop] = useState<string | null>(null);
   const [expandedRightTop, setExpandedRightTop] = useState<string | null>(null);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
 
   // Get categories to find the selected one
   const { data: categories } = useGetCategoriesQuery({});
@@ -138,30 +150,51 @@ export default function FAQ() {
     <div className="bg-white">
       <div className="container mx-auto px-4 lg:px-0">
         <div className=" pt-10 pb-15 lg:pt-30 lg:pb-40">
-          <h2 className="text-center text-[20px] md:text-[40px] font-semibold text-primaryText">
+          <h2
+            data-aos="fade-up"
+            className="text-center text-[20px] md:text-[40px] font-semibold text-primaryText"
+          >
             Frequently <br /> Asked Questions
           </h2>
           <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-12 mt-4 lg:mt-20">
             {/* Left side */}
-            <div className="w-full lg:w-1/2">
+            <div
+              className="w-full lg:w-1/2"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
               {faqItemsLeftTop.map((item) => (
-                <FAQItem
+                <div
                   key={item._id}
-                  item={item}
-                  isExpanded={expandedLeftTop === item._id}
-                  onToggle={() => toggleExpand(item._id, "leftTop")}
-                />
+                  data-aos="fade-up"
+                  data-aos-delay={`${item._id.charCodeAt(0) * 5}`}
+                >
+                  <FAQItem
+                    item={item}
+                    isExpanded={expandedLeftTop === item._id}
+                    onToggle={() => toggleExpand(item._id, "leftTop")}
+                  />
+                </div>
               ))}
             </div>
             {/* Right side */}
-            <div className="w-full lg:w-1/2">
+            <div
+              className="w-full lg:w-1/2"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
               {faqItemsRightTop.map((item) => (
-                <FAQItem
+                <div
                   key={item._id}
-                  item={item}
-                  isExpanded={expandedRightTop === item._id}
-                  onToggle={() => toggleExpand(item._id, "rightTop")}
-                />
+                  data-aos="fade-up"
+                  data-aos-delay={`${item._id.charCodeAt(0) * 5}`}
+                >
+                  <FAQItem
+                    item={item}
+                    isExpanded={expandedRightTop === item._id}
+                    onToggle={() => toggleExpand(item._id, "rightTop")}
+                  />
+                </div>
               ))}
             </div>
           </div>

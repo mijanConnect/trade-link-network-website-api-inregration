@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import PopularServices from "./PopularServices";
 import { locations } from "./Location";
 import Button from "../ui/Button";
@@ -8,6 +10,15 @@ import { useRouter } from "next/navigation";
 import Steps from "../ui/Steps";
 
 export default function AreaDetails({ areaId }: { areaId: string }) {
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
   const selectedLocation = locations.find((loc) => loc.slug === areaId);
   const areas = selectedLocation?.areas || [];
   const router = useRouter();
@@ -35,10 +46,17 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
     <>
       <div className="container mx-auto px-4">
         <div className="mb-8 lg:mb-25">
-          <h2 className="text-[22px] lg:text-[40px] font-bold text-primaryText">
+          <h2
+            data-aos="fade-up"
+            className="text-[22px] lg:text-[40px] font-bold text-primaryText"
+          >
             Find Trusted Tradespeople in {selectedLocation?.name || "Your Area"}
           </h2>
-          <p className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10">
+          <p
+            data-aos="fade-up"
+            data-aos-delay="100"
+            className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10"
+          >
             Trade Link Network is a UK-wide marketplace that connects homeowners
             with verified tradespeople across{" "}
             {selectedLocation?.name || "your area"}. Whether you need
@@ -47,7 +65,7 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
             manage everything online
           </p>
 
-          <div className="mt-6">
+          <div className="mt-6" data-aos="fade-up" data-aos-delay="200">
             <h4 className="text-[22px] lg:text-[24px] font-semibold text-primaryText mb-2 lg:mb-2">
               Areas included in {selectedLocation?.name || "Your Area"}:
             </h4>
@@ -62,14 +80,18 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
               ))}
             </ul>
           </div>
-          <p className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10">
+          <p
+            data-aos="fade-up"
+            data-aos-delay="300"
+            className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10"
+          >
             We work with homeowners and tradespeople across the{" "}
             {selectedLocation?.name || "your area"}, including major centres
             such as Nottingham, Leicester, Derby and Northampton, as well as
             surrounding towns and rural areas.
           </p>
 
-          <div className="mt-6">
+          <div className="mt-6" data-aos="fade-up" data-aos-delay="400">
             <h4 className="text-[22px] lg:text-[24px] font-semibold text-primaryText mb-2 lg:mb-2">
               Popular towns we commonly see jobs from include:
             </h4>
