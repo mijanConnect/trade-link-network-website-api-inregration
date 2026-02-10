@@ -1,6 +1,82 @@
 import { baseApi } from "../baseApi";
 
 // ---------------------------------------
+// Types & Enums for "My Profile" API
+// ---------------------------------------
+export enum ProfessionalDocumentType {
+  DRIVING_LICENSE = "DRIVING_LICENSE",
+  PASSPORT = "PASSPORT",
+  INSURANCE = "INSURANCE",
+}
+
+export interface VerificationDocument {
+  documentType: ProfessionalDocumentType;
+  documentPath: string;
+  uploadedAt: string;
+  _id: string;
+}
+
+export interface ProfessionalLocation {
+  type: string;
+  coordinates: [number, number];
+}
+
+export interface ProfessionalProfile {
+  _id: string;
+  businessName: string;
+  businessImage: string;
+  location: ProfessionalLocation;
+  services: string[];
+  serviceRadiusKm: number;
+  address: string;
+  ratingAvg: number;
+  totalReviews: number;
+  createdAt: string;
+  updatedAt: string;
+  postCode: string;
+  user: string;
+  approveStatus: string;
+  verificationDocuments: VerificationDocument[];
+  about?: string;
+}
+
+export interface MyProfileUser {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: string;
+  isVerified: boolean;
+  isPhoneVerified: boolean;
+  isEmailVerified: boolean;
+  isDeleted: boolean;
+  authProviders: unknown[];
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+  professional?: ProfessionalProfile;
+}
+
+export interface MyProfileResponse {
+  success: boolean;
+  message: string;
+  data: MyProfileUser;
+}
+
+export interface UpdateMyProfilePayload {
+  businessName?: string;
+  businessImage?: string;
+  serviceRadiusKm?: string | number;
+  documentType?: ProfessionalDocumentType;
+  address?: string;
+  postCode?: string;
+  services?: string[];
+  phone?: string;
+  about?: string;
+}
+
+// ---------------------------------------
 // Types for "My Reviews" API
 // ---------------------------------------
 export interface MyReview {
@@ -36,13 +112,26 @@ export interface GetMyReviewsArgs {
 
 const myProfileSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMyProfile: builder.query({
+    // GET my profile
+    getMyProfile: builder.query<MyProfileResponse, void>({
       query: () => ({
-        url: "/profile",
+        url: "/users/profile",
         method: "GET",
       }),
+      transformResponse: (response: MyProfileResponse) => response,
     }),
 
+    // UPDATE my profile
+    updateMyProfile: builder.mutation<MyProfileResponse, UpdateMyProfilePayload>({
+      query: (data) => ({
+        url: "/profile",
+        method: "PATCH",
+        body: data,
+      }),
+      transformResponse: (response: MyProfileResponse) => response,
+    }),
+
+    // GET my reviews
     myReviews: builder.query<MyReviewsResponse, GetMyReviewsArgs | void>({
       query: (args) => {
         const params = new URLSearchParams();
@@ -63,4 +152,8 @@ const myProfileSlice = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMyProfileQuery, useMyReviewsQuery } = myProfileSlice;
+export const {
+  useGetMyProfileQuery,
+  useUpdateMyProfileMutation,
+  useMyReviewsQuery,
+} = myProfileSlice;
