@@ -9,10 +9,14 @@ import { toast } from "sonner";
 
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import { useProfileQuery } from "@/store/slice/authSlice";
+import {
+  useProfileQuery,
+  useUpdateUserProfileMutation,
+} from "@/store/slice/authSlice";
 
 export default function RightSide() {
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [formChanges, setFormChanges] = useState({
     name: "",
     email: "",
@@ -20,6 +24,7 @@ export default function RightSide() {
   });
 
   const { data: profileData } = useProfileQuery({});
+  const [updateUserProfile, { isLoading }] = useUpdateUserProfileMutation();
 
   // Compute display values - use changes if edited, otherwise use profile data
   const displayValues = useMemo(
@@ -39,14 +44,51 @@ export default function RightSide() {
   };
 
   const handleSaveChanges = async () => {
-    // TODO: Add API call to update profile
-    toast.success("Changes saved successfully!");
+    try {
+      // Prepare payload with current display values (actual values from input fields)
+      const payload: any = {
+        name: displayValues.name,
+        email: displayValues.email,
+        phone: displayValues.phone,
+      };
+
+      // Add profileImage if selected
+      if (selectedImage) {
+        payload.profileImage = selectedImage;
+      }
+
+      // Validate required fields
+      if (!payload.name || !payload.email) {
+        toast.error("Name and Email are required");
+        return;
+      }
+
+      console.log("Sending payload:", payload);
+
+      // Call the API
+      await updateUserProfile(payload).unwrap();
+
+      // Clear form changes after successful save
+      setFormChanges({
+        name: "",
+        email: "",
+        phone: "",
+      });
+
+      // Clear selected image after successful save
+      setSelectedImage(null);
+
+      toast.success("Changes saved successfully!");
+    } catch (error: any) {
+      console.error("Profile update error:", error);
+      toast.error(error?.data?.message || "Failed to save changes");
+    }
   };
 
   return (
     <>
       <div>
-        <ProfileImage />
+        <ProfileImage onImageSelect={setSelectedImage} />
         <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[600px]">
           <InputField
             title="Name"
@@ -86,8 +128,12 @@ export default function RightSide() {
             onChange={(value) => handleInputChange("email", value)}
           />
         </div>
-        <Button className="mt-6 lg:mt-8 w-full" onClick={handleSaveChanges}>
-          Save Changes
+        <Button
+          className="mt-6 lg:mt-8 w-full"
+          onClick={handleSaveChanges}
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving..." : "Save Changes"}
         </Button>
 
         <div>

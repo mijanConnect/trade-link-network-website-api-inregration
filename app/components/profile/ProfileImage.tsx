@@ -6,7 +6,11 @@ import { useState, useMemo } from "react";
 import { useProfileQuery } from "@/store/slice/authSlice";
 import { getImageUrl } from "../ui/ImageURL";
 
-export default function ProfileImage() {
+interface ProfileImageProps {
+  onImageSelect?: (file: File | null) => void;
+}
+
+export default function ProfileImage({ onImageSelect }: ProfileImageProps) {
   const { data: profileData } = useProfileQuery({});
   const [uploadedPreview, setUploadedPreview] = useState<string | null>(null);
 
@@ -24,6 +28,11 @@ export default function ProfileImage() {
 
     const imageUrl = URL.createObjectURL(file);
     setUploadedPreview(imageUrl);
+
+    // Notify parent component about the file selection
+    if (onImageSelect) {
+      onImageSelect(file);
+    }
   };
 
   return (

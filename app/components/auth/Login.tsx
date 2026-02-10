@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
-import Image from "next/image";
+// import Image from "next/image";
 import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
 import { useLoginMutation } from "@/store/slice/authSlice";
@@ -57,7 +57,7 @@ export default function LoginPage() {
         header="Welcome back"
         description="Login to your account below"
       />
-      <div>
+      {/* <div>
         <Button
           fullWidth
           variant="outline"
@@ -72,7 +72,7 @@ export default function LoginPage() {
           />
           Continue with Google
         </Button>
-      </div>
+      </div> */}
       <div className="w-full space-y-4">
         <InputField
           title="Email Address"

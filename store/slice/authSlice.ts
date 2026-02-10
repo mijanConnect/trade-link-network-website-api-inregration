@@ -164,6 +164,28 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     // ---------------------------------------
+    // UPDATE PROFILE (Form Data)
+    // POST to /users/profile with form-data
+    // Body: name, email, profileImage (file)
+    // ---------------------------------------
+    updateUserProfile: builder.mutation({
+      query: (data) => {
+        const formData = new FormData();
+        if (data.name) formData.append("name", data.name);
+        if (data.email) formData.append("email", data.email);
+        if (data.profileImage)
+          formData.append("profileImage", data.profileImage);
+
+        return {
+          url: "/users/profile",
+          method: "PATCH",
+          body: formData,
+        };
+      },
+      invalidatesTags: ["Profile"],
+    }),
+
+    // ---------------------------------------
     // VERIFY PHONE
     // Returns: { accessToken }
     // ---------------------------------------
@@ -191,6 +213,7 @@ export const {
   useResetPasswordMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,
+  useUpdateUserProfileMutation,
   useProfileQuery,
   useCreateCustomerMutation,
   useVerifyPhoneMutation,

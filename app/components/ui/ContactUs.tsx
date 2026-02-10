@@ -3,34 +3,36 @@
 import { useState } from "react";
 import Button from "./Button";
 import { X } from "lucide-react";
+import { useSendMessageMutation } from "@/store/slice/contactUsSlice";
+import { toast } from "sonner";
 
 interface ContactUsProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (payload: {
-    email: string;
-    title: string;
-    message: string;
-  }) => void;
 }
 
-export default function ContactUs({
-  isOpen,
-  onClose,
-  onSubmit,
-}: ContactUsProps) {
+export default function ContactUs({ isOpen, onClose }: ContactUsProps) {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const [sendMessage, { isLoading }] = useSendMessageMutation();
 
-  const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit({ email, title, message });
+  const handleSubmit = async () => {
+    try {
+      await sendMessage({
+        email,
+        issueTitle: title,
+        message,
+      }).unwrap();
+
+      toast.success("Message sent successfully!");
+      setEmail("");
+      setTitle("");
+      setMessage("");
+      onClose();
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to send message");
     }
-    setEmail("");
-    setTitle("");
-    setMessage("");
-    onClose();
   };
 
   const handleClose = () => {
@@ -100,9 +102,9 @@ export default function ContactUs({
             variant="primary"
             className="flex-1"
             onClick={handleSubmit}
-            disabled={!email || !title || !message}
+            disabled={!email || !title || !message || isLoading}
           >
-            Submit
+            {isLoading ? "Sending..." : "Submit"}
           </Button>
         </div>
       </div>

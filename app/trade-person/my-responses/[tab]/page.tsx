@@ -1,71 +1,9 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
-// import LeadDetailPanel from "@/app/components/trade-person/LeadDetailPanel";
-import { leadsMock, type Lead } from "@/lib/trade-person/mock";
-// import { Briefcase, MapPin } from "lucide-react";
-// import Link from "next/link";
-
-type JobCard = {
-  id: string;
-  type: "in-progress" | "completed" | "pending";
-  title: string;
-  dateLabel: string;
-  lead: Lead;
-};
-
-const jobCardsMock: JobCard[] = [
-  {
-    id: "job_1",
-    type: "in-progress",
-    title: "Job Request Accepted",
-    dateLabel: "17 Jan, 2020 - 08:45 pm",
-    lead: leadsMock[2]!,
-  },
-  {
-    id: "job_2",
-    type: "in-progress",
-    title: "Job Request Accepted",
-    dateLabel: "18 Jan, 2020 - 09:30 am",
-    lead: leadsMock[3]!,
-  },
-  {
-    id: "job_3",
-    type: "completed",
-    title: "Successfully Completed",
-    dateLabel: "17 Jan, 2026 - 08:45 pm",
-    lead: leadsMock[3]!,
-  },
-  {
-    id: "job_4",
-    type: "completed",
-    title: "Successfully Completed",
-    dateLabel: "15 Jan, 2026 - 02:20 pm",
-    lead: leadsMock[4]!,
-  },
-  {
-    id: "job_5",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "20 Jan, 2026 - 10:15 am",
-    lead: leadsMock[0]!,
-  },
-  {
-    id: "job_6",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "19 Jan, 2026 - 03:45 pm",
-    lead: leadsMock[1]!,
-  },
-  {
-    id: "job_7",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "18 Jan, 2026 - 11:30 am",
-    lead: leadsMock[5]!,
-  },
-];
+import { useEffect, useMemo } from "react";
+import { useGetMyLeadsQuery } from "@/store/slice/myLeadSlice";
+import { transformMyLeadToJobCard } from "@/lib/trade-person/myResponsesUtils";
 
 export default function MyResponsesTabPage() {
   const params = useParams();
@@ -73,9 +11,28 @@ export default function MyResponsesTabPage() {
   const tab = (params.tab as string) || "hired";
   const jobId = params.jobId as string | undefined;
 
-  const inProgressJobs = jobCardsMock.filter((j) => j.type === "in-progress");
-  const completedJobs = jobCardsMock.filter((j) => j.type === "completed");
-  const pendingJobs = jobCardsMock.filter((j) => j.type === "pending");
+  // Fetch all my leads
+  const { data: myLeadsData, isLoading } = useGetMyLeadsQuery({});
+
+  // Transform API data to JobCard format
+  const jobCards = useMemo(() => {
+    if (!myLeadsData?.data) return [];
+    return myLeadsData.data.map(transformMyLeadToJobCard);
+  }, [myLeadsData]);
+
+  // Filter jobs by type
+  const inProgressJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "in-progress"),
+    [jobCards]
+  );
+  const completedJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "completed"),
+    [jobCards]
+  );
+  const pendingJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "pending"),
+    [jobCards]
+  );
 
   const isPending = tab === "pending";
   const isHired = tab === "hired";
@@ -92,10 +49,10 @@ export default function MyResponsesTabPage() {
 
   // Redirect to default job if no job selected
   useEffect(() => {
-    if (!jobId && defaultJobId && (isPending || isHired)) {
+    if (!isLoading && !jobId && defaultJobId && (isPending || isHired)) {
       router.replace(`/trade-person/my-responses/${tab}/${defaultJobId}`);
     }
-  }, [jobId, defaultJobId, tab, router, isPending, isHired]);
+  }, [jobId, defaultJobId, tab, router, isPending, isHired, isLoading]);
 
   // const selectedJob = jobId ? jobCardsMock.find((j) => j.id === jobId) : null;
   // const selectedLead = selectedJob ? selectedJob.lead : null;

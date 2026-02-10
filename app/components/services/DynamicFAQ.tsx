@@ -1,71 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-
-const faqItems = [
-  {
-    id: 1,
-    question: "How does Trade Link Network work?",
-    answer:
-      "Trade Link Network connects homeowners with trusted, verified tradespeople. You post a job, suitable professionals are notified, and you can compare responses before choosing who to hire.",
-  },
-  {
-    id: 2,
-    question: "Is it free to post a job?",
-    answer: "Yes. Posting a job is free, and there’s no obligation to hire.",
-  },
-  {
-    id: 3,
-    question: "How many tradespeople will contact me?",
-    answer:
-      "You’ll typically receive responses from up to three suitable tradespeople, depending on availability in your area.",
-  },
-  {
-    id: 4,
-    question: "Are tradespeople vetted?",
-    answer:
-      "Yes. All tradespeople on Trade Link Network are vetted before joining and must follow our code of conduct.",
-  },
-  {
-    id: 5,
-    question: "What if my job isn’t urgent?",
-    answer:
-      "That’s no problem. You can post both urgent and non-urgent jobs and choose a suitable timeframe that works for you.",
-  },
-  {
-    id: 6,
-    question: "What if I’m not sure which service to choose?",
-    answer:
-      "You can still post a job and describe the issue. Tradespeople can advise on the correct service if needed.",
-  },
-  {
-    id: 7,
-    question: "Do you cover the whole UK?",
-    answer:
-      "Yes. Trade Link Network operates across England, Scotland, Wales and Northern Ireland.",
-  },
-  {
-    id: 8,
-    question: "Can I post commercial or business jobs?",
-    answer:
-      "Yes. Both residential and commercial jobs can be posted on the platform.",
-  },
-  {
-    id: 9,
-    question: "Am I obligated to accept a quote?",
-    answer:
-      "No. You’re free to compare responses and decide whether or not to proceed.",
-  },
-  {
-    id: 10,
-    question: "How do I communicate with tradespeople?",
-    answer:
-      "All communication is handled via email or phone through tradesmen that accept your job lead.",
-  },
-];
+import { useParams } from "next/navigation";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import {
+  useGetCategoriesQuery,
+  useGetCategoriesFaqsQuery,
+} from "@/store/slice/categoriesSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 interface FAQItemProps {
-  item: { id: number; question: string; answer: string };
+  item: { _id: string; question: string; answer: string };
   isExpanded: boolean;
   onToggle: () => void;
 }
@@ -115,14 +61,60 @@ function FAQItem({ item, isExpanded, onToggle }: FAQItemProps) {
 }
 
 export default function FAQ() {
-  const [expandedLeftTop, setExpandedLeftTop] = useState<number | null>(null);
-  const [expandedRightTop, setExpandedRightTop] = useState<number | null>(null);
+  const params = useParams();
+  const serviceId = params?.id as string | undefined;
+
+  const [expandedLeftTop, setExpandedLeftTop] = useState<string | null>(null);
+  const [expandedRightTop, setExpandedRightTop] = useState<string | null>(null);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
+
+  // Get categories to find the selected one
+  const { data: categories } = useGetCategoriesQuery({});
+  const selectedCategory =
+    categories?.find(
+      (c: { slug: string; _id: string; name: string }) => c.slug === serviceId,
+    ) || null;
+
+  const categoryId = selectedCategory?._id;
+
+  // Fetch FAQs for the selected category
+  const {
+    data: faqsData,
+    isLoading,
+    isError,
+  } = useGetCategoriesFaqsQuery(categoryId || skipToken);
+
+  // Handle different response formats
+  let faqItems: {
+    _id: string;
+    question: string;
+    answer: string;
+  }[] = [];
+
+  if (faqsData) {
+    if (Array.isArray(faqsData)) {
+      faqItems = faqsData;
+    } else if (faqsData.faqs && Array.isArray(faqsData.faqs)) {
+      faqItems = faqsData.faqs;
+    } else if (faqsData.data && Array.isArray(faqsData.data)) {
+      faqItems = faqsData.data;
+    }
+  }
 
   const splitIndex = Math.ceil(faqItems.length / 2);
   const faqItemsLeftTop = faqItems.slice(0, splitIndex);
   const faqItemsRightTop = faqItems.slice(splitIndex);
 
-  const toggleExpand = (id: number, section: "leftTop" | "rightTop") => {
+  const toggleExpand = (id: string, section: "leftTop" | "rightTop") => {
     if (section === "leftTop") {
       setExpandedLeftTop(expandedLeftTop === id ? null : id);
     } else if (section === "rightTop") {
@@ -130,34 +122,79 @@ export default function FAQ() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="bg-white">
+        <div className="container mx-auto px-4 lg:px-0">
+          <div className="pt-10 pb-15 lg:pt-30 lg:pb-40">
+            <p className="text-center">Loading FAQs...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !faqItems || faqItems.length === 0) {
+    return (
+      <div className="bg-white">
+        <div className="container mx-auto px-4 lg:px-0">
+          <div className="pt-10 pb-15 lg:pt-30 lg:pb-40">
+            <p className="text-center">No FAQs available</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white">
       <div className="container mx-auto px-4 lg:px-0">
         <div className=" pt-10 pb-15 lg:pt-30 lg:pb-40">
-          <h2 className="text-center text-[20px] md:text-[40px] font-semibold text-primaryText">
+          <h2
+            data-aos="fade-up"
+            className="text-center text-[20px] md:text-[40px] font-semibold text-primaryText"
+          >
             Frequently <br /> Asked Questions
           </h2>
           <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-12 mt-4 lg:mt-20">
             {/* Left side */}
-            <div className="w-full lg:w-1/2">
+            <div
+              className="w-full lg:w-1/2"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
               {faqItemsLeftTop.map((item) => (
-                <FAQItem
-                  key={item.id}
-                  item={item}
-                  isExpanded={expandedLeftTop === item.id}
-                  onToggle={() => toggleExpand(item.id, "leftTop")}
-                />
+                <div
+                  key={item._id}
+                  data-aos="fade-up"
+                  data-aos-delay={`${item._id.charCodeAt(0) * 5}`}
+                >
+                  <FAQItem
+                    item={item}
+                    isExpanded={expandedLeftTop === item._id}
+                    onToggle={() => toggleExpand(item._id, "leftTop")}
+                  />
+                </div>
               ))}
             </div>
             {/* Right side */}
-            <div className="w-full lg:w-1/2">
+            <div
+              className="w-full lg:w-1/2"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
               {faqItemsRightTop.map((item) => (
-                <FAQItem
-                  key={item.id}
-                  item={item}
-                  isExpanded={expandedRightTop === item.id}
-                  onToggle={() => toggleExpand(item.id, "rightTop")}
-                />
+                <div
+                  key={item._id}
+                  data-aos="fade-up"
+                  data-aos-delay={`${item._id.charCodeAt(0) * 5}`}
+                >
+                  <FAQItem
+                    item={item}
+                    isExpanded={expandedRightTop === item._id}
+                    onToggle={() => toggleExpand(item._id, "rightTop")}
+                  />
+                </div>
               ))}
             </div>
           </div>
