@@ -54,8 +54,9 @@ export function transformMyLeadToJobCard(myLead: MyLeadResponse): JobCard {
 }
 
 /**
- * Transform MyLeadResponse (with creator) to Lead format for display
+ * Transform MyLeadResponse (with receiver/creator) to Lead format for display
  * This is used when fetching a single job request detail
+ * Priority: receiver (if object) > creator > fallback
  */
 export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
   const jobDetails = myLead.jobPost.answeredQuestions.map((q) => ({
@@ -63,18 +64,26 @@ export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
     value: q.answerText,
   }));
 
+  // Get customer info - prioritize receiver if it's an object, otherwise use creator
+  const receiverInfo = typeof myLead.receiver === 'object' ? myLead.receiver : null;
+  const customerInfo = receiverInfo || myLead.creator;
+
   // Build highlights
   const highlights: LeadHighlight[] = [];
-  if (myLead.creator?.isPhoneVerified) {
+  if (customerInfo?.isPhoneVerified) {
     highlights.push("Verified Phone");
   }
-  // Note: isFrequent and isUrgent are not available in MyLeadResponse
-  // They would need to be added to the API response if needed
+  // Check if jobPost has isUrgent
+  if (myLead.jobPost.isUrgent) {
+    highlights.push("Urgent");
+  }
 
-  // Get customer info from creator
-  const customerName = myLead.creator?.name || "Customer";
-  const customerAddress = myLead.creator?.customer?.address || "";
-  const profileImage = myLead.creator?.customer?.profileImage;
+  // Get customer info from receiver or creator
+  const customerName = customerInfo?.name || "Customer";
+  const customerAddress = myLead.jobPost.locationName || customerInfo?.customer?.address || "";
+  const customerEmail = customerInfo?.email || "";
+  const customerPhone = customerInfo?.phone || "";
+  const profileImage = customerInfo?.customer?.profileImage;
   const customerAvatar = profileImage
     ? `${baseUrl}${profileImage}`
     : "/assets/avatar.png";
@@ -103,6 +112,8 @@ export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
     customerName,
     customerAddress,
     customerAvatar,
+    customerEmail,
+    customerPhone, // Add phone number
     createdAtLabel: formatTimeAgo(myLead.createdAt),
     title: myLead.jobPost.service.name,
     summary,
@@ -111,7 +122,7 @@ export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
     priceLabel: "£0.00", // Price not available in job request response
     highlights,
     jobDetails,
-    responsesCount: 0, // Not available in job request response
+    responsesCount: myLead.jobPost.purchasedCount || 0, // Use purchasedCount from jobPost
   };
 }
 

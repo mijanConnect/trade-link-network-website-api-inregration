@@ -24,6 +24,10 @@ export interface JobPost {
     _id: string;
     service: Service;
     answeredQuestions: AnsweredQuestion[];
+    jobNumber?: string;
+    locationName?: string;
+    purchasedCount?: number;
+    isUrgent?: boolean;
 }
 
 export interface Creator {
@@ -48,7 +52,7 @@ export interface MyLeadResponse {
     _id: string;
     jobPost: JobPost;
     sender: string;
-    receiver: string;
+    receiver: string | Creator; // Can be string ID or full Creator object
     creator?: Creator;
     status: "PENDING" | "ACCEPTED" | "REJECTED" | "COMPLETED";
     completedAt: string | null;

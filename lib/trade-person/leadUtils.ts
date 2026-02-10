@@ -128,6 +128,7 @@ export function transformApiLeadToMockLead(apiLead: ApiLead): MockLead {
     customerName: apiLead.creator?.name || "",
     customerAddress,
     customerAvatar,
+    customerEmail: apiLead.creator?.email || "",
     createdAtLabel: formatTimeAgo(apiLead.createdAt || ""),
     title: apiLead.service?.name || "",
     summary,

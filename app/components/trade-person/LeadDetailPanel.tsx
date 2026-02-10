@@ -125,13 +125,24 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
   const isUnlocked = source === "my-responses";
   const showUnlockButton = source === "leads" && lead.status === "locked";
   
-  // Mock phone and email - in real app, these would come from the lead data
-  const fullPhone = "+44 789 123 4567";
-  const fullEmail = "example.customer21@gmail.com";
-  const maskedPhone = "+44 789 *** *** 24";
-  const maskedEmail = "example*****21@gmail.com";
-
+  // Get phone and email from lead data (lead is guaranteed to be non-null here)
+  // Type assertion needed temporarily until TypeScript server refreshes
+  const leadWithContact = lead as typeof lead & { customerEmail?: string; customerPhone?: string };
+  const customerEmail = leadWithContact.customerEmail || "";
+  const customerPhone = leadWithContact.customerPhone || "";
+  
+  // For unlocked view (my-responses), show full contact info
+  // For locked view (leads), show masked info
+  const fullPhone = customerPhone || "+44 789 123 4567";
+  const maskedPhone = customerPhone 
+    ? customerPhone.replace(/(.{4})(.*)(.{4})/, "$1*****$3")
+    : "+44 789 *** *** 24";
   const displayPhone = isUnlocked ? fullPhone : maskedPhone;
+  
+  const fullEmail = customerEmail;
+  const maskedEmail = customerEmail 
+    ? customerEmail.replace(/(.{3})(.*)(@.*)/, "$1*****$3")
+    : "example*****21@gmail.com";
   const displayEmail = isUnlocked ? fullEmail : maskedEmail;
 
   const handlePurchase = async () => {
@@ -183,7 +194,9 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
             <div className="flex items-center gap-2">
               <span className="text-slate-600">Phone:</span>
               <span className="font-medium text-primaryText">{displayPhone}</span>
-              <TradePersonBadge label="Verified" tone="success" />
+              {lead.highlights.includes("Verified Phone") && (
+                <TradePersonBadge label="Verified" tone="success" />
+              )}
             </div>
             <div className="flex items-center gap-2">
               <span className="text-slate-600">Email:</span>
@@ -210,7 +223,17 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
               </p>
             </div>
           ) : (
-            <Button variant="primary" size="md" >
+            <Button 
+              variant="primary" 
+              size="md"
+              onClick={() => {
+                if (customerEmail) {
+                  window.location.href = `mailto:${customerEmail}`;
+                } else {
+                  toast.error("Email address not available");
+                }
+              }}
+            >
               Contact {lead.customerName.split(" ")[0]}
             </Button>
           )}
