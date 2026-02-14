@@ -1,73 +1,14 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import LeadDetailPanel from "@/app/components/trade-person/LeadDetailPanel";
 import LeadDetailLoading from "@/app/components/trade-person/LeadDetailLoading";
-import { leadsMock } from "@/lib/trade-person/mock";
 import type { Lead } from "@/lib/trade-person/mock";
 import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
-type JobCard = {
-  id: string;
-  type: "in-progress" | "completed" | "pending";
-  title: string;
-  dateLabel: string;
-  leadId: string;
-};
-
-const jobCardsMock: JobCard[] = [
-  {
-    id: "job_1",
-    type: "in-progress",
-    title: "Job Request Accepted",
-    dateLabel: "17 Jan, 2020 - 08:45 pm",
-    leadId: "lead_3",
-  },
-  {
-    id: "job_2",
-    type: "in-progress",
-    title: "Job Request Accepted",
-    dateLabel: "18 Jan, 2020 - 09:30 am",
-    leadId: "lead_4",
-  },
-  {
-    id: "job_3",
-    type: "completed",
-    title: "Successfully Completed",
-    dateLabel: "17 Jan, 2026 - 08:45 pm",
-    leadId: "lead_4",
-  },
-  {
-    id: "job_4",
-    type: "completed",
-    title: "Successfully Completed",
-    dateLabel: "15 Jan, 2026 - 02:20 pm",
-    leadId: "lead_5",
-  },
-  {
-    id: "job_5",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "20 Jan, 2026 - 10:15 am",
-    leadId: "lead_1",
-  },
-  {
-    id: "job_6",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "19 Jan, 2026 - 03:45 pm",
-    leadId: "lead_2",
-  },
-  {
-    id: "job_7",
-    type: "pending",
-    title: "Response Sent",
-    dateLabel: "18 Jan, 2026 - 11:30 am",
-    leadId: "lead_6",
-  },
-];
+import { useGetMyLeadsQuery, useGetMyLeadDetailsQuery } from "@/store/slice/myLeadSlice";
+import { transformMyLeadToJobCard, transformMyLeadDetailToLead, type JobCard } from "@/lib/trade-person/myResponsesUtils";
 
 export default function MyResponsesJobPage() {
   const params = useParams();
@@ -75,14 +16,44 @@ export default function MyResponsesJobPage() {
   const tab = (params.tab as string) || "hired";
   const jobId = params.jobId as string;
 
-  const selectedJob = jobCardsMock.find((j) => j.id === jobId);
-  const selectedLead = selectedJob
-    ? leadsMock.find((l) => l.id === selectedJob.leadId)
-    : null;
+  // Fetch all my leads
+  const { data: myLeadsData, isLoading: isLoadingMyLeads } = useGetMyLeadsQuery({});
 
-  const inProgressJobs = jobCardsMock.filter((j) => j.type === "in-progress");
-  const completedJobs = jobCardsMock.filter((j) => j.type === "completed");
-  const pendingJobs = jobCardsMock.filter((j) => j.type === "pending");
+  // Transform API data to JobCard format
+  const jobCards = useMemo(() => {
+    if (!myLeadsData?.data) return [];
+    return myLeadsData.data.map(transformMyLeadToJobCard);
+  }, [myLeadsData]);
+
+  // Filter jobs by type
+  const inProgressJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "in-progress"),
+    [jobCards]
+  );
+  const completedJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "completed"),
+    [jobCards]
+  );
+  const pendingJobs = useMemo(
+    () => jobCards.filter((j) => j.type === "pending"),
+    [jobCards]
+  );
+
+  const selectedJob = jobCards.find((j) => j.id === jobId);
+
+  // Fetch job request details for the selected job
+  const {
+    data: jobRequestData,
+    isLoading: isLoadingLead,
+  } = useGetMyLeadDetailsQuery(jobId || "", {
+    skip: !jobId,
+  });
+
+  // Transform job request to Lead format
+  const selectedLead = useMemo(() => {
+    if (!jobRequestData) return null;
+    return transformMyLeadDetailToLead(jobRequestData);
+  }, [jobRequestData]);
 
   const isPending = tab === "pending";
   const isHired = tab === "hired";
@@ -99,17 +70,40 @@ export default function MyResponsesJobPage() {
   const prevTabRef = useRef<string>(tab);
 
   const mobileSelectedJob = mobileSelectedJobId
-    ? jobCardsMock.find((j) => j.id === mobileSelectedJobId)
-    : null;
-  const mobileSelectedLead: Lead | null = mobileSelectedJob
-    ? leadsMock.find((l) => l.id === mobileSelectedJob.leadId) ?? null
+    ? jobCards.find((j) => j.id === mobileSelectedJobId)
     : null;
 
+  // Fetch job request details for mobile selected job
+  const {
+    data: mobileJobRequestData,
+    isLoading: isLoadingMobileLead,
+  } = useGetMyLeadDetailsQuery(mobileSelectedJobId || "", {
+    skip: !mobileSelectedJobId,
+  });
+
+  const mobileSelectedLead: Lead | null = useMemo(() => {
+    if (!mobileJobRequestData) return null;
+    return transformMyLeadDetailToLead(mobileJobRequestData);
+  }, [mobileJobRequestData]);
+
   useEffect(() => {
-    if (!selectedJob || (!isPending && !isHired)) {
-      router.replace("/trade-person/my-responses/hired");
+    if (!isLoadingMyLeads && (!selectedJob || (!isPending && !isHired))) {
+      // If no jobs available, redirect to hired tab
+      if (jobCards.length === 0) {
+        router.replace("/trade-person/my-responses/hired");
+        return;
+      }
+      // If selected job not found, redirect to first available job
+      const firstJob = isHired
+        ? [...inProgressJobs, ...completedJobs][0]
+        : pendingJobs[0];
+      if (firstJob) {
+        router.replace(`/trade-person/my-responses/${tab}/${firstJob.id}`);
+      } else {
+        router.replace("/trade-person/my-responses/hired");
+      }
     }
-  }, [selectedJob, isPending, isHired, router]);
+  }, [selectedJob, isPending, isHired, router, isLoadingMyLeads, jobCards, inProgressJobs, completedJobs, pendingJobs, tab]);
 
   // Handle tab change with smooth loading - no UI jump
   useEffect(() => {
@@ -159,36 +153,46 @@ export default function MyResponsesJobPage() {
     // This prevents UI jerk for fast data loads
     const showLoadingTimer = setTimeout(() => {
       // Only show loading if data is not ready yet
-      if (!selectedLead && !mobileSelectedLead) {
+      if (isLoadingLead || isLoadingMobileLead) {
         setIsLoading(true);
       }
     }, 200);
 
     loadingTimerRef.current = showLoadingTimer;
 
-    // Simulate data loading delay (in real app, this would be an API call)
-    // If data is ready quickly, hide loading immediately
-    const dataLoadTimer = setTimeout(() => {
+    // Hide loading when data is ready
+    if (!isLoadingLead && !isLoadingMobileLead) {
       setIsLoading(false);
       if (loadingTimerRef.current) {
         clearTimeout(loadingTimerRef.current);
         loadingTimerRef.current = null;
       }
-    }, 300); // Simulate 300ms data load time
+    }
 
     return () => {
       if (loadingTimerRef.current) {
         clearTimeout(loadingTimerRef.current);
         loadingTimerRef.current = null;
       }
-      clearTimeout(dataLoadTimer);
       // Reset loading state on cleanup
       setIsLoading(false);
     };
-  }, [jobId, mobileSelectedJobId, selectedLead, mobileSelectedLead]);
+  }, [jobId, mobileSelectedJobId, isLoadingLead, isLoadingMobileLead]);
 
-  if (!selectedJob || !selectedLead) {
-    return null;
+  if (isLoadingMyLeads) {
+    return (
+      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!selectedJob) {
+    return (
+      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
+        <p className="text-slate-500">Job not found</p>
+      </div>
+    );
   }
 
   return (
@@ -257,8 +261,6 @@ export default function MyResponsesJobPage() {
                     </h3>
                     <div className="space-y-3">
                       {inProgressJobs.map((job) => {
-                        const lead = leadsMock.find((l) => l.id === job.leadId);
-                        if (!lead) return null;
                         return (
                           <div key={job.id} className="space-y-4">
                             <Link
@@ -304,8 +306,6 @@ export default function MyResponsesJobPage() {
                     </h3>
                     <div className="space-y-3">
                       {completedJobs.map((job) => {
-                        const lead = leadsMock.find((l) => l.id === job.leadId);
-                        if (!lead) return null;
                         return (
                           <div key={job.id} className="space-y-4">
                             <Link
@@ -325,7 +325,7 @@ export default function MyResponsesJobPage() {
                                     {job.title}
                                   </span>
                                   <span className="text-[11px] text-slate-500">
-                                    {job.dateLabel}
+                                    {job.completedAt ? `Completed: ${job.dateLabel}` : job.dateLabel}
                                   </span>
                                 </div>
                                 <div className="mt-2 text-[14px] font-semibold text-primaryText">
@@ -351,10 +351,8 @@ export default function MyResponsesJobPage() {
               <>
                 {pendingJobs.length > 0 ? (
                   <div className="space-y-3">
-                    {pendingJobs.map((job) => {
-                      const lead = leadsMock.find((l) => l.id === job.leadId);
-                      if (!lead) return null;
-                      return (
+                      {pendingJobs.map((job) => {
+                        return (
                         <div key={job.id} className="space-y-4">
                           <Link
                             key={job.id}
@@ -475,8 +473,6 @@ export default function MyResponsesJobPage() {
                       </h3>
                       <div className="space-y-3">
                         {inProgressJobs.map((job) => {
-                          const lead = leadsMock.find((l) => l.id === job.leadId);
-                          if (!lead) return null;
                           return (
                             <button
                               key={job.id}
@@ -520,8 +516,6 @@ export default function MyResponsesJobPage() {
                       </h3>
                       <div className="space-y-3">
                         {completedJobs.map((job) => {
-                          const lead = leadsMock.find((l) => l.id === job.leadId);
-                          if (!lead) return null;
                           return (
                             <button
                               key={job.id}
@@ -541,7 +535,7 @@ export default function MyResponsesJobPage() {
                                   {job.title}
                                 </span>
                                 <span className="text-[11px] text-slate-500">
-                                  {job.dateLabel}
+                                  {job.completedAt ? `Completed: ${job.dateLabel}` : job.dateLabel}
                                 </span>
                               </div>
                               <div className="mt-2 text-[13px] font-semibold text-primaryText">
@@ -566,8 +560,6 @@ export default function MyResponsesJobPage() {
                     <div>
                       <div className="space-y-3">
                       {pendingJobs.map((job) => {
-                        const lead = leadsMock.find((l) => l.id === job.leadId);
-                        if (!lead) return null;
                         return (
                           <button
                             key={job.id}

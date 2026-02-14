@@ -1,9 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import type { Lead } from "@/lib/trade-person/mock";
 // import TradePersonBadge from "@/app/components/trade-person/TradePersonBadge";
 // import { CheckCircle2, User, AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { FrequentUserIcon, UrgentIcon, VerifyIcon } from "./Svg";
+import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
+import { useState } from "react";
+import React from "react";
+import { toast } from "sonner";
 
 type Props = {
   lead: Lead;
@@ -23,19 +28,36 @@ function getResponseStatus(responsesCount: number): string {
   return `${responsesCount}/3`;
 }
 
-export default function LeadCard({ lead, selected }: Props) {
-  const router = useRouter();
+function LeadCard({ lead, selected }: Props) {
+  const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
+  const [isProcessing, setIsProcessing] = useState(false);
   const isLeadAvailable = lead.responsesCount < 3;
 
-  const handleCheckoutClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCheckoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isLeadAvailable) return;
-    router.push(`/trade-person/checkout/${lead.id}`);
+    if (!isLeadAvailable || isPurchasing || isProcessing) return;
+    
+    try {
+      setIsProcessing(true);
+      const result = await purchaseLead(lead.id).unwrap();
+      
+      if (result.checkOutUrl) {
+        // Navigate to Stripe checkout
+        window.location.href = result.checkOutUrl;
+      } else {
+        toast.error("Failed to get checkout URL");
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error("Purchase error:", error);
+      toast.error("Failed to purchase lead. Please try again.");
+      setIsProcessing(false);
+    }
   };
 
   return (
-    <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-sm  bg-white shadow-sm">
       <div
         className={`w-full p-4 text-left transition ${selected ? "bg-white border-2 border-primary" : ""}`}
       >
@@ -81,8 +103,8 @@ export default function LeadCard({ lead, selected }: Props) {
       <button
         type="button"
         onClick={handleCheckoutClick}
-        disabled={!isLeadAvailable}
-        className={`flex w-full items-center justify-between bg-primary px-4 py-5 text-left text-white transition ${isLeadAvailable ? "hover:bg-slate-800 cursor-pointer" : "cursor-not-allowed opacity-60"}`}
+        disabled={!isLeadAvailable || isPurchasing || isProcessing}
+        className={`flex w-full items-center justify-between bg-primary px-4 py-5 text-left text-white transition ${isLeadAvailable && !isPurchasing && !isProcessing ? "hover:bg-slate-800 cursor-pointer" : "cursor-not-allowed opacity-60"}`}
       >
         <div className="flex items-center gap-3">
           {/* three vertical lines icon */}
@@ -92,7 +114,11 @@ export default function LeadCard({ lead, selected }: Props) {
             <span className="w-0.5 h-4 rounded-full bg-white" />
           </div>
           <div className="text-[12px] font-semibold">
-            {isLeadAvailable ? getResponseStatus(lead.responsesCount) : "Lead not available"}
+            {isPurchasing || isProcessing 
+              ? "Processing..." 
+              : isLeadAvailable 
+                ? getResponseStatus(lead.responsesCount) 
+                : "Lead not available"}
           </div>
         </div>
 
@@ -102,3 +128,5 @@ export default function LeadCard({ lead, selected }: Props) {
   );
 }
 
+// Memoize to prevent unnecessary re-renders when parent re-renders
+export default React.memo(LeadCard);
