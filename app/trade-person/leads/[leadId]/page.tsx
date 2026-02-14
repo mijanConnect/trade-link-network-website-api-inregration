@@ -52,7 +52,7 @@ export default function LeadDetailPage() {
     data: leadsData,
     isLoading: isLoadingLeads,
     error: leadsError,
-  } = useGetAllLeadsQuery({});
+  } = useGetAllLeadsQuery();
 
   // Validate leadId - if it's not a valid ObjectId (like "lead_1"), we'll skip the query
   const isValidLeadId = leadIdParam && isValidObjectId(leadIdParam);

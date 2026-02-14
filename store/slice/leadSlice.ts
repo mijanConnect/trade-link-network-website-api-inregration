@@ -85,15 +85,13 @@ export interface LeadPurchaseResponse {
 const leadSlice = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllLeads: builder.query<
-          { data: Lead[]; pagination: Pagination}>({
-            query: (args) => {
-             
-    
-                
+          { data: Lead[]; pagination: Pagination},
+          void
+        >({
+            query: () => {
                 return {
                     url: '/jobPosts',
                     method: 'GET',
-             
                 };
             },
             transformResponse: (response: GetAllLeadsResponse) => ({

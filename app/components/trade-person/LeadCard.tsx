@@ -56,7 +56,7 @@ export default function LeadCard({ lead, selected }: Props) {
   };
 
   return (
-    <div className="overflow-hidden rounded-sm border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-sm  bg-white shadow-sm">
       <div
         className={`w-full p-4 text-left transition ${selected ? "bg-white border-2 border-primary" : ""}`}
       >

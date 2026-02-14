@@ -92,10 +92,12 @@ export default function CreateAccount({
       setTimeout(() => {
         router.push("/my-jobs?tab=pending");
       }, 1000);
-    } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       console.error("Error:", err);
       const errorMessage =
-        err instanceof Error ? err.message : "An error occurred";
+        err?.data?.message ||
+        (err instanceof Error ? err.message : "An error occurred");
       setError(errorMessage);
     }
   };
