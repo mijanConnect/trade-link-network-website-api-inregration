@@ -82,15 +82,25 @@ export interface LeadPurchaseResponse {
   };
 }
 
+export interface GetAllLeadsArgs {
+  page?: number;
+  limit?: number;
+}
+
 const leadSlice = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllLeads: builder.query<
           { data: Lead[]; pagination: Pagination},
-          void
+          GetAllLeadsArgs | void
         >({
-            query: () => {
+            query: (args) => {
+                const params = new URLSearchParams();
+                const queryArgs = args || {};
+                if (queryArgs.page) params.set('page', queryArgs.page.toString());
+                if (queryArgs.limit) params.set('limit', queryArgs.limit.toString());
+                const queryString = params.toString();
                 return {
-                    url: '/jobPosts',
+                    url: `/jobPosts${queryString ? `?${queryString}` : ''}`,
                     method: 'GET',
                 };
             },

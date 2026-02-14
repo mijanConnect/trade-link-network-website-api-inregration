@@ -10,7 +10,7 @@ import LeadsFilterDrawer, {
   LeadsFilterButton,
 } from "@/app/components/trade-person/LeadsFilterDrawer";
 import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
-import { useGetAllLeadsQuery, useGetSingleLeadQuery } from "@/store/slice/leadSlice";
+import { useGetAllLeadsQuery, useGetSingleLeadQuery, type Lead } from "@/store/slice/leadSlice";
 import {
   transformApiLeadToMockLead,
   getDateBucketFromISO,
@@ -37,6 +37,7 @@ export default function LeadDetailPage() {
   const router = useRouter();
   const leadIdParam = params.leadId as string;
   const listRef = useRef<HTMLDivElement>(null);
+  const mobileListRef = useRef<HTMLDivElement>(null);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>("date");
@@ -46,13 +47,21 @@ export default function LeadDetailPage() {
     leadIdParam || null,
   );
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isLoadingMoreRef = useRef(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allLeads, setAllLeads] = useState<Lead[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const limit = 10;
 
-  // Fetch all leads
+  // Fetch leads with pagination
   const {
     data: leadsData,
     isLoading: isLoadingLeads,
     error: leadsError,
-  } = useGetAllLeadsQuery();
+  } = useGetAllLeadsQuery({ page: currentPage, limit });
 
   // Validate leadId - if it's not a valid ObjectId (like "lead_1"), we'll skip the query
   const isValidLeadId = leadIdParam && isValidObjectId(leadIdParam);
@@ -66,16 +75,120 @@ export default function LeadDetailPage() {
     skip: !leadId,
   });
 
-  // Transform API leads to mock format
-  const transformedLeads = useMemo(() => {
-    if (!leadsData?.data) return [];
-    return leadsData.data.map(transformApiLeadToMockLead);
-  }, [leadsData]);
+  // Accumulate leads when new page data arrives
+  // This effect syncs external API data with React state, which is a valid use case
+  useEffect(() => {
+    if (!leadsData?.data) return;
+    
+    setAllLeads((prev) => {
+      if (currentPage === 1) {
+        // First page - replace all leads
+        return leadsData.data;
+      } else {
+        // Subsequent pages - append new leads (avoid duplicates)
+        const existingIds = new Set(prev.map((l) => l._id));
+        const newLeads = leadsData.data.filter((l) => !existingIds.has(l._id));
+        return [...prev, ...newLeads];
+      }
+    });
+    
+    // Check if there are more pages - use strict comparison
+    const pagination = leadsData.pagination;
+    if (pagination) {
+      const hasMorePages = pagination.page < pagination.totalPage;
+      setHasMore(hasMorePages);
+      // If no more pages, reset loading state
+      if (!hasMorePages) {
+        setIsLoadingMore(false);
+        isLoadingMoreRef.current = false;
+      }
+    } else {
+      setHasMore(false);
+      setIsLoadingMore(false);
+      isLoadingMoreRef.current = false;
+    }
+    
+    // Reset loading more state after data is processed
+    if (currentPage > 1) {
+      setIsLoadingMore(false);
+      isLoadingMoreRef.current = false;
+    }
+  }, [leadsData, currentPage]);
 
-  // Save scroll position before navigation
+  // Transform accumulated leads to mock format
+  const transformedLeads = useMemo(() => {
+    if (!allLeads || allLeads.length === 0) return [];
+    return allLeads.map(transformApiLeadToMockLead);
+  }, [allLeads]);
+
+  // Save scroll position before navigation and handle infinite scroll (Desktop)
   const handleScroll = () => {
     if (listRef.current) {
       sessionStorage.setItem("leadsScrollTop", listRef.current.scrollTop.toString());
+      
+      // Prevent multiple simultaneous requests
+      if (isLoadingMoreRef.current || isLoadingLeads || isLoadingMore) return;
+      
+      // Check pagination directly from API response to prevent over-fetching
+      const pagination = leadsData?.pagination;
+      if (pagination && currentPage >= pagination.totalPage) {
+        setHasMore(false);
+        return;
+      }
+      
+      // Infinite scroll: load more when near bottom
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      // Load more when 80% scrolled, has more pages, and not already loading
+      if (scrollPercentage > 0.8 && hasMore && pagination && currentPage < pagination.totalPage) {
+        isLoadingMoreRef.current = true;
+        setIsLoadingMore(true);
+        setCurrentPage((prev) => {
+          // Double check we're not exceeding total pages
+          if (pagination && prev + 1 > pagination.totalPage) {
+            isLoadingMoreRef.current = false;
+            setIsLoadingMore(false);
+            setHasMore(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }
+    }
+  };
+
+  // Handle infinite scroll for mobile
+  const handleMobileScroll = () => {
+    if (mobileListRef.current) {
+      // Prevent multiple simultaneous requests
+      if (isLoadingMoreRef.current || isLoadingLeads || isLoadingMore) return;
+      
+      // Check pagination directly from API response to prevent over-fetching
+      const pagination = leadsData?.pagination;
+      if (pagination && currentPage >= pagination.totalPage) {
+        setHasMore(false);
+        return;
+      }
+      
+      const { scrollTop, scrollHeight, clientHeight } = mobileListRef.current;
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      // Load more when 80% scrolled, has more pages, and not already loading
+      if (scrollPercentage > 0.8 && hasMore && pagination && currentPage < pagination.totalPage) {
+        isLoadingMoreRef.current = true;
+        setIsLoadingMore(true);
+        setCurrentPage((prev) => {
+          // Double check we're not exceeding total pages
+          if (pagination && prev + 1 > pagination.totalPage) {
+            isLoadingMoreRef.current = false;
+            setIsLoadingMore(false);
+            setHasMore(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }
     }
   };
 
@@ -84,7 +197,7 @@ export default function LeadDetailPage() {
       if (dateFilters.length === 0) return true;
       
       // Find the original API lead to get createdAt ISO string
-      const apiLead = leadsData?.data?.find((l) => l._id === lead.id);
+      const apiLead = allLeads.find((l) => l._id === lead.id);
       if (!apiLead) return true;
       
       const bucket = getDateBucketFromISO(apiLead.createdAt);
@@ -107,8 +220,8 @@ export default function LeadDetailPage() {
       .sort((a, b) => {
         if (sortOption === "date") {
           // Find original API leads for createdAt comparison
-          const apiLeadA = leadsData?.data?.find((l) => l._id === a.id);
-          const apiLeadB = leadsData?.data?.find((l) => l._id === b.id);
+          const apiLeadA = allLeads.find((l) => l._id === a.id);
+          const apiLeadB = allLeads.find((l) => l._id === b.id);
           
           if (!apiLeadA || !apiLeadB) return 0;
           
@@ -127,7 +240,7 @@ export default function LeadDetailPage() {
       });
 
     return sorted;
-  }, [sortOption, dateFilters, transformedLeads, leadsData]);
+  }, [sortOption, dateFilters, transformedLeads, allLeads]);
 
   // Transform single lead if available
   const selectedLeadTransformed = useMemo(() => {
@@ -217,6 +330,12 @@ export default function LeadDetailPage() {
   const resetFilters = () => {
     setSortOption("date");
     setDateFilters([]);
+    // Reset pagination when filters change
+    setCurrentPage(1);
+    setAllLeads([]);
+    setHasMore(true);
+    setIsLoadingMore(false);
+    isLoadingMoreRef.current = false;
   };
 
   // Show loading state
@@ -285,7 +404,7 @@ export default function LeadDetailPage() {
           >
             <div className="mb-3 flex items-center justify-between rounded-md bg-white p-4">
               <span className="text-[13px] text-slate-600">
-                Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || transformedLeads.length} leads
+                Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || allLeads.length} leads
               </span>
               <LeadsFilterButton onClick={() => setIsFilterOpen(true)} />
             </div>
@@ -310,6 +429,18 @@ export default function LeadDetailPage() {
                   <LeadCard lead={lead} selected={lead.id === leadId} />
                 </Link>
               ))}
+              {/* Loading indicator for infinite scroll */}
+              {isLoadingMore && (
+                <div className="flex justify-center py-4">
+                  <div className="text-sm text-slate-500">Loading more leads...</div>
+                </div>
+              )}
+              {/* End of list indicator */}
+              {!hasMore && filteredAndSortedLeads.length > 0 && (
+                <div className="flex justify-center py-4">
+                  <div className="text-sm text-slate-500">No more leads to load</div>
+                </div>
+              )}
             </div>
           </div>
         </aside>
@@ -357,10 +488,14 @@ export default function LeadDetailPage() {
             </div>
 
             {/* Leads List */}
-            <div className="flex-1 overflow-y-auto px-3 py-4">
+            <div
+              ref={mobileListRef}
+              onScroll={handleMobileScroll}
+              className="flex-1 overflow-y-auto px-3 py-4"
+            >
               <div className="mb-3 flex items-center justify-between rounded-md bg-white p-3">
                 <span className="text-[12px] text-slate-600">
-                  Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || transformedLeads.length} leads
+                  Showing {filteredAndSortedLeads.length} of {leadsData?.pagination?.total || allLeads.length} leads
                 </span>
                 <LeadsFilterButton onClick={() => setIsFilterOpen(true)} />
               </div>
@@ -383,6 +518,18 @@ export default function LeadDetailPage() {
                     />
                   </button>
                 ))}
+                {/* Loading indicator for infinite scroll */}
+                {isLoadingMore && (
+                  <div className="flex justify-center py-4">
+                    <div className="text-sm text-slate-500">Loading more leads...</div>
+                  </div>
+                )}
+                {/* End of list indicator */}
+                {!hasMore && filteredAndSortedLeads.length > 0 && (
+                  <div className="flex justify-center py-4">
+                    <div className="text-sm text-slate-500">No more leads to load</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
