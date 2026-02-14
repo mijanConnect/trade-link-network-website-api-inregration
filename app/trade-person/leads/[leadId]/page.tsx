@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
 import LeadCard from "@/app/components/trade-person/LeadCard";
 import LeadDetailPanel from "@/app/components/trade-person/LeadDetailPanel";
 import LeadDetailLoading from "@/app/components/trade-person/LeadDetailLoading";
@@ -46,8 +45,12 @@ export default function LeadDetailPage() {
   const [mobileSelectedLeadId, setMobileSelectedLeadId] = useState<string | null>(
     leadIdParam || null,
   );
+  // Local UI state for instant selection feedback (before URL update)
+  const [activeLeadId, setActiveLeadId] = useState<string | null>(leadIdParam || null);
   const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isLoadingMoreRef = useRef(false);
+  const shouldRestoreScrollRef = useRef(true); // Only restore scroll on initial load
+  const previousLeadIdRef = useRef<string | null>(null);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -248,8 +251,8 @@ export default function LeadDetailPage() {
     return transformApiLeadToMockLead(singleLeadData);
   }, [singleLeadData]);
 
-  // Use single lead if available, otherwise find from list (only if leadId is valid)
-  const selectedLead = selectedLeadTransformed || (leadId ? filteredAndSortedLeads.find((l) => l.id === leadId) : null);
+  // Use single lead if available, otherwise find from list (use activeLeadId for UI consistency)
+  const selectedLead = selectedLeadTransformed || (activeLeadId ? filteredAndSortedLeads.find((l) => l.id === activeLeadId) : null);
   const defaultLeadId = filteredAndSortedLeads[0]?.id;
   const mobileSelectedLead =
     filteredAndSortedLeads.find((l) => l.id === mobileSelectedLeadId) ??
@@ -308,18 +311,28 @@ export default function LeadDetailPage() {
     }
   }, [selectedLead, defaultLeadId, router, leadIdParam, leadId, isLoadingLeads]);
 
-  // Restore scroll position when lead changes
+  // Restore scroll position only on initial page load, not when clicking leads
   useEffect(() => {
-    const saved = sessionStorage.getItem("leadsScrollTop");
-    if (saved && listRef.current) {
-      // Use requestAnimationFrame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        if (listRef.current) {
-          listRef.current.scrollTop = Number(saved);
-        }
-      });
+    // Only restore scroll once when leads are first loaded
+    // Don't restore when leadId changes due to user clicks
+    if (!shouldRestoreScrollRef.current || !listRef.current || allLeads.length === 0) return;
+    
+    // Only restore on the very first load (when previousLeadIdRef is null)
+    if (previousLeadIdRef.current === null) {
+      const saved = sessionStorage.getItem("leadsScrollTop");
+      if (saved) {
+        // Use setTimeout to ensure DOM is fully rendered
+        setTimeout(() => {
+          if (listRef.current) {
+            listRef.current.scrollTop = Number(saved);
+          }
+        }, 100);
+      }
+      // Mark that we've done initial scroll restoration
+      previousLeadIdRef.current = leadId || "";
+      shouldRestoreScrollRef.current = false;
     }
-  }, [leadId]);
+  }, [allLeads.length, leadId]);
 
   const toggleDateFilter = (key: DateFilterKey) => {
     setDateFilters((prev) =>
@@ -411,23 +424,33 @@ export default function LeadDetailPage() {
 
             <div className="space-y-4">
               {filteredAndSortedLeads.map((lead) => (
-                <Link
+                <button
                   key={lead.id}
-                  href={`/trade-person/leads/${lead.id}`}
+                  type="button"
                   onClick={() => {
-                    // Save scroll position before navigation
+                    // Prevent scroll restoration when clicking on a lead
+                    shouldRestoreScrollRef.current = false;
+                    
+                    // 🔥 Instant UI feedback - update local state first
+                    setActiveLeadId(lead.id);
+                    
+                    // Save current scroll position
                     if (listRef.current) {
                       sessionStorage.setItem(
                         "leadsScrollTop",
                         listRef.current.scrollTop.toString(),
                       );
                     }
-                    // Don't set loading immediately - let useEffect handle it smoothly
+                    
+                    // URL update (non-blocking, happens after UI update)
+                    requestAnimationFrame(() => {
+                      router.push(`/trade-person/leads/${lead.id}`, { scroll: false });
+                    });
                   }}
-                  className="block transition-opacity duration-200"
+                  className="block w-full text-left transition-opacity duration-200"
                 >
-                  <LeadCard lead={lead} selected={lead.id === leadId} />
-                </Link>
+                  <LeadCard lead={lead} selected={lead.id === activeLeadId} />
+                </button>
               ))}
               {/* Loading indicator for infinite scroll */}
               {isLoadingMore && (

@@ -7,6 +7,7 @@ import type { Lead } from "@/lib/trade-person/mock";
 import { FrequentUserIcon, UrgentIcon, VerifyIcon } from "./Svg";
 import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
 import { useState } from "react";
+import React from "react";
 import { toast } from "sonner";
 
 type Props = {
@@ -27,7 +28,7 @@ function getResponseStatus(responsesCount: number): string {
   return `${responsesCount}/3`;
 }
 
-export default function LeadCard({ lead, selected }: Props) {
+function LeadCard({ lead, selected }: Props) {
   const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
   const [isProcessing, setIsProcessing] = useState(false);
   const isLeadAvailable = lead.responsesCount < 3;
@@ -127,3 +128,5 @@ export default function LeadCard({ lead, selected }: Props) {
   );
 }
 
+// Memoize to prevent unnecessary re-renders when parent re-renders
+export default React.memo(LeadCard);
