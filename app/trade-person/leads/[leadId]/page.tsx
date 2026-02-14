@@ -17,7 +17,7 @@ import {
 } from "@/lib/trade-person/leadUtils";
 import type { Lead as MockLead } from "@/lib/trade-person/mock";
 
-export type SortOption = "date" | "responses" | "price";
+export type SortOption = "all" | "date" | "responses" | "price";
 export type DateFilterKey = "today" | "yesterday" | "last7";
 
 function parsePrice(priceLabel: string): number {
@@ -39,8 +39,8 @@ export default function LeadDetailPage() {
   const mobileListRef = useRef<HTMLDivElement>(null);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [sortOption, setSortOption] = useState<SortOption>("date");
-  const [dateFilters, setDateFilters] = useState<DateFilterKey[]>([]);
+  const [sortOption, setSortOption] = useState<SortOption>("all");
+  const [dateFilter, setDateFilter] = useState<DateFilterKey | null>(null);
   const [showDetailOnMobile, setShowDetailOnMobile] = useState(false);
   const [mobileSelectedLeadId, setMobileSelectedLeadId] = useState<string | null>(
     leadIdParam || null,
@@ -59,12 +59,45 @@ export default function LeadDetailPage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const limit = 10;
 
-  // Fetch leads with pagination
+  // Map local sort option to API value
+  const getSortByValue = (sort: SortOption): string | undefined => {
+    if (sort === "all") return undefined;
+    if (sort === "date") return "date";
+    if (sort === "responses") return "lead_availability";
+    if (sort === "price") return "price";
+    return undefined;
+  };
+
+  // Map date filter to API value
+  const getFilterByDateValue = (filter: DateFilterKey | null): string | undefined => {
+    return filter || undefined;
+  };
+
+  // Prepare API query parameters
+  const apiQueryParams = useMemo(() => {
+    return {
+      page: currentPage,
+      limit,
+      sortBy: getSortByValue(sortOption),
+      filterByDate: getFilterByDateValue(dateFilter),
+    };
+  }, [currentPage, sortOption, dateFilter]);
+
+  // Fetch leads with pagination and filters
   const {
     data: leadsData,
     isLoading: isLoadingLeads,
     error: leadsError,
-  } = useGetAllLeadsQuery({ page: currentPage, limit });
+  } = useGetAllLeadsQuery(apiQueryParams);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+    setAllLeads([]);
+    setHasMore(true);
+    setIsLoadingMore(false);
+    isLoadingMoreRef.current = false;
+  }, [sortOption, dateFilter]);
 
   // Validate leadId - if it's not a valid ObjectId (like "lead_1"), we'll skip the query
   const isValidLeadId = leadIdParam && isValidObjectId(leadIdParam);
@@ -197,7 +230,7 @@ export default function LeadDetailPage() {
 
   const filteredAndSortedLeads = useMemo(() => {
     const matchesDateFilter = (lead: MockLead) => {
-      if (dateFilters.length === 0) return true;
+      if (!dateFilter) return true;
       
       // Find the original API lead to get createdAt ISO string
       const apiLead = allLeads.find((l) => l._id === lead.id);
@@ -206,14 +239,14 @@ export default function LeadDetailPage() {
       const bucket = getDateBucketFromISO(apiLead.createdAt);
 
       // Last 7 days should include today + yesterday + last7 bucket
-      if (dateFilters.includes("last7")) {
+      if (dateFilter === "last7") {
         if (bucket === "today" || bucket === "yesterday" || bucket === "last7") {
           return true;
         }
       }
 
-      if (dateFilters.includes("today") && bucket === "today") return true;
-      if (dateFilters.includes("yesterday") && bucket === "yesterday") return true;
+      if (dateFilter === "today" && bucket === "today") return true;
+      if (dateFilter === "yesterday" && bucket === "yesterday") return true;
 
       return false;
     };
@@ -243,7 +276,7 @@ export default function LeadDetailPage() {
       });
 
     return sorted;
-  }, [sortOption, dateFilters, transformedLeads, allLeads]);
+  }, [sortOption, dateFilter, transformedLeads, allLeads]);
 
   // Transform single lead if available
   const selectedLeadTransformed = useMemo(() => {
@@ -334,15 +367,13 @@ export default function LeadDetailPage() {
     }
   }, [allLeads.length, leadId]);
 
-  const toggleDateFilter = (key: DateFilterKey) => {
-    setDateFilters((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
-    );
+  const handleDateFilterChange = (key: DateFilterKey | null) => {
+    setDateFilter(key);
   };
 
   const resetFilters = () => {
-    setSortOption("date");
-    setDateFilters([]);
+    setSortOption("all");
+    setDateFilter(null);
     // Reset pagination when filters change
     setCurrentPage(1);
     setAllLeads([]);
@@ -593,10 +624,10 @@ export default function LeadDetailPage() {
       <LeadsFilterDrawer
         isOpen={isFilterOpen}
         sortOption={sortOption}
-        dateFilters={dateFilters}
+        dateFilter={dateFilter}
         onClose={() => setIsFilterOpen(false)}
         onSortChange={setSortOption}
-        onToggleDateFilter={toggleDateFilter}
+        onDateFilterChange={handleDateFilterChange}
         onReset={resetFilters}
       />
     </>

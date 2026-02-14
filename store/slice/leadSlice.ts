@@ -85,6 +85,8 @@ export interface LeadPurchaseResponse {
 export interface GetAllLeadsArgs {
   page?: number;
   limit?: number;
+  sortBy?: string; // "date" | "lead_availability" | "price"
+  filterByDate?: string; // "today" | "yesterday" | "last7"
 }
 
 const leadSlice = baseApi.injectEndpoints({
@@ -98,6 +100,8 @@ const leadSlice = baseApi.injectEndpoints({
                 const queryArgs = args || {};
                 if (queryArgs.page) params.set('page', queryArgs.page.toString());
                 if (queryArgs.limit) params.set('limit', queryArgs.limit.toString());
+                if (queryArgs.sortBy) params.set('sortBy', queryArgs.sortBy);
+                if (queryArgs.filterByDate) params.set('filterByDate', queryArgs.filterByDate);
                 const queryString = params.toString();
                 return {
                     url: `/jobPosts${queryString ? `?${queryString}` : ''}`,
