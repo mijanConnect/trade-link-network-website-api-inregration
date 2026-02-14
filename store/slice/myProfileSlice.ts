@@ -21,12 +21,17 @@ export interface ProfessionalLocation {
   coordinates: [number, number];
 }
 
+export interface ProfessionalServiceItem {
+  _id: string;
+  name: string;
+}
+
 export interface ProfessionalProfile {
   _id: string;
   businessName: string;
   businessImage: string;
   location: ProfessionalLocation;
-  services: string[];
+  services: Array<string | ProfessionalServiceItem>;
   serviceRadiusKm: number;
   address: string;
   ratingAvg: number;
@@ -74,6 +79,8 @@ export interface UpdateMyProfilePayload {
   services?: string[];
   phone?: string;
   about?: string;
+  // Local-only field for uploading a new business image
+  businessImageFile?: File;
 }
 
 // ---------------------------------------
@@ -121,13 +128,35 @@ const myProfileSlice = baseApi.injectEndpoints({
       transformResponse: (response: MyProfileResponse) => response,
     }),
 
-    // UPDATE my profile
+    // UPDATE my profile (supports JSON or FormData with image)
     updateMyProfile: builder.mutation<MyProfileResponse, UpdateMyProfilePayload>({
-      query: (data) => ({
-        url: "/profile",
-        method: "PATCH",
-        body: data,
-      }),
+      query: (data) => {
+        const formData = new FormData();
+
+        if (data.businessName) formData.append("businessName", data.businessName);
+        if (data.serviceRadiusKm !== undefined && data.serviceRadiusKm !== null) {
+          formData.append("serviceRadiusKm", String(data.serviceRadiusKm));
+        }
+        if (data.address) formData.append("address", data.address);
+        if (data.postCode) formData.append("postCode", data.postCode);
+        if (data.phone) formData.append("phone", data.phone);
+        if (data.about) formData.append("about", data.about);
+        if (data.documentType) {
+          formData.append("documentType", data.documentType);
+        }
+        if (Array.isArray(data.services)) {
+          data.services.forEach((s) => formData.append("services", s));
+        }
+        if (data.businessImageFile) {
+          formData.append("businessImage", data.businessImageFile);
+        }
+
+        return {
+          url: "/professionals/me",
+          method: "PATCH",
+          body: formData,
+        };
+      },
       transformResponse: (response: MyProfileResponse) => response,
     }),
 
