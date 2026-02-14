@@ -6,10 +6,10 @@ import { X, SlidersHorizontal } from "lucide-react";
 type Props = {
   isOpen: boolean;
   sortOption: SortOption;
-  dateFilters: DateFilterKey[];
+  dateFilter: DateFilterKey | null;
   onClose: () => void;
   onSortChange: (value: SortOption) => void;
-  onToggleDateFilter: (key: DateFilterKey) => void;
+  onDateFilterChange: (key: DateFilterKey | null) => void;
   onReset: () => void;
 };
 
@@ -29,10 +29,10 @@ export function LeadsFilterButton({ onClick }: { onClick: () => void }) {
 export default function LeadsFilterDrawer({
   isOpen,
   sortOption,
-  dateFilters,
+  dateFilter,
   onClose,
   onSortChange,
-  onToggleDateFilter,
+  onDateFilterChange,
   onReset,
 }: Props) {
   return (
@@ -80,6 +80,22 @@ export default function LeadsFilterDrawer({
               Sort by
             </h3>
             <div className="mt-3 space-y-2">
+              <label className="flex cursor-pointer items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm hover:border-slate-300">
+                <div>
+                  <span className="font-medium text-slate-800">All</span>
+                  <p className="text-[11px] text-slate-500">
+                    Show all leads without sorting
+                  </p>
+                </div>
+                <input
+                  type="radio"
+                  name="sort"
+                  className="h-4 w-4 accent-primary"
+                  checked={sortOption === "all"}
+                  onChange={() => onSortChange("all")}
+                />
+              </label>
+
               <label className="flex cursor-pointer items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm hover:border-slate-300">
                 <div>
                   <span className="font-medium text-slate-800">Date</span>
@@ -144,16 +160,33 @@ export default function LeadsFilterDrawer({
             <div className="mt-3 space-y-2">
               <label className="flex cursor-pointer items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm hover:border-slate-300">
                 <div>
+                  <span className="font-medium text-slate-800">All</span>
+                  <p className="text-[11px] text-slate-500">
+                    Show all leads regardless of date
+                  </p>
+                </div>
+                <input
+                  type="radio"
+                  name="dateFilter"
+                  className="h-4 w-4 accent-primary"
+                  checked={dateFilter === null}
+                  onChange={() => onDateFilterChange(null)}
+                />
+              </label>
+
+              <label className="flex cursor-pointer items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-sm hover:border-slate-300">
+                <div>
                   <span className="font-medium text-slate-800">Today</span>
                   <p className="text-[11px] text-slate-500">
                     Requests posted in the last few hours
                   </p>
                 </div>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="dateFilter"
                   className="h-4 w-4 accent-primary"
-                  checked={dateFilters.includes("today")}
-                  onChange={() => onToggleDateFilter("today")}
+                  checked={dateFilter === "today"}
+                  onChange={() => onDateFilterChange("today")}
                 />
               </label>
 
@@ -165,10 +198,11 @@ export default function LeadsFilterDrawer({
                   </p>
                 </div>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="dateFilter"
                   className="h-4 w-4 accent-primary"
-                  checked={dateFilters.includes("yesterday")}
-                  onChange={() => onToggleDateFilter("yesterday")}
+                  checked={dateFilter === "yesterday"}
+                  onChange={() => onDateFilterChange("yesterday")}
                 />
               </label>
 
@@ -182,10 +216,11 @@ export default function LeadsFilterDrawer({
                   </p>
                 </div>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="dateFilter"
                   className="h-4 w-4 accent-primary"
-                  checked={dateFilters.includes("last7")}
-                  onChange={() => onToggleDateFilter("last7")}
+                  checked={dateFilter === "last7"}
+                  onChange={() => onDateFilterChange("last7")}
                 />
               </label>
             </div>

@@ -92,6 +92,7 @@ export default function CreateAccount({
       setTimeout(() => {
         router.push("/my-jobs?tab=pending");
       }, 1000);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Error:", err);
       const errorMessage =

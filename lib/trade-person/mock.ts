@@ -7,6 +7,8 @@ export type Lead = {
   customerName: string;
   customerAddress: string;
   customerAvatar: string;
+  customerEmail?: string; // Customer email for contact
+  customerPhone?: string; // Customer phone for contact
   createdAtLabel: string;
   title: string;
   summary: string;
