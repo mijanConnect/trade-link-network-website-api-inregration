@@ -107,17 +107,17 @@ export default function LoginPage() {
           {/* Button text changes based on loading state */}
         </Button>
       </div>
-      {/* <div className="mt-6 text-center">
+      <div className="mt-6 text-center">
         <p className="text-[15px]">
-          Don&apos;t have an account?{" "}
+          Sign Up as{" "}
           <span
             onClick={() => router.push("/register")}
             className="font-semibold text-primary cursor-pointer hover:underline"
           >
-            Sign Up for free
+            Tradeperson
           </span>
         </p>
-      </div> */}
+      </div>
     </div>
   );
 }

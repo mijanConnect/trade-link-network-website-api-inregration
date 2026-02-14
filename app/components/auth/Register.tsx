@@ -6,14 +6,15 @@ import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
 import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
+import { useRegisterMutation } from "@/store/slice/authSlice";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [register, { isLoading }] = useRegisterMutation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   //   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
@@ -44,19 +45,28 @@ export default function RegisterPage() {
       return;
     }
 
-    setIsLoading(true);
     setError("");
 
     try {
-      // Handle registration logic here
-      console.log("Registering user:", { name, email });
-      // After registration, navigate to verify-otp page
-      router.push("/verify-otp");
-    } catch (error) {
-      setError("Failed to register. Please try again.");
+      const payload = {
+        name,
+        email,
+        password,
+        role: "PROFESSIONAL",
+      };
+
+      const response = await register(payload).unwrap();
+
+      console.log("Registration successful:", response);
+      // After registration, navigate to login page
+      router.push("/login");
+    } catch (error: any) {
+      const errorMessage =
+        error?.data?.message ||
+        error?.message ||
+        "Failed to register. Please try again.";
+      setError(errorMessage);
       console.error("Registration failed:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -64,8 +74,8 @@ export default function RegisterPage() {
     <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-[550px] border border-gray-200">
       <AuthLogo />
       <AuthLoginDescription
-        header="Sign up as a homeowner"
-        description="Enter your details below to create your account"
+        header="Sign Up as Tradeperson"
+        description="Register for free — no subscription"
       />
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-[14px]">
