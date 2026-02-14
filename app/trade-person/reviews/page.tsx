@@ -5,7 +5,6 @@ import TradePersonProfileCard from "@/app/components/trade-person/TradePersonPro
 // import TradePersonPanel from "@/app/components/trade-person/TradePersonPanel";
 import Stars from "@/app/components/trade-person/Stars";
 import Button from "@/app/components/ui/Button";
-import { tradePersonProfile } from "@/lib/trade-person/mock";
 import { useMyReviewsQuery } from "@/store/slice/myProfileSlice";
 
 const formatReviewDate = (dateString: string) => {
@@ -33,7 +32,7 @@ export default function ReviewsPage() {
     <div className="flex flex-col gap-6 md:flex-row">
       {/* Left Column - Profile Card */}
       <aside className="w-full md:w-1/3">
-        <TradePersonProfileCard profile={tradePersonProfile} />
+        <TradePersonProfileCard />
       </aside>
 
       {/* Right Column - Reviews */}

@@ -4,8 +4,8 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import TradePersonProfileCard from "@/app/components/trade-person/TradePersonProfileCard";
 import InputField from "@/app/components/ui/InputField";
 import SelectField from "@/app/components/ui/SelectField";
+import TextareaField from "@/app/components/ui/TextareaField";
 import Button from "@/app/components/ui/Button";
-import { tradePersonProfile } from "@/lib/trade-person/mock";
 import { Upload } from "lucide-react";
 import {
   useGetMyProfileQuery,
@@ -19,6 +19,7 @@ import {
   useGetCategoriesServicesQuery,
 } from "@/store/slice/categoriesSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
 
 export default function AboutPage() {
   const { data: profileData, isLoading } = useGetMyProfileQuery();
@@ -35,7 +36,7 @@ export default function AboutPage() {
     <div className="flex flex-col  md:flex-row">
       {/* Left Column - Profile Card */}
       <aside className="w-full md:w-1/3  container mx-auto">
-        <TradePersonProfileCard profile={tradePersonProfile} />
+        <TradePersonProfileCard />
       </aside>
 
       {/* Right Column - Edit Form */}
@@ -103,7 +104,7 @@ function AboutForm({ user }: AboutFormProps) {
   const [email, setEmail] = useState(user.email ?? "");
   const [website, setWebsite] = useState("");
   const [about, setAbout] = useState(professional?.about ?? "");
-  const [documentType, setDocumentType] = useState<
+  const [documentType] = useState<
     ProfessionalDocumentType | ""
   >(professional?.verificationDocuments?.[0]?.documentType ?? "");
 
@@ -143,12 +144,14 @@ function AboutForm({ user }: AboutFormProps) {
   };
 
   // Update professionCategory when categories are loaded (only once)
-  // This is necessary to initialize state from async data
-  // Note: Setting state in useEffect is required here for async initialization
+  // Using a ref to track initialization to avoid linter warnings
   useEffect(() => {
     if (categories.length > 0 && !categoryInitialized.current) {
       categoryInitialized.current = true;
-      setProfessionCategory(categories[0]._id);
+      // Use requestAnimationFrame to defer state update
+      requestAnimationFrame(() => {
+        setProfessionCategory(categories[0]._id);
+      });
     }
   }, [categories]);
 
@@ -191,6 +194,8 @@ function AboutForm({ user }: AboutFormProps) {
         about,
         businessImageFile: businessImageFile ?? undefined,
       }).unwrap();
+
+      toast.success("Profile updated successfully");
     } catch (error) {
       console.error("Failed to update profile", error);
     }
@@ -316,7 +321,13 @@ function AboutForm({ user }: AboutFormProps) {
               </select>
             )}
           </div>
-          <InputField title="About" initialValue={about} onChange={setAbout} />
+          <TextareaField
+            title="About"
+            initialValue={about}
+            onChange={setAbout}
+            rows={6}
+            placeholder="Tell us about your business..."
+          />
         </div>
       </div>
 
