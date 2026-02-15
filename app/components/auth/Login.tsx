@@ -30,7 +30,13 @@ export default function LoginPage() {
         toast.success("Login successful!");
       }
 
-      router.push("/"); // Redirect to dashboard or any desired page after login
+      // Check role and redirect accordingly
+      const role = response?.data?.role || response?.role;
+      if (role === "PROFESSIONAL") {
+        router.push("/trade-person");
+      } else {
+        router.push("/");
+      }
     } catch (err) {
       // Handle error if login fails
       const error = err as Record<string, unknown>;
