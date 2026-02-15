@@ -58,8 +58,12 @@ export default function RegisterPage() {
       const response = await register(payload).unwrap();
 
       console.log("Registration successful:", response);
-      // After registration, navigate to login page
-      router.push("/login");
+      if (typeof window !== "undefined") {
+        localStorage.setItem("otpContext", "signup");
+        localStorage.setItem("signupEmail", email);
+      }
+
+      router.push("/verify-otp");
     } catch (error: any) {
       const errorMessage =
         error?.data?.message ||

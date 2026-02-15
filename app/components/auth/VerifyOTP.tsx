@@ -7,6 +7,7 @@ import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
 import {
   useForgotPasswordMutation,
+  useResendOtpMutation,
   useVerifyEmailMutation,
 } from "@/store/slice/authSlice";
 
@@ -18,6 +19,7 @@ export default function VerifyOTPPage() {
   const [error, setError] = useState("");
   const [verifyEmail] = useVerifyEmailMutation();
   const [forgotPassword] = useForgotPasswordMutation();
+  const [resendOtp] = useResendOtpMutation();
 
   const handleOtpChange = (index: number, value: string) => {
     const numericValue = value.replace(/\D/g, "");
@@ -51,8 +53,20 @@ export default function VerifyOTPPage() {
     setIsLoading(true);
     setError("");
     try {
+      const otpContext =
+        typeof window !== "undefined" ? localStorage.getItem("otpContext") : "";
+      const signupEmail =
+        typeof window !== "undefined"
+          ? localStorage.getItem("signupEmail")
+          : "";
+      const isSignupFlow = otpContext === "signup" && !!signupEmail;
+
       const email =
-        typeof window !== "undefined" ? localStorage.getItem("resetEmail") : "";
+        typeof window !== "undefined"
+          ? isSignupFlow
+            ? signupEmail
+            : localStorage.getItem("resetEmail")
+          : "";
 
       if (!email) {
         setError("Email not found. Please request a new code.");
@@ -63,6 +77,16 @@ export default function VerifyOTPPage() {
         email,
         oneTimeCode: Number(otpString),
       }).unwrap();
+
+      if (isSignupFlow) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("otpContext");
+          localStorage.removeItem("signupEmail");
+        }
+
+        router.push("/login");
+        return;
+      }
 
       const resultAny = result as
         | string
@@ -97,8 +121,18 @@ export default function VerifyOTPPage() {
   };
 
   const handleResendOTP = async () => {
+    const otpContext =
+      typeof window !== "undefined" ? localStorage.getItem("otpContext") : "";
+    const signupEmail =
+      typeof window !== "undefined" ? localStorage.getItem("signupEmail") : "";
+    const isSignupFlow = otpContext === "signup" && !!signupEmail;
+
     const email =
-      typeof window !== "undefined" ? localStorage.getItem("resetEmail") : "";
+      typeof window !== "undefined"
+        ? isSignupFlow
+          ? signupEmail
+          : localStorage.getItem("resetEmail")
+        : "";
 
     if (!email) {
       setError("Email not found. Please request a new code.");
@@ -107,7 +141,11 @@ export default function VerifyOTPPage() {
 
     setError("");
     try {
-      await forgotPassword({ email }).unwrap();
+      if (isSignupFlow) {
+        await resendOtp({ email }).unwrap();
+      } else {
+        await forgotPassword({ email }).unwrap();
+      }
       setOtp(["", "", "", "", "", ""]);
       setResendTimer(60);
     } catch (err) {
