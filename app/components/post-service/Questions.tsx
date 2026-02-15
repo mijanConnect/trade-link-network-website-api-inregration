@@ -108,6 +108,7 @@ export default function Questions({
                   className="w-full px-5 py-3 text-[14px] lg:text-[16px] text-left border border-primaryTextLight rounded-sm bg-transparent text-primaryText cursor-pointer hover:bg-gray-300 hover:bg-opacity-5 transition-colors flex items-center justify-between"
                   onClick={() => {
                     setCurrentQuestionIndex(index);
+                    setIsFinished(false);
                     onProgressChange?.(index + 1, totalQuestions);
                   }}
                 >
