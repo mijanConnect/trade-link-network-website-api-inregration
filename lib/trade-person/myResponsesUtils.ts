@@ -98,7 +98,7 @@ export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
 
   // Format budget from answered questions
   const budgetAnswer = jobDetails.find((d) =>
-    d.label.toLowerCase().includes("budget")
+    d?.label?.toLowerCase()?.includes("budget")
   )?.value || "Not specified";
 
   // Create summary from job details
@@ -108,21 +108,21 @@ export function transformMyLeadDetailToLead(myLead: MyLeadResponse): Lead {
     .join(" / ");
 
   return {
-    id: myLead.jobPost._id,
+    id: myLead.jobPost?._id,
     customerName,
     customerAddress,
     customerAvatar,
     customerEmail,
     customerPhone, // Add phone number
     createdAtLabel: formatTimeAgo(myLead.createdAt),
-    title: myLead.jobPost.service.name,
+    title: myLead.jobPost?.service?.name,
     summary,
     budgetLabel: budgetAnswer,
     status,
     priceLabel: "£0.00", // Price not available in job request response
     highlights,
     jobDetails,
-    responsesCount: myLead.jobPost.purchasedCount || 0, // Use purchasedCount from jobPost
+    responsesCount: myLead.jobPost?.purchasedCount || 0, // Use purchasedCount from jobPost
   };
 }
 

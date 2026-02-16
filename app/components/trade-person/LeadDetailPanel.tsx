@@ -172,17 +172,17 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
     }
   };
 
-  // Check if refund button should be enabled (24 hours after createdAt)
   const isRefundEnabled = useMemo(() => {
     if (!createdAt || tab !== "pending" || source !== "my-responses") {
       return false;
     }
     const createdAtDate = new Date(createdAt);
     const now = new Date();
-    const hoursDiff = (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
+    const hoursDiff =
+      (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
     return hoursDiff >= 24;
   }, [createdAt, tab, source]);
-
+  
   // Show refund button only for pending tab in my-responses
   const showRefundButton = tab === "pending" && source === "my-responses" && jobId;
 
