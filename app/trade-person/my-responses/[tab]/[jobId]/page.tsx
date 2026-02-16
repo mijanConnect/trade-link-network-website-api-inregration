@@ -405,7 +405,13 @@ export default function MyResponsesJobPage() {
               </div>
             ) : (
               <div className="animate-fadeIn">
-                <LeadDetailPanel lead={selectedLead} source="my-responses" tab={tab as "pending" | "hired"} />
+                <LeadDetailPanel 
+                  lead={selectedLead} 
+                  source="my-responses" 
+                  tab={tab as "pending" | "hired"}
+                  createdAt={jobRequestData?.createdAt}
+                  jobId={selectedLead?.id}
+                />
               </div>
             )}
           </div>
@@ -628,7 +634,13 @@ export default function MyResponsesJobPage() {
                   </div>
                 ) : (
                   <div className="animate-fadeIn">
-                    <LeadDetailPanel lead={mobileSelectedLead} source="my-responses" tab={tab as "pending" | "hired"} />
+                    <LeadDetailPanel 
+                      lead={mobileSelectedLead} 
+                      source="my-responses" 
+                      tab={tab as "pending" | "hired"}
+                      createdAt={mobileJobRequestData?.createdAt}
+                      jobId={mobileSelectedLead?.id}
+                    />
                   </div>
                 )}
               </div>
