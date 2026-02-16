@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
 import TradePersonProfileCard from "@/app/components/trade-person/TradePersonProfileCard";
@@ -41,7 +41,9 @@ export default function AboutPage() {
 
       {/* Right Column - Edit Form */}
       <div className="w-full flex-1 space-y-6 md:w-2/3 bg-background p-12 ">
-        <h1 className="text-2xl font-bold text-primaryText md:text-[32px]">About</h1>
+        <h1 className="text-2xl font-bold text-primaryText md:text-[32px]">
+          About
+        </h1>
         <AboutForm user={profileData.data} />
       </div>
     </div>
@@ -68,7 +70,7 @@ function AboutForm({ user }: AboutFormProps) {
     if (!Array.isArray(professional?.services)) return [];
     return professional.services
       .map((s: string | { _id: string; name: string }) =>
-        typeof s === "string" ? s : s?._id ?? "",
+        typeof s === "string" ? s : (s?._id ?? ""),
       )
       .filter(Boolean);
   }, [professional]);
@@ -86,7 +88,7 @@ function AboutForm({ user }: AboutFormProps) {
       ? String(professional.serviceRadiusKm)
       : "",
   );
-  const [postcode, setPostcode] = useState(professional?.postCode ?? "");
+  const [postcode, setpostcode] = useState(professional?.postcode ?? "");
 
   // Store selected services as objectIds
   const [selectedProfessions, setSelectedProfessions] = useState<string[]>(
@@ -96,7 +98,7 @@ function AboutForm({ user }: AboutFormProps) {
   // Initialize professionCategory - use first category if available, or empty string
   const [professionCategory, setProfessionCategory] = useState<string>("");
   const categoryInitialized = useRef(false);
-  
+
   const [phone, setPhone] = useState(user.phone ?? "");
   const [officeAddress, setOfficeAddress] = useState(
     professional?.address ?? "",
@@ -104,9 +106,9 @@ function AboutForm({ user }: AboutFormProps) {
   const [email, setEmail] = useState(user.email ?? "");
   const [website, setWebsite] = useState("");
   const [about, setAbout] = useState(professional?.about ?? "");
-  const [documentType] = useState<
-    ProfessionalDocumentType | ""
-  >(professional?.verificationDocuments?.[0]?.documentType ?? "");
+  const [documentType] = useState<ProfessionalDocumentType | "">(
+    professional?.verificationDocuments?.[0]?.documentType ?? "",
+  );
 
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
@@ -174,7 +176,7 @@ function AboutForm({ user }: AboutFormProps) {
 
   // State to control select dropdown reset
   const [selectKey, setSelectKey] = useState(0);
-  
+
   const handleAddProfessionWithReset = (serviceId: string) => {
     handleAddProfession(serviceId);
     // Reset select dropdown
@@ -188,7 +190,7 @@ function AboutForm({ user }: AboutFormProps) {
         serviceRadiusKm,
         documentType: documentType || undefined,
         address: officeAddress,
-        postCode: postcode,
+        postcode: postcode,
         services: selectedProfessions,
         phone,
         about,
@@ -201,9 +203,7 @@ function AboutForm({ user }: AboutFormProps) {
     }
   };
 
-  const handleImageChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -256,9 +256,9 @@ function AboutForm({ user }: AboutFormProps) {
             onChange={setBusinessName}
           />
           <InputField
-            title="Postcode"
+            title="postcode"
             initialValue={postcode}
-            onChange={setPostcode}
+            onChange={setpostcode}
           />
           <InputField
             title="Service radius (km)"
@@ -295,13 +295,16 @@ function AboutForm({ user }: AboutFormProps) {
               ))}
             </div>
             {isServicesLoading ? (
-              <div className="mt-2 text-sm text-slate-500">Loading services...</div>
+              <div className="mt-2 text-sm text-slate-500">
+                Loading services...
+              </div>
             ) : (
               <select
                 key={selectKey}
                 className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-[14px]"
                 onChange={(e) => {
-                  if (e.target.value) handleAddProfessionWithReset(e.target.value);
+                  if (e.target.value)
+                    handleAddProfessionWithReset(e.target.value);
                 }}
                 defaultValue=""
                 disabled={!professionCategory || availableServices.length === 0}

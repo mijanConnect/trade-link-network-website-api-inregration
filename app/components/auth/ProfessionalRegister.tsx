@@ -61,7 +61,7 @@ function AboutForm() {
   const [businessImageFile, setBusinessImageFile] = useState<File | null>(null);
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [serviceRadiusKm, setServiceRadiusKm] = useState("");
-  const [postcode, setPostcode] = useState("");
+  const [postcode, setpostcode] = useState("");
 
   // Store selected services as objectIds
   const [selectedProfessions, setSelectedProfessions] = useState<string[]>(
@@ -134,7 +134,7 @@ function AboutForm() {
         serviceRadiusKm,
         documentType: documentType || undefined,
         address: officeAddress,
-        postCode: postcode,
+        postcode: postcode,
         services: selectedProfessions,
         phone,
         email,
@@ -236,10 +236,10 @@ function AboutForm() {
             onChange={setBusinessName}
           />
           <InputField
-            title="Postcode"
+            title="postcode"
             placeholder="Enter postcode"
             initialValue={postcode}
-            onChange={setPostcode}
+            onChange={setpostcode}
           />
           <InputField
             title="Service radius (km)"
