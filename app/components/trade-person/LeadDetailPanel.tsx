@@ -8,13 +8,17 @@ import type { Lead } from "@/lib/trade-person/mock";
 // import { CheckCircle2, User, AlertCircle, VerifiedIcon } from "lucide-react";
 import { FrequentUserIcon, UrgentIcon, VerifyIcon } from "./Svg";
 import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
+import RefundModal from "./RefundModal";
+import { useRefundJobPostMutation } from "@/store/slice/myJobsSlice";
 
 type Props = {
   lead: Lead | null;
   source?: "leads" | "my-responses"; // "leads" = locked view with masked data, "my-responses" = unlocked view with full data
   tab?: "pending" | "hired"; // Tab from my-responses page to determine which banner to show
+  createdAt?: string; // CreatedAt date for refund eligibility check
+  jobId?: string; // Job ID for refund request
 };
 
 function highlightIcon(h: Lead["highlights"][0]) {
@@ -110,9 +114,11 @@ function statusBanner(status: Lead["status"], source?: "leads" | "my-responses",
   return null;
 }
 
-export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) {
+export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt, jobId }: Props) {
   const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
+  const [refundJobPost, { isLoading: isRefunding }] = useRefundJobPostMutation();
 
   if (!lead) {
     return (
@@ -163,6 +169,41 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
       console.error("Purchase error:", error);
       toast.error("Failed to purchase lead. Please try again.");
       setIsProcessing(false);
+    }
+  };
+
+  // Check if refund button should be enabled (24 hours after createdAt)
+  const isRefundEnabled = useMemo(() => {
+    if (!createdAt || tab !== "pending" || source !== "my-responses") {
+      return false;
+    }
+    const createdAtDate = new Date(createdAt);
+    const now = new Date();
+    const hoursDiff = (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
+    return hoursDiff >= 24;
+  }, [createdAt, tab, source]);
+
+  // Show refund button only for pending tab in my-responses
+  const showRefundButton = tab === "pending" && source === "my-responses" && jobId;
+
+  const handleRefundSubmit = async (data: { reason: string; image: File | null }) => {
+    if (!jobId || !data.image) {
+      toast.error("Missing required information");
+      return;
+    }
+
+    try {
+      await refundJobPost({
+        jobPost: jobId,
+        reason: data.reason,
+        image: data.image,
+      }).unwrap();
+      
+      toast.success("Refund request submitted successfully");
+      setIsRefundModalOpen(false);
+    } catch (error: any) {
+      console.error("Refund error:", error);
+      toast.error(error?.data?.message || "Failed to submit refund request. Please try again.");
     }
   };
 
@@ -264,6 +305,37 @@ export default function LeadDetailPanel({ lead, source = "leads", tab }: Props) 
           ))}
         </div>
       </TradePersonPanel>
+
+      {/* Refund Button - Only for pending tab */}
+      {showRefundButton && (
+        <div className="mt-6 border-t border-slate-200 pt-4">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsRefundModalOpen(true)}
+            disabled={!isRefundEnabled}
+            className="w-full"
+          >
+            Request Refund
+          </Button>
+          {!isRefundEnabled && createdAt && (
+            <p className="mt-2 text-[12px] text-slate-500 text-center">
+              Refund option will be available 24 hours after payment
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Refund Modal */}
+      {jobId && (
+        <RefundModal
+          isOpen={isRefundModalOpen}
+          onClose={() => setIsRefundModalOpen(false)}
+          onSubmit={handleRefundSubmit}
+          isLoading={isRefunding}
+          jobId={jobId}
+        />
+      )}
     </div>
   );
 }

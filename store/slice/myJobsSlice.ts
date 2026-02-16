@@ -216,6 +216,28 @@ export const myJobsApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["HiredJobs"],
     }),
+
+
+
+    // ---------------------------------------
+    // Refund Job Post
+    // ---------------------------------------
+    refundJobPost: builder.mutation({
+      query: (data: { jobPost: string; reason: string; image: File }) => {
+        const formData = new FormData();
+        formData.append("jobPost", data.jobPost);
+        formData.append("reason", data.reason);
+        formData.append("image", data.image);
+
+        return {
+          url: `/refundRequests`,
+          method: "POST",
+          body: formData,
+        };
+      },
+
+      invalidatesTags: ["PendingJobs"],
+    }),
   }),
 });
 
@@ -233,4 +255,5 @@ export const {
   useAcceptJobRequestMutation,
   useCompleteJobPostMutation,
   useCreateJobReviewMutation,
+  useRefundJobPostMutation,
 } = myJobsApi;
