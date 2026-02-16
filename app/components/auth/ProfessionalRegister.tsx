@@ -137,6 +137,8 @@ function AboutForm() {
         postCode: postcode,
         services: selectedProfessions,
         phone,
+        email,
+        website,
         about,
         businessImageFile: businessImageFile ?? undefined,
         verificationDocumentFile: documentFile ?? undefined,

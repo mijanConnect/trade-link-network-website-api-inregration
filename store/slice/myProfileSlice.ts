@@ -78,6 +78,8 @@ export interface UpdateMyProfilePayload {
   postCode?: string;
   services?: string[];
   phone?: string;
+  email?: string;
+  website?: string;
   about?: string;
   // Local-only field for uploading a new business image
   businessImageFile?: File;
@@ -140,8 +142,10 @@ const myProfileSlice = baseApi.injectEndpoints({
           formData.append("serviceRadiusKm", String(data.serviceRadiusKm));
         }
         if (data.address) formData.append("address", data.address);
-        if (data.postCode) formData.append("postCode", data.postCode);
+        if (data.postCode) formData.append("postcode", data.postCode);
         if (data.phone) formData.append("phone", data.phone);
+        if (data.email) formData.append("email", data.email);
+        if (data.website) formData.append("website", data.website);
         if (data.about) formData.append("about", data.about);
         if (data.documentType) {
           formData.append("documentType", data.documentType);
