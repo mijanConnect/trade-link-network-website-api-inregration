@@ -143,9 +143,12 @@ function AboutForm() {
       }).unwrap();
 
       toast.success("Profile updated successfully");
-      
+
       // Check if token exists, if yes, user is already logged in - redirect to home
-      const authToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+      const authToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
       if (authToken) {
         router.push("/trade-person");
       } else {

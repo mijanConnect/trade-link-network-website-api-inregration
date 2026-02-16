@@ -153,7 +153,7 @@ const myProfileSlice = baseApi.injectEndpoints({
           formData.append("businessImage", data.businessImageFile);
         }
         if (data.verificationDocumentFile) {
-          formData.append("verificationDocument", data.verificationDocumentFile);
+          formData.append("doc", data.verificationDocumentFile);
         }
 
         return {
