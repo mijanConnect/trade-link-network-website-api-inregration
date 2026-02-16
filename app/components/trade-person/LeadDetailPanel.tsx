@@ -314,12 +314,12 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
             size="md"
             onClick={() => setIsRefundModalOpen(true)}
             disabled={!isRefundEnabled}
-            className="w-full"
+            className="w-36! cursor-pointer "
           >
             Request Refund
           </Button>
           {!isRefundEnabled && createdAt && (
-            <p className="mt-2 text-[12px] text-slate-500 text-center">
+            <p className="mt-2 text-[12px] text-slate-500 font-semibold">
               Refund option will be available 24 hours after payment
             </p>
           )}
