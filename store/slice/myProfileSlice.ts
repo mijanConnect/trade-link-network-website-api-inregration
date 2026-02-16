@@ -81,6 +81,8 @@ export interface UpdateMyProfilePayload {
   about?: string;
   // Local-only field for uploading a new business image
   businessImageFile?: File;
+  // Local-only field for uploading verification document
+  verificationDocumentFile?: File;
 }
 
 // ---------------------------------------
@@ -149,6 +151,9 @@ const myProfileSlice = baseApi.injectEndpoints({
         }
         if (data.businessImageFile) {
           formData.append("businessImage", data.businessImageFile);
+        }
+        if (data.verificationDocumentFile) {
+          formData.append("verificationDocument", data.verificationDocumentFile);
         }
 
         return {

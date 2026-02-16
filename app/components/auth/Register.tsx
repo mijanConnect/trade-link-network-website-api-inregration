@@ -63,7 +63,7 @@ export default function RegisterPage() {
         localStorage.setItem("signupEmail", email);
       }
 
-      router.push("/verify-otp");
+      router.push("/verify-register-otp");
     } catch (error: any) {
       const errorMessage =
         error?.data?.message ||

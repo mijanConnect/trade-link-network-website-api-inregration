@@ -62,7 +62,7 @@ export default function InputField({
             border-primaryTextLight
             bg-transparent
             px-5
-            py-4
+            py-3
             text-[16px]
             lg
             :text-[14px]

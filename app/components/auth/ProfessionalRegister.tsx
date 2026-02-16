@@ -1,0 +1,426 @@
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
+import InputField from "@/app/components/ui/InputField";
+import TextareaField from "@/app/components/ui/TextareaField";
+import Button from "@/app/components/ui/Button";
+import { CustomSelect } from "@/app/components/ui/CustomSelect";
+import { Upload } from "lucide-react";
+import {
+  useUpdateMyProfileMutation,
+  ProfessionalDocumentType,
+} from "@/store/slice/myProfileSlice";
+import { getImageUrl } from "@/app/components/ui/ImageURL";
+import {
+  useGetCategoriesQuery,
+  useGetCategoriesServicesQuery,
+} from "@/store/slice/categoriesSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { toast } from "sonner";
+import AuthLogo from "./AuthLogo";
+
+export default function ProfessionalRefister() {
+  return (
+    <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-[550px] border border-gray-200 mt-12 mb-12">
+      <div className="border-b border-stroke mb-2">
+        <AuthLogo />
+      </div>
+      <div className="flex flex-col  md:flex-row">
+        {/* Right Column - Edit Form */}
+        <div className="w-full flex-1 space-y-6 md:w-2/3 bg-background">
+          <h1 className="text-[18px] font-medium text-primaryText md:text-[24px] text-center">
+            Register as a Professional
+          </h1>
+          <AboutForm />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AboutForm() {
+  const router = useRouter();
+  // professional is no longer needed since we're not fetching profile data
+
+  // Fetch categories
+  const { data: categoriesData, isLoading: isCategoriesLoading } =
+    useGetCategoriesQuery({});
+  const categories = useMemo(
+    () => (categoriesData as Array<{ _id: string; name: string }>) || [],
+    [categoriesData],
+  );
+
+  // Initialize selected services as objectIds
+  const initialSelectedServices = useMemo(() => {
+    return [];
+  }, []);
+
+  const [businessName, setBusinessName] = useState("");
+  const [businessImagePreview, setBusinessImagePreview] = useState<string>("");
+  const [businessImageFile, setBusinessImageFile] = useState<File | null>(null);
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [serviceRadiusKm, setServiceRadiusKm] = useState("");
+  const [postcode, setPostcode] = useState("");
+
+  // Store selected services as objectIds
+  const [selectedProfessions, setSelectedProfessions] = useState<string[]>(
+    initialSelectedServices,
+  );
+
+  // Initialize professionCategory - use first category if available, or empty string
+  const [professionCategory, setProfessionCategory] = useState<string>("");
+
+  const [phone, setPhone] = useState("");
+  const [officeAddress, setOfficeAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
+  const [about, setAbout] = useState("");
+  const [documentType, setDocumentType] = useState<
+    ProfessionalDocumentType | ""
+  >("");
+
+  const [updateMyProfile, { isLoading: isUpdating }] =
+    useUpdateMyProfileMutation();
+
+  // Fetch services for selected category
+  const { data: servicesData, isLoading: isServicesLoading } =
+    useGetCategoriesServicesQuery(
+      professionCategory ? professionCategory : skipToken,
+    );
+  const availableServices =
+    (servicesData as Array<{ _id: string; name: string }>) || [];
+
+  // Create profession options from categories
+  const professionOptions = categories.map((cat) => ({
+    label: cat.name,
+    value: cat._id,
+  }));
+
+  // Get service names for display from selected objectIds
+  const getServiceName = (serviceId: string) => {
+    const service = availableServices.find((s) => s._id === serviceId);
+    if (service) return service.name;
+    return serviceId; // Fallback to ID if name not found
+  };
+
+  // Update professionCategory when categories are loaded (only once)
+  // Using a ref to track initialization to avoid linter warnings
+  useEffect(() => {
+    // Keep professionCategory empty - user must select
+  }, [categories]);
+
+  const handleRemoveProfession = (serviceId: string) => {
+    setSelectedProfessions((prev) => prev.filter((p) => p !== serviceId));
+  };
+
+  const handleAddProfession = (serviceId: string) => {
+    if (!selectedProfessions.includes(serviceId)) {
+      setSelectedProfessions((prev) => [...prev, serviceId]);
+    }
+  };
+
+  // Reset selected services when category changes
+  const handleCategoryChange = (categoryId: string) => {
+    setProfessionCategory(categoryId);
+    // Optionally clear selected services when category changes
+    // setSelectedProfessions([]);
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateMyProfile({
+        businessName,
+        serviceRadiusKm,
+        documentType: documentType || undefined,
+        address: officeAddress,
+        postCode: postcode,
+        services: selectedProfessions,
+        phone,
+        about,
+        businessImageFile: businessImageFile ?? undefined,
+        verificationDocumentFile: documentFile ?? undefined,
+      }).unwrap();
+
+      toast.success("Profile updated successfully");
+      
+      // Check if token exists, if yes, user is already logged in - redirect to home
+      const authToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+      if (authToken) {
+        router.push("/");
+      } else {
+        // No token, redirect to login
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Failed to update profile", error);
+      toast.error("Failed to update profile");
+    }
+  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setBusinessImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setBusinessImagePreview(previewUrl);
+  };
+
+  const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setDocumentFile(file);
+  };
+
+  const handleServiceRadiusChange = (value: string) => {
+    // Only allow non-negative numbers
+    if (value === "") {
+      setServiceRadiusKm("");
+    } else {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue >= 0) {
+        setServiceRadiusKm(value);
+      }
+    }
+  };
+
+  return (
+    <div className="max-w-2xl border rounded-sm p-4">
+      {/* Business Photos */}
+      <div className="rounded-sm">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+          Add your business photos
+        </h2>
+        <label className="flex h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
+          {businessImagePreview ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={getImageUrl(businessImagePreview)}
+              alt="Business"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="text-center">
+              <Upload size={32} className="mx-auto text-slate-400" />
+              <p className="mt-2 text-[14px] text-slate-600">
+                Click to upload image
+              </p>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+          />
+        </label>
+      </div>
+
+      {/* Profile Details */}
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+          Profile Details
+        </h2>
+        <div className="space-y-4">
+          <InputField
+            title="Business Name"
+            placeholder="Enter business name"
+            initialValue={businessName}
+            onChange={setBusinessName}
+          />
+          <InputField
+            title="Postcode"
+            placeholder="Enter postcode"
+            initialValue={postcode}
+            onChange={setPostcode}
+          />
+          <InputField
+            title="Service radius (km)"
+            placeholder="Enter service radius (km)"
+            type="number"
+            initialValue={serviceRadiusKm}
+            onChange={handleServiceRadiusChange}
+          />
+          <div>
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Select profession category
+            </div>
+            <CustomSelect
+              value={professionCategory}
+              options={professionOptions}
+              onChange={handleCategoryChange}
+              disabled={isCategoriesLoading}
+            />
+          </div>
+          <div>
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Select profession
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2 mb-3">
+              {selectedProfessions.map((serviceId) => (
+                <span
+                  key={serviceId}
+                  className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-3 py-1.5 text-[13px] text-primary"
+                >
+                  {getServiceName(serviceId)}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveProfession(serviceId)}
+                    className="hover:text-primary/70"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            {isServicesLoading ? (
+              <div className="mt-2 text-sm text-slate-500">
+                Loading services...
+              </div>
+            ) : (
+              <CustomSelect
+                placeholder={
+                  !professionCategory
+                    ? "Select a category first..."
+                    : "Select profession..."
+                }
+                options={availableServices
+                  .filter((s) => !selectedProfessions.includes(s._id))
+                  .map((service) => ({
+                    label: service.name,
+                    value: service._id,
+                  }))}
+                value={null}
+                onChange={(value) => handleAddProfession(value)}
+                disabled={!professionCategory || availableServices.length === 0}
+              />
+            )}
+          </div>
+          <TextareaField
+            title="About"
+            initialValue={about}
+            onChange={setAbout}
+            rows={6}
+            placeholder="Tell us about your business..."
+          />
+        </div>
+      </div>
+
+      {/* Documents */}
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+          Add your business/personal documents
+        </h2>
+        <div>
+          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+            Document type
+          </div>
+          <CustomSelect
+            value={documentType}
+            options={[
+              {
+                label: "Driving licence",
+                value: ProfessionalDocumentType.DRIVING_LICENSE,
+              },
+              {
+                label: "Passport",
+                value: ProfessionalDocumentType.PASSPORT,
+              },
+              {
+                label: "Insurance",
+                value: ProfessionalDocumentType.INSURANCE,
+              },
+            ]}
+            onChange={(value) =>
+              setDocumentType(value as ProfessionalDocumentType)
+            }
+          />
+        </div>
+        <label
+          className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
+            documentType
+              ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
+              : "border-gray-200 bg-gray-50 cursor-not-allowed"
+          }`}
+        >
+          <div className="text-center">
+            <Upload
+              size={32}
+              className={`mx-auto ${
+                documentType ? "text-slate-400" : "text-gray-300"
+              }`}
+            />
+            <p
+              className={`mt-2 text-[14px] ${
+                documentType ? "text-slate-600" : "text-gray-400"
+              }`}
+            >
+              {documentFile ? documentFile.name : "Upload document"}
+            </p>
+            {!documentType && (
+              <p className="mt-1 text-[12px] text-gray-400">
+                Select document type first
+              </p>
+            )}
+          </div>
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleDocumentChange}
+            disabled={!documentType}
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          />
+        </label>
+      </div>
+
+      {/* Contact */}
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+          Contact
+        </h2>
+        <div className="space-y-4">
+          <InputField
+            title="Phone number"
+            placeholder="Enter phone number"
+            initialValue={phone}
+            onChange={setPhone}
+            type="tel"
+          />
+          <InputField
+            title="Office address"
+            placeholder="Enter office address"
+            initialValue={officeAddress}
+            onChange={setOfficeAddress}
+          />
+          <InputField
+            title="Email"
+            placeholder="Enter email"
+            initialValue={email}
+            onChange={setEmail}
+            type="email"
+          />
+          <InputField
+            title="Website (Optional)"
+            placeholder="Enter web address"
+            initialValue={website}
+            onChange={setWebsite}
+          />
+        </div>
+      </div>
+
+      {/* Save Button */}
+      <div className="mt-8">
+        <Button
+          fullWidth
+          variant="primary"
+          onClick={handleSave}
+          loading={isUpdating}
+        >
+          {isUpdating ? "Submitting..." : "Submit"}
+        </Button>
+      </div>
+    </div>
+  );
+}

@@ -11,7 +11,7 @@ import {
   useVerifyEmailMutation,
 } from "@/store/slice/authSlice";
 
-export default function VerifyOTPPage() {
+export default function VerifyRegisterOTPPage() {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);

@@ -15,6 +15,7 @@ interface CustomSelectProps {
   placeholder?: string;
   value?: string | null;
   onChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
 export function CustomSelect({
@@ -24,6 +25,7 @@ export function CustomSelect({
   placeholder = "Please select",
   value,
   onChange,
+  disabled = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<string | null>(null);
@@ -37,8 +39,13 @@ export function CustomSelect({
         </label>
       )}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-5 py-3 text-[14px] lg:text-[16px] text-left text-primaryText border border-primaryTextLight rounded-sm bg-transparent hover:bg-gray-50 flex items-center justify-between"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+        className={`w-full px-5 py-3 text-[14px] lg:text-[16px] text-left border border-primaryTextLight rounded-sm flex items-center justify-between ${
+          disabled
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "text-primaryText bg-transparent hover:bg-gray-50 cursor-pointer"
+        }`}
       >
         <span className={selected ? "" : "text-gray-400 font-normal"}>
           {selected
