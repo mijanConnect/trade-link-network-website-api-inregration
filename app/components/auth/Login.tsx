@@ -10,6 +10,20 @@ import AuthLoginDescription from "./AuthLoginDescription";
 import { useLoginMutation } from "@/store/slice/authSlice";
 import { toast } from "sonner";
 
+// Helper function to decode JWT and extract role
+const getRoleFromToken = (token: string): string | null => {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    
+    const decoded = JSON.parse(atob(parts[1]));
+    return decoded?.role || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,11 +44,20 @@ export default function LoginPage() {
         toast.success("Login successful!");
       }
 
-      // Check role and redirect accordingly
-      const role = response?.data?.role || response?.role;
+      // Extract role from JWT token
+      const token = response?.data?.accessToken;
+      const role = token ? getRoleFromToken(token) : null;
+      
+      console.log("Login response:", response);
+      console.log("Token:", token);
+      console.log("Role extracted from token:", role);
+      console.log("Role comparison (PROFESSIONAL):", role === "PROFESSIONAL");
+      
       if (role === "PROFESSIONAL") {
+        console.log("Redirecting to /trade-person");
         router.push("/trade-person");
       } else {
+        console.log("Redirecting to /");
         router.push("/");
       }
     } catch (err) {

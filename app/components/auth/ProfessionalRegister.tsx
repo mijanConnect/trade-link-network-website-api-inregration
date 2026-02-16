@@ -147,7 +147,7 @@ function AboutForm() {
       // Check if token exists, if yes, user is already logged in - redirect to home
       const authToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
       if (authToken) {
-        router.push("/");
+        router.push("/trade-person");
       } else {
         // No token, redirect to login
         router.push("/login");
