@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft } from "lucide-react";
-import Button from "../ui/Button";
+// import Button from "../ui/Button";
 import Link from "next/link";
 import { useGetJobsDetailsQuery } from "@/store/slice/myJobsSlice";
 import { useParams } from "next/navigation";
@@ -153,9 +153,9 @@ export default function JobDetails() {
         </section>
       </div>
 
-      <Button variant="primary" size="md" className="mt-4 lg:mt-10">
+      {/* <Button variant="primary" size="md" className="mt-4 lg:mt-10">
         Edit Job Post
-      </Button>
+      </Button> */}
     </div>
   );
 }
