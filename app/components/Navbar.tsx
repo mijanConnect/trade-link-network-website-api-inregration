@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "./ui/Button";
 import { LogoNav, LogoNavMobile } from "./Svg";
@@ -114,6 +114,21 @@ export default function Navbar() {
     return false;
   };
 
+  const handleScrollToCategory = useCallback(() => {
+    if (pathname !== "/") {
+      // Navigate to home first, then scroll
+      router.push("/");
+      // Set a flag to scroll after navigation
+      localStorage.setItem("scrollToCategory", "true");
+    } else {
+      // Already on home, scroll immediately
+      const target = document.getElementById("browse-category");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  }, [pathname, router]);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -130,6 +145,22 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  // Handle scroll to category when navigated from another route
+  useEffect(() => {
+    if (pathname === "/" && typeof window !== "undefined") {
+      const shouldScroll = localStorage.getItem("scrollToCategory");
+      if (shouldScroll === "true") {
+        localStorage.removeItem("scrollToCategory");
+        const target = document.getElementById("browse-category");
+        if (target) {
+          setTimeout(() => {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
+        }
+      }
+    }
+  }, [pathname]);
 
   if (typeof window === "undefined") {
     return null;
@@ -214,15 +245,12 @@ export default function Navbar() {
 
             {!isLoggedIn && (
               <div className="hidden lg:flex items-center gap-2 lg:gap-6">
-                <Link
-                  href="/login"
-                  className={`nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all ${
-                    isActive("/post-job") ? "active" : ""
-                  }`}
-                  onClick={() => setOpen(false)}
+                <button
+                  onClick={handleScrollToCategory}
+                  className="nav-link text-[14px] sm:text-[16px] font-bold text-primary transition-all cursor-pointer"
                 >
                   Post a Job
-                </Link>
+                </button>
 
                 <Link
                   href="/login"
@@ -238,7 +266,7 @@ export default function Navbar() {
 
             {!isLoggedIn && (
               <Button
-                onClick={() => router.push("/trade-person/leads")}
+                onClick={() => router.push("/register")}
                 variant="primary"
                 size="sm"
                 className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
@@ -356,13 +384,15 @@ export default function Navbar() {
 
                 {!isLoggedIn && (
                   <>
-                    <Link
-                      href="/login"
+                    <button
+                      onClick={() => {
+                        handleScrollToCategory();
+                        setOpen(false);
+                      }}
                       className="bg-primary p-2 text-white font-semibold text-center flex-1"
-                      onClick={() => setOpen(false)}
                     >
                       Post a Job
-                    </Link>
+                    </button>
 
                     <Link
                       href="/login"

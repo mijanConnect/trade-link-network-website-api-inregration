@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import TradePersonProfileCard from "@/app/components/trade-person/TradePersonProfileCard";
+import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
-import SelectField from "@/app/components/ui/SelectField";
 import TextareaField from "@/app/components/ui/TextareaField";
 import Button from "@/app/components/ui/Button";
+import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import { Upload } from "lucide-react";
 import {
-  useGetMyProfileQuery,
   useUpdateMyProfileMutation,
   ProfessionalDocumentType,
 } from "@/store/slice/myProfileSlice";
-import type { MyProfileUser } from "@/store/slice/myProfileSlice";
 import { getImageUrl } from "@/app/components/ui/ImageURL";
 import {
   useGetCategoriesQuery,
@@ -20,42 +18,30 @@ import {
 } from "@/store/slice/categoriesSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { toast } from "sonner";
+import AuthLogo from "./AuthLogo";
 
-export default function AboutPage() {
-  const { data: profileData, isLoading } = useGetMyProfileQuery();
-
-  if (isLoading || !profileData?.data) {
-    return (
-      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-      </div>
-    );
-  }
-
+export default function ProfessionalRefister() {
   return (
-    <div className="flex flex-col  md:flex-row">
-      {/* Left Column - Profile Card */}
-      <aside className="w-full md:w-1/3  container mx-auto">
-        <TradePersonProfileCard />
-      </aside>
-
-      {/* Right Column - Edit Form */}
-      <div className="w-full flex-1 space-y-6 md:w-2/3 bg-background p-12 ">
-        <h1 className="text-2xl font-bold text-primaryText md:text-[32px]">
-          About
-        </h1>
-        <AboutForm user={profileData.data} />
+    <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-[550px] border border-gray-200 mt-12 mb-12">
+      <div className="border-b border-stroke mb-2">
+        <AuthLogo />
+      </div>
+      <div className="flex flex-col  md:flex-row">
+        {/* Right Column - Edit Form */}
+        <div className="w-full flex-1 space-y-6 md:w-2/3 bg-background">
+          <h1 className="text-[18px] font-medium text-primaryText md:text-[24px] text-center">
+            Register as a Professional
+          </h1>
+          <AboutForm />
+        </div>
       </div>
     </div>
   );
 }
 
-type AboutFormProps = {
-  user: MyProfileUser;
-};
-
-function AboutForm({ user }: AboutFormProps) {
-  const professional = user.professional;
+function AboutForm() {
+  const router = useRouter();
+  // professional is no longer needed since we're not fetching profile data
 
   // Fetch categories
   const { data: categoriesData, isLoading: isCategoriesLoading } =
@@ -67,28 +53,15 @@ function AboutForm({ user }: AboutFormProps) {
 
   // Initialize selected services as objectIds
   const initialSelectedServices = useMemo(() => {
-    if (!Array.isArray(professional?.services)) return [];
-    return professional.services
-      .map((s: string | { _id: string; name: string }) =>
-        typeof s === "string" ? s : (s?._id ?? ""),
-      )
-      .filter(Boolean);
-  }, [professional]);
+    return [];
+  }, []);
 
-  const [businessName, setBusinessName] = useState(
-    professional?.businessName ?? "",
-  );
-  const initialImageUrl = getImageUrl(professional?.businessImage);
-  const [businessImagePreview, setBusinessImagePreview] =
-    useState<string>(initialImageUrl);
+  const [businessName, setBusinessName] = useState("");
+  const [businessImagePreview, setBusinessImagePreview] = useState<string>("");
   const [businessImageFile, setBusinessImageFile] = useState<File | null>(null);
-  const [serviceRadiusKm, setServiceRadiusKm] = useState(
-    professional?.serviceRadiusKm !== undefined &&
-      professional?.serviceRadiusKm !== null
-      ? String(professional.serviceRadiusKm)
-      : "",
-  );
-  const [postcode, setpostcode] = useState(professional?.postcode ?? "");
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [serviceRadiusKm, setServiceRadiusKm] = useState("");
+  const [postcode, setpostcode] = useState("");
 
   // Store selected services as objectIds
   const [selectedProfessions, setSelectedProfessions] = useState<string[]>(
@@ -97,18 +70,15 @@ function AboutForm({ user }: AboutFormProps) {
 
   // Initialize professionCategory - use first category if available, or empty string
   const [professionCategory, setProfessionCategory] = useState<string>("");
-  const categoryInitialized = useRef(false);
 
-  const [phone, setPhone] = useState(user.phone ?? "");
-  const [officeAddress, setOfficeAddress] = useState(
-    professional?.address ?? "",
-  );
-  const [email, setEmail] = useState(user.email ?? "");
+  const [phone, setPhone] = useState("");
+  const [officeAddress, setOfficeAddress] = useState("");
+  const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
-  const [about, setAbout] = useState(professional?.about ?? "");
-  const [documentType] = useState<ProfessionalDocumentType | "">(
-    professional?.verificationDocuments?.[0]?.documentType ?? "",
-  );
+  const [about, setAbout] = useState("");
+  const [documentType, setDocumentType] = useState<
+    ProfessionalDocumentType | ""
+  >("");
 
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
@@ -128,33 +98,16 @@ function AboutForm({ user }: AboutFormProps) {
   }));
 
   // Get service names for display from selected objectIds
-  // This will try to find the service in availableServices, or return a fallback
   const getServiceName = (serviceId: string) => {
     const service = availableServices.find((s) => s._id === serviceId);
     if (service) return service.name;
-    // If service not found in current category, check if it's in professional data
-    if (professional?.services) {
-      const existingService = professional.services.find(
-        (s: string | { _id: string; name: string }) =>
-          (typeof s === "string" ? s : s?._id) === serviceId,
-      );
-      if (existingService && typeof existingService === "object") {
-        return existingService.name || serviceId;
-      }
-    }
     return serviceId; // Fallback to ID if name not found
   };
 
   // Update professionCategory when categories are loaded (only once)
   // Using a ref to track initialization to avoid linter warnings
   useEffect(() => {
-    if (categories.length > 0 && !categoryInitialized.current) {
-      categoryInitialized.current = true;
-      // Use requestAnimationFrame to defer state update
-      requestAnimationFrame(() => {
-        setProfessionCategory(categories[0]._id);
-      });
-    }
+    // Keep professionCategory empty - user must select
   }, [categories]);
 
   const handleRemoveProfession = (serviceId: string) => {
@@ -174,15 +127,6 @@ function AboutForm({ user }: AboutFormProps) {
     // setSelectedProfessions([]);
   };
 
-  // State to control select dropdown reset
-  const [selectKey, setSelectKey] = useState(0);
-
-  const handleAddProfessionWithReset = (serviceId: string) => {
-    handleAddProfession(serviceId);
-    // Reset select dropdown
-    setSelectKey((prev) => prev + 1);
-  };
-
   const handleSave = async () => {
     try {
       await updateMyProfile({
@@ -193,13 +137,29 @@ function AboutForm({ user }: AboutFormProps) {
         postcode: postcode,
         services: selectedProfessions,
         phone,
+        email,
+        website,
         about,
         businessImageFile: businessImageFile ?? undefined,
+        verificationDocumentFile: documentFile ?? undefined,
       }).unwrap();
 
       toast.success("Profile updated successfully");
+
+      // Check if token exists, if yes, user is already logged in - redirect to home
+      const authToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("accessToken")
+          : null;
+      if (authToken) {
+        router.push("/trade-person");
+      } else {
+        // No token, redirect to login
+        router.push("/login");
+      }
     } catch (error) {
       console.error("Failed to update profile", error);
+      toast.error("Failed to update profile");
     }
   };
 
@@ -212,11 +172,30 @@ function AboutForm({ user }: AboutFormProps) {
     setBusinessImagePreview(previewUrl);
   };
 
+  const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setDocumentFile(file);
+  };
+
+  const handleServiceRadiusChange = (value: string) => {
+    // Only allow non-negative numbers
+    if (value === "") {
+      setServiceRadiusKm("");
+    } else {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue >= 0) {
+        setServiceRadiusKm(value);
+      }
+    }
+  };
+
   return (
     <div className="max-w-2xl border rounded-sm p-4">
       {/* Business Photos */}
-      <div className="rounded-sm p-4">
-        <h2 className="mb-4 text-[14px] font-semibold text-primaryText">
+      <div className="rounded-sm">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Add your business photos
         </h2>
         <label className="flex h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
@@ -245,39 +224,46 @@ function AboutForm({ user }: AboutFormProps) {
       </div>
 
       {/* Profile Details */}
-      <div className="rounded-sm p-4">
-        <h2 className="mb-4 text-[14px] font-semibold text-primaryText">
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Profile Details
         </h2>
         <div className="space-y-4">
           <InputField
             title="Business Name"
+            placeholder="Enter business name"
             initialValue={businessName}
             onChange={setBusinessName}
           />
           <InputField
             title="postcode"
+            placeholder="Enter postcode"
             initialValue={postcode}
             onChange={setpostcode}
           />
           <InputField
             title="Service radius (km)"
+            placeholder="Enter service radius (km)"
             type="number"
             initialValue={serviceRadiusKm}
-            onChange={setServiceRadiusKm}
-          />
-          <SelectField
-            title="Select profession category"
-            value={professionCategory}
-            options={professionOptions}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            disabled={isCategoriesLoading}
+            onChange={handleServiceRadiusChange}
           />
           <div>
-            <label className="text-[16px] font-semibold text-primaryText">
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Select profession category
+            </div>
+            <CustomSelect
+              value={professionCategory}
+              options={professionOptions}
+              onChange={handleCategoryChange}
+              disabled={isCategoriesLoading}
+            />
+          </div>
+          <div>
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
               Select profession
-            </label>
-            <div className="mt-2 flex flex-wrap gap-2">
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2 mb-3">
               {selectedProfessions.map((serviceId) => (
                 <span
                   key={serviceId}
@@ -299,29 +285,22 @@ function AboutForm({ user }: AboutFormProps) {
                 Loading services...
               </div>
             ) : (
-              <select
-                key={selectKey}
-                className="mt-2 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-[14px]"
-                onChange={(e) => {
-                  if (e.target.value)
-                    handleAddProfessionWithReset(e.target.value);
-                }}
-                defaultValue=""
-                disabled={!professionCategory || availableServices.length === 0}
-              >
-                <option value="">
-                  {!professionCategory
+              <CustomSelect
+                placeholder={
+                  !professionCategory
                     ? "Select a category first..."
-                    : "Select profession..."}
-                </option>
-                {availableServices
+                    : "Select profession..."
+                }
+                options={availableServices
                   .filter((s) => !selectedProfessions.includes(s._id))
-                  .map((service) => (
-                    <option key={service._id} value={service._id}>
-                      {service.name}
-                    </option>
-                  ))}
-              </select>
+                  .map((service) => ({
+                    label: service.name,
+                    value: service._id,
+                  }))}
+                value={null}
+                onChange={(value) => handleAddProfession(value)}
+                disabled={!professionCategory || availableServices.length === 0}
+              />
             )}
           </div>
           <TextareaField
@@ -335,21 +314,15 @@ function AboutForm({ user }: AboutFormProps) {
       </div>
 
       {/* Documents */}
-      {/* <div className="rounded-sm p-4">
-        <h2 className="mb-4 text-[14px] font-semibold text-primaryText">
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Add your business/personal documents
         </h2>
-        <div className="flex flex-col gap-4">
-          <div className="flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed border-slate-300">
-            <div className="text-center">
-              <Upload size={32} className="mx-auto text-slate-400" />
-              <p className="mt-2 text-[14px] text-slate-600">
-                Upload documents
-              </p>
-            </div>
+        <div>
+          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+            Document type
           </div>
-          <SelectField
-            title="Document type"
+          <CustomSelect
             value={documentType}
             options={[
               {
@@ -365,38 +338,77 @@ function AboutForm({ user }: AboutFormProps) {
                 value: ProfessionalDocumentType.INSURANCE,
               },
             ]}
-            onChange={(e) =>
-              setDocumentType(e.target.value as ProfessionalDocumentType)
+            onChange={(value) =>
+              setDocumentType(value as ProfessionalDocumentType)
             }
           />
         </div>
-      </div> */}
+        <label
+          className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
+            documentType
+              ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
+              : "border-gray-200 bg-gray-50 cursor-not-allowed"
+          }`}
+        >
+          <div className="text-center">
+            <Upload
+              size={32}
+              className={`mx-auto ${
+                documentType ? "text-slate-400" : "text-gray-300"
+              }`}
+            />
+            <p
+              className={`mt-2 text-[14px] ${
+                documentType ? "text-slate-600" : "text-gray-400"
+              }`}
+            >
+              {documentFile ? documentFile.name : "Upload document"}
+            </p>
+            {!documentType && (
+              <p className="mt-1 text-[12px] text-gray-400">
+                Select document type first
+              </p>
+            )}
+          </div>
+          <input
+            type="file"
+            className="hidden"
+            onChange={handleDocumentChange}
+            disabled={!documentType}
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          />
+        </label>
+      </div>
 
       {/* Contact */}
-      <div className="rounded-sm p-4">
-        <h2 className="mb-4 text-[14px] font-semibold text-primaryText">
+      <div className="rounded-sm mt-6">
+        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Contact
         </h2>
         <div className="space-y-4">
           <InputField
             title="Phone number"
+            placeholder="Enter phone number"
             initialValue={phone}
             onChange={setPhone}
             type="tel"
           />
           <InputField
             title="Office address"
+            placeholder="Enter office address"
             initialValue={officeAddress}
             onChange={setOfficeAddress}
           />
           <InputField
             title="Email"
+            placeholder="Enter email"
             initialValue={email}
             onChange={setEmail}
             type="email"
           />
           <InputField
             title="Website (Optional)"
+            placeholder="Enter web address"
             initialValue={website}
             onChange={setWebsite}
           />
@@ -404,15 +416,14 @@ function AboutForm({ user }: AboutFormProps) {
       </div>
 
       {/* Save Button */}
-      <div>
+      <div className="mt-8">
         <Button
-          variant="primary"
-          size="lg"
           fullWidth
-          loading={isUpdating}
+          variant="primary"
           onClick={handleSave}
+          loading={isUpdating}
         >
-          Save Changes
+          {isUpdating ? "Submitting..." : "Submit"}
         </Button>
       </div>
     </div>

@@ -120,6 +120,19 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
   const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
   const [refundJobPost, { isLoading: isRefunding }] = useRefundJobPostMutation();
 
+  // Check if refund button should be enabled (24 hours after createdAt)
+  // This hook must be called before any early returns
+  const isRefundEnabled = useMemo(() => {
+    if (!createdAt || tab !== "pending" || source !== "my-responses") {
+      return false;
+    }
+    const createdAtDate = new Date(createdAt);
+    const now = new Date();
+    const hoursDiff =
+      (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
+    return hoursDiff >= 24;
+  }, [createdAt, tab, source]);
+
   if (!lead) {
     return (
       <div className="flex h-[600px] items-center justify-center rounded-lg border border-slate-200 bg-white">
@@ -171,17 +184,6 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
       setIsProcessing(false);
     }
   };
-
-  const isRefundEnabled = useMemo(() => {
-    if (!createdAt || tab !== "pending" || source !== "my-responses") {
-      return false;
-    }
-    const createdAtDate = new Date(createdAt);
-    const now = new Date();
-    const hoursDiff =
-      (now.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60);
-    return hoursDiff >= 24;
-  }, [createdAt, tab, source]);
   
   // Show refund button only for pending tab in my-responses
   const showRefundButton = tab === "pending" && source === "my-responses" && jobId;
@@ -201,9 +203,12 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
       
       toast.success("Refund request submitted successfully");
       setIsRefundModalOpen(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Refund error:", error);
-      toast.error(error?.data?.message || "Failed to submit refund request. Please try again.");
+      const errorMessage = 
+        (error as { data?: { message?: string } })?.data?.message || 
+        "Failed to submit refund request. Please try again.";
+      toast.error(errorMessage);
     }
   };
 

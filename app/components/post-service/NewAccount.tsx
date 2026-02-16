@@ -116,6 +116,7 @@ export default function NewAccount({
               Name
             </label>
             <InputField
+              disabled={showOtpInput}
               placeholder="Enter your name"
               initialValue={name}
               onChange={(val: string) => handleDataChange("name", val)}
@@ -126,6 +127,7 @@ export default function NewAccount({
               Email Address
             </label>
             <InputField
+              disabled={showOtpInput}
               placeholder="example.email@gmail.com"
               initialValue={email}
               onChange={(val: string) => handleDataChange("email", val)}
@@ -136,6 +138,7 @@ export default function NewAccount({
               Phone number
             </h4>
             <PhoneInputWithCountrySelect
+              disabled={showOtpInput}
               international
               countryCallingCodeEditable={false}
               countries={["GB"]}
@@ -151,6 +154,8 @@ export default function NewAccount({
                 paddingLeft: "12px",
                 fontSize: "16px",
                 fontFamily: "inherit",
+                opacity: showOtpInput ? 0.5 : 1,
+                cursor: showOtpInput ? "not-allowed" : "text",
               }}
             />
           </div>
@@ -159,6 +164,7 @@ export default function NewAccount({
               Password
             </label>
             <InputField
+              disabled={showOtpInput}
               type="password"
               placeholder="Enter your password"
               initialValue={password}

@@ -10,6 +10,20 @@ import AuthLoginDescription from "./AuthLoginDescription";
 import { useLoginMutation } from "@/store/slice/authSlice";
 import { toast } from "sonner";
 
+// Helper function to decode JWT and extract role
+const getRoleFromToken = (token: string): string | null => {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    
+    const decoded = JSON.parse(atob(parts[1]));
+    return decoded?.role || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +44,22 @@ export default function LoginPage() {
         toast.success("Login successful!");
       }
 
-      router.push("/"); // Redirect to dashboard or any desired page after login
+      // Extract role from JWT token
+      const token = response?.data?.accessToken;
+      const role = token ? getRoleFromToken(token) : null;
+      
+      console.log("Login response:", response);
+      console.log("Token:", token);
+      console.log("Role extracted from token:", role);
+      console.log("Role comparison (PROFESSIONAL):", role === "PROFESSIONAL");
+      
+      if (role === "PROFESSIONAL") {
+        console.log("Redirecting to /trade-person");
+        router.push("/trade-person");
+      } else {
+        console.log("Redirecting to /");
+        router.push("/");
+      }
     } catch (err) {
       // Handle error if login fails
       const error = err as Record<string, unknown>;
@@ -107,17 +136,17 @@ export default function LoginPage() {
           {/* Button text changes based on loading state */}
         </Button>
       </div>
-      {/* <div className="mt-6 text-center">
+      <div className="mt-6 text-center">
         <p className="text-[15px]">
-          Don&apos;t have an account?{" "}
+          Sign Up as{" "}
           <span
             onClick={() => router.push("/register")}
             className="font-semibold text-primary cursor-pointer hover:underline"
           >
-            Sign Up for free
+            Tradeperson
           </span>
         </p>
-      </div> */}
+      </div>
     </div>
   );
 }

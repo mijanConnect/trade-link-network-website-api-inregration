@@ -38,7 +38,7 @@ export interface ProfessionalProfile {
   totalReviews: number;
   createdAt: string;
   updatedAt: string;
-  postCode: string;
+  postcode: string;
   user: string;
   approveStatus: string;
   verificationDocuments: VerificationDocument[];
@@ -75,12 +75,16 @@ export interface UpdateMyProfilePayload {
   serviceRadiusKm?: string | number;
   documentType?: ProfessionalDocumentType;
   address?: string;
-  postCode?: string;
+  postcode?: string;
   services?: string[];
   phone?: string;
+  email?: string;
+  website?: string;
   about?: string;
   // Local-only field for uploading a new business image
   businessImageFile?: File;
+  // Local-only field for uploading verification document
+  verificationDocumentFile?: File;
 }
 
 // ---------------------------------------
@@ -129,17 +133,26 @@ const myProfileSlice = baseApi.injectEndpoints({
     }),
 
     // UPDATE my profile (supports JSON or FormData with image)
-    updateMyProfile: builder.mutation<MyProfileResponse, UpdateMyProfilePayload>({
+    updateMyProfile: builder.mutation<
+      MyProfileResponse,
+      UpdateMyProfilePayload
+    >({
       query: (data) => {
         const formData = new FormData();
 
-        if (data.businessName) formData.append("businessName", data.businessName);
-        if (data.serviceRadiusKm !== undefined && data.serviceRadiusKm !== null) {
+        if (data.businessName)
+          formData.append("businessName", data.businessName);
+        if (
+          data.serviceRadiusKm !== undefined &&
+          data.serviceRadiusKm !== null
+        ) {
           formData.append("serviceRadiusKm", String(data.serviceRadiusKm));
         }
         if (data.address) formData.append("address", data.address);
-        if (data.postCode) formData.append("postCode", data.postCode);
+        if (data.postcode) formData.append("postcode", data.postcode);
         if (data.phone) formData.append("phone", data.phone);
+        if (data.email) formData.append("email", data.email);
+        if (data.website) formData.append("website", data.website);
         if (data.about) formData.append("about", data.about);
         if (data.documentType) {
           formData.append("documentType", data.documentType);
@@ -149,6 +162,9 @@ const myProfileSlice = baseApi.injectEndpoints({
         }
         if (data.businessImageFile) {
           formData.append("businessImage", data.businessImageFile);
+        }
+        if (data.verificationDocumentFile) {
+          formData.append("doc", data.verificationDocumentFile);
         }
 
         return {
