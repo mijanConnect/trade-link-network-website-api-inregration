@@ -200,6 +200,20 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Profile"],
     }),
+
+    // ---------------------------------------
+    // GET WALLET
+    // Returns: { _id, balance }
+    // ---------------------------------------
+    wallet: builder.query({
+      query: () => ({
+        url: "/wallets/mine",
+        method: "GET",
+      }),
+      transformResponse: (response) =>
+        response?.data ?? response,
+      providesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -217,4 +231,5 @@ export const {
   useProfileQuery,
   useCreateCustomerMutation,
   useVerifyPhoneMutation,
+  useWalletQuery,
 } = authApi;

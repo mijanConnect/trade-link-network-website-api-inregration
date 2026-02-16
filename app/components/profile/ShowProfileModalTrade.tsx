@@ -1,4 +1,4 @@
-import { useProfileQuery } from "@/store/slice/authSlice";
+import { useProfileQuery, useWalletQuery } from "@/store/slice/authSlice";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,6 +17,7 @@ export default function ShowProfileModalTrade({
   const router = useRouter();
 
   const { data: profileData } = useProfileQuery({});
+  const { data: walletData } = useWalletQuery({});
 
   return (
     <div className="relative">
@@ -86,6 +87,11 @@ export default function ShowProfileModalTrade({
               </h3>
 
               <p className="text-sm text-gray-500">{profileData?.email}</p>
+
+              <div className="flex gap-1 items-center bg-primary text-white rounded-sm px-3 py-1 mt-2">
+                <p>Wallet Balance:</p>
+                <p>{walletData?.balance || 0}</p>
+              </div>
             </div>
 
             <div className="p-2">
