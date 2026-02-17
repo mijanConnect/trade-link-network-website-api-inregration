@@ -150,12 +150,12 @@ export default function TradePersonHeader() {
         <div className="container mx-auto flex items-center justify-between py-3 gap-4 px-4">
           <div>
             <div className="hidden lg:block">
-              <Link href="/">
+              <Link href="/trade-person/leads">
                 <LogoNav />
               </Link>
             </div>
             <div className="lg:hidden">
-              <Link href="/">
+              <Link href="/trade-person/leads">
                 <LogoNavMobile />
               </Link>
             </div>

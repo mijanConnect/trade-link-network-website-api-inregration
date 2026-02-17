@@ -1,6 +1,7 @@
 import Category from "../components/home/Category";
 import FAQ from "../components/home/FAQ";
 import Hero from "../components/home/Hero";
+import StepsHome from "../components/home/StepsHome";
 import UseUs from "../components/home/UseUs";
 import WorksFlow from "../components/home/WorksFlow";
 import CTA from "../components/ui/CTA";
@@ -13,6 +14,7 @@ export default function Home() {
         <Category />
         <WorksFlow />
         <UseUs />
+        <StepsHome />
         <FAQ />
         <div className="pt-8 lg:pt-20">
           <CTA />
