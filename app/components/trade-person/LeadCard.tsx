@@ -17,7 +17,7 @@ type Props = {
 };
 
 function highlightIcon(h: Lead["highlights"][0]) {
-  if (h === "Verified Phone") return <VerifyIcon  />;
+  if (h === "Verified Phone") return <VerifyIcon />;
   if (h === "Frequent User") return <FrequentUserIcon />;
   return <UrgentIcon />;
 }
@@ -29,35 +29,40 @@ function getResponseStatus(responsesCount: number): string {
 }
 
 function LeadCard({ lead, selected }: Props) {
-  const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
-  const [isProcessing, setIsProcessing] = useState(false);
+  // const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
+  // const [isProcessing, setIsProcessing] = useState(false);
   const isLeadAvailable = lead.responsesCount < 3;
 
-  const handleCheckoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!isLeadAvailable || isPurchasing || isProcessing) return;
-    
-    try {
-      setIsProcessing(true);
-      const result = await purchaseLead(lead.id).unwrap();
-      
-      if (result.checkOutUrl) {
-        // Navigate to Stripe checkout
-        window.location.href = result.checkOutUrl;
-      } else {
-        toast.error("Failed to get checkout URL");
-        setIsProcessing(false);
-      }
-    } catch (error) {
-      console.error("Purchase error:", error);
-      toast.error("Failed to purchase lead. Please try again.");
-      setIsProcessing(false);
-    }
-  };
+  // const handleCheckoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   if (!isLeadAvailable || isPurchasing || isProcessing) return;
+
+  //   try {
+  //     setIsProcessing(true);
+  //     const result = await purchaseLead(lead.id).unwrap() as { checkOutUrl: string | null; payment?: string };
+
+  //     if (result.checkOutUrl) {
+  //       // Navigate to Stripe checkout
+  //       window.location.href = result.checkOutUrl;
+  //     } else if (result.payment === "WALLET") {
+  //       // Payment successful via wallet
+  //       toast.success("Quick payment via your wallet");
+  //       setIsProcessing(false);
+  //       // Optionally refresh the page or update the lead status
+  //     } else {
+  //       toast.error("Failed to get checkout URL");
+  //       setIsProcessing(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Purchase error:", error);
+  //     toast.error((error as { data?: { message?: string } })?.data?.message || "Failed to purchase lead. Please try again.");
+  //     setIsProcessing(false);
+  //   }
+  // };
 
   return (
-    <div className="overflow-hidden rounded-sm  bg-white shadow-sm">
+    <div className="overflow-hidden rounded-sm  bg-white shadow-sm cursor-pointer" >
       <div
         className={`w-full p-4 text-left transition ${selected ? "bg-white border-2 border-primary" : ""}`}
       >
@@ -97,33 +102,58 @@ function LeadCard({ lead, selected }: Props) {
             ))}
           </div>
         )}
+
+
+
+        <button
+          type="button"
+          // onClick={handleCheckoutClick}
+          // disabled={!isLeadAvailable || isPurchasing || isProcessing}
+          className={`flex w-full items-center justify-between bg-primary px-4 mt-4 py-5 text-left text-white transition ${isLeadAvailable ? "hover:bg-slate-800 cursor-pointer" : "cursor-not-allowed opacity-60"}`}
+        >
+          <div className="flex items-center gap-3">
+            {/* three vertical lines icon */}
+            <div className="flex  gap-[3px]">
+              <span className="w-0.5 h-4 rounded-full bg-white" />
+              <span className="w-0.5 h-4 rounded-full bg-white" />
+              <span className="w-0.5 h-4 rounded-full bg-white" />
+            </div>
+            <div className="text-[12px] font-semibold">
+              { isLeadAvailable
+                  ? getResponseStatus(lead.responsesCount)
+                  : "Lead not available"}
+            </div>
+          </div>
+
+          <div className="text-[13px] font-semibold">{lead.priceLabel}</div>
+        </button>
       </div>
 
       {/* Bottom checkout bar - similar to design */}
-      <button
+      {/* <button
         type="button"
         onClick={handleCheckoutClick}
         disabled={!isLeadAvailable || isPurchasing || isProcessing}
         className={`flex w-full items-center justify-between bg-primary px-4 py-5 text-left text-white transition ${isLeadAvailable && !isPurchasing && !isProcessing ? "hover:bg-slate-800 cursor-pointer" : "cursor-not-allowed opacity-60"}`}
       >
         <div className="flex items-center gap-3">
-          {/* three vertical lines icon */}
+   
           <div className="flex  gap-[3px]">
             <span className="w-0.5 h-4 rounded-full bg-white" />
             <span className="w-0.5 h-4 rounded-full bg-white" />
             <span className="w-0.5 h-4 rounded-full bg-white" />
           </div>
           <div className="text-[12px] font-semibold">
-            {isPurchasing || isProcessing 
-              ? "Processing..." 
-              : isLeadAvailable 
-                ? getResponseStatus(lead.responsesCount) 
+            {isPurchasing || isProcessing
+              ? "Processing..."
+              : isLeadAvailable
+                ? getResponseStatus(lead.responsesCount)
                 : "Lead not available"}
           </div>
         </div>
 
         <div className="text-[13px] font-semibold">{lead.priceLabel}</div>
-      </button>
+      </button> */}
     </div>
   );
 }

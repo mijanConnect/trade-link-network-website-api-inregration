@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function MyResponsesIndexPage() {
-  redirect("/trade-person/my-responses/hired");
+  redirect("/trade-person/my-responses/pending");
 }

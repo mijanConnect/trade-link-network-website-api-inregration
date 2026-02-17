@@ -78,7 +78,9 @@ export interface LeadPurchaseResponse {
   success: boolean;
   message: string;
   data: {
-    checkOutUrl: string;
+    checkOutUrl: string | null;
+    payment?: string;
+    message?: string;
   };
 }
 
@@ -131,7 +133,7 @@ const leadSlice = baseApi.injectEndpoints({
             providesTags: ['Leads'],
         }),
 
-        leadPurchase: builder.mutation<{ checkOutUrl: string }, string>({
+        leadPurchase: builder.mutation<{ checkOutUrl: string | null; payment?: string }, string>({
             query: (id) => {
                 return {
                     url: `/jobPosts/${id}/purchase`,
@@ -139,7 +141,8 @@ const leadSlice = baseApi.injectEndpoints({
                 };
             },
             transformResponse: (response: LeadPurchaseResponse) => ({
-                checkOutUrl: response?.data?.checkOutUrl ?? '',
+                checkOutUrl: response?.data?.checkOutUrl ?? null,
+                payment: response?.data?.payment,
             }),
             invalidatesTags: ['Leads'],
         }),
