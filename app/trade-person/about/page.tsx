@@ -106,9 +106,9 @@ function AboutForm({ user }: AboutFormProps) {
   const [email, setEmail] = useState(user.email ?? "");
   const [website, setWebsite] = useState("");
   const [about, setAbout] = useState(professional?.about ?? "");
-  const [documentType] = useState<ProfessionalDocumentType | "">(
-    professional?.verificationDocuments?.[0]?.documentType ?? "",
-  );
+      // const [documentType] = useState<ProfessionalDocumentType | "">(
+      //   professional?.verificationDocuments?.[0]?.documentType ?? "",
+      // );
 
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
@@ -188,7 +188,7 @@ function AboutForm({ user }: AboutFormProps) {
       await updateMyProfile({
         businessName,
         serviceRadiusKm,
-        documentType: documentType || undefined,
+        // documentType: documentType || undefined,
         address: officeAddress,
         postcode: postcode,
         services: selectedProfessions,
@@ -394,6 +394,7 @@ function AboutForm({ user }: AboutFormProps) {
             initialValue={email}
             onChange={setEmail}
             type="email"
+            disabled={true}
           />
           <InputField
             title="Website (Optional)"
