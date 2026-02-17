@@ -40,18 +40,23 @@ function LeadCard({ lead, selected }: Props) {
     
     try {
       setIsProcessing(true);
-      const result = await purchaseLead(lead.id).unwrap();
+      const result = await purchaseLead(lead.id).unwrap() as { checkOutUrl: string | null; payment?: string };
       
       if (result.checkOutUrl) {
         // Navigate to Stripe checkout
         window.location.href = result.checkOutUrl;
+      } else if (result.payment === "WALLET") {
+        // Payment successful via wallet
+        toast.success("Quick payment via your wallet");
+        setIsProcessing(false);
+        // Optionally refresh the page or update the lead status
       } else {
         toast.error("Failed to get checkout URL");
         setIsProcessing(false);
       }
     } catch (error) {
       console.error("Purchase error:", error);
-      toast.error("Failed to purchase lead. Please try again.");
+      toast.error((error as { data?: { message?: string } })?.data?.message || "Failed to purchase lead. Please try again.");
       setIsProcessing(false);
     }
   };
