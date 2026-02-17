@@ -16,7 +16,27 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   //   const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!/[A-Z]/.test(pwd)) {
+      return "Password must include at least 1 uppercase letter";
+    }
+    if (!/[a-z]/.test(pwd)) {
+      return "Password must include at least 1 lowercase letter";
+    }
+    if (!/[0-9]/.test(pwd)) {
+      return "Password must include at least 1 number";
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
+      return "Password must include at least 1 special character";
+    }
+    return null;
+  };
 
   const handleSignUp = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -29,8 +49,9 @@ export default function RegisterPage() {
     //   return;
     // }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long");
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -109,16 +130,23 @@ export default function RegisterPage() {
           }}
         />
 
-        <InputField
-          title="Password"
-          type="password"
-          placeholder="Enter your password"
-          initialValue={password}
-          onChange={(value) => {
-            setPassword(value);
-            setError("");
-          }}
-        />
+        <div>
+          <InputField
+            title="Password"
+            type="password"
+            placeholder="Enter your password"
+            initialValue={password}
+            onChange={(value) => {
+              setPassword(value);
+              setError("");
+              const validation = validatePassword(value);
+              setPasswordError(validation || "");
+            }}
+          />
+          {passwordError && (
+            <p className="text-red-600 text-[12px] mt-1">{passwordError}</p>
+          )}
+        </div>
 
         <InputField
           title="Confirm Password"

@@ -14,7 +14,27 @@ export default function UpdatePasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [resetPassword] = useResetPasswordMutation();
+
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!/[A-Z]/.test(pwd)) {
+      return "Password must include at least 1 uppercase letter";
+    }
+    if (!/[a-z]/.test(pwd)) {
+      return "Password must include at least 1 lowercase letter";
+    }
+    if (!/[0-9]/.test(pwd)) {
+      return "Password must include at least 1 number";
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
+      return "Password must include at least 1 special character";
+    }
+    return null;
+  };
 
   const handleUpdatePassword = async () => {
     if (!newPassword || !confirmPassword) {
@@ -22,8 +42,9 @@ export default function UpdatePasswordPage() {
       return;
     }
 
-    if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters long");
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -88,16 +109,23 @@ export default function UpdatePasswordPage() {
         </div>
       )}
       <div className="w-full space-y-4">
-        <InputField
-          title="New Password"
-          type="password"
-          placeholder="Enter your new password"
-          initialValue={newPassword}
-          onChange={(value) => {
-            setNewPassword(value);
-            setError("");
-          }}
-        />
+        <div>
+          <InputField
+            title="New Password"
+            type="password"
+            placeholder="Enter your new password"
+            initialValue={newPassword}
+            onChange={(value) => {
+              setNewPassword(value);
+              setError("");
+              const validation = validatePassword(value);
+              setPasswordError(validation || "");
+            }}
+          />
+          {passwordError && (
+            <p className="text-red-600 text-[12px] mt-1">{passwordError}</p>
+          )}
+        </div>
 
         <div>
           <InputField

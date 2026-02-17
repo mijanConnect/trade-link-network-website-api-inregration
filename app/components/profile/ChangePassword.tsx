@@ -13,12 +13,36 @@ export default function ChangePassword() {
     confirmPassword: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string>("");
 
   const [changePassword, { isLoading }] = useChangePasswordMutation();
+
+  const validatePassword = (pwd: string): string | null => {
+    if (pwd.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!/[A-Z]/.test(pwd)) {
+      return "Password must include at least 1 uppercase letter";
+    }
+    if (!/[a-z]/.test(pwd)) {
+      return "Password must include at least 1 lowercase letter";
+    }
+    if (!/[0-9]/.test(pwd)) {
+      return "Password must include at least 1 number";
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) {
+      return "Password must include at least 1 special character";
+    }
+    return null;
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setError(null);
+    if (field === "newPassword") {
+      const validation = validatePassword(value);
+      setPasswordError(validation || "");
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -37,8 +61,9 @@ export default function ChangePassword() {
       return;
     }
 
-    if (formData.newPassword.length < 6) {
-      setError("New password must be at least 6 characters");
+    const passwordValidationError = validatePassword(formData.newPassword);
+    if (passwordValidationError) {
+      setError(passwordValidationError);
       return;
     }
 
@@ -82,21 +107,42 @@ export default function ChangePassword() {
             onChange={(value) => handleInputChange("currentPassword", value)}
           />
 
-          <InputField
-            title="New Password"
-            type="password"
-            placeholder="Enter new password"
-            initialValue={formData.newPassword}
-            onChange={(value) => handleInputChange("newPassword", value)}
-          />
+          <div>
+            <InputField
+              title="New Password"
+              type="password"
+              placeholder="Enter new password"
+              initialValue={formData.newPassword}
+              onChange={(value) => handleInputChange("newPassword", value)}
+            />
+            {passwordError && (
+              <p className="text-red-600 text-[12px] mt-1">{passwordError}</p>
+            )}
+          </div>
 
-          <InputField
-            title="Confirm Password"
-            type="password"
-            placeholder="Confirm new password"
-            initialValue={formData.confirmPassword}
-            onChange={(value) => handleInputChange("confirmPassword", value)}
-          />
+          <div>
+            <InputField
+              title="Confirm Password"
+              type="password"
+              placeholder="Confirm new password"
+              initialValue={formData.confirmPassword}
+              onChange={(value) => handleInputChange("confirmPassword", value)}
+            />
+            {formData.newPassword &&
+              formData.confirmPassword &&
+              formData.newPassword === formData.confirmPassword && (
+                <p className="text-green-600 text-[12px] mt-1">
+                  Passwords match
+                </p>
+              )}
+            {formData.newPassword &&
+              formData.confirmPassword &&
+              formData.newPassword !== formData.confirmPassword && (
+                <p className="text-red-600 text-[12px] mt-1">
+                  Passwords do not match
+                </p>
+              )}
+          </div>
         </div>
 
         <Button

@@ -7,6 +7,8 @@ import TextareaField from "@/app/components/ui/TextareaField";
 import Button from "@/app/components/ui/Button";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import { Upload } from "lucide-react";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 import {
   useUpdateMyProfileMutation,
   ProfessionalDocumentType,
@@ -386,13 +388,27 @@ function AboutForm() {
           Contact
         </h2>
         <div className="space-y-4">
-          <InputField
-            title="Phone number"
-            placeholder="Enter phone number"
-            initialValue={phone}
-            onChange={setPhone}
-            type="tel"
-          />
+          <div>
+            <p className="mb-2">Phone Number</p>
+            <PhoneInput
+              international
+              countryCallingCodeEditable={false}
+              countries={["GB"]}
+              defaultCountry="GB"
+              value={phone}
+              onChange={(value) => setPhone(value || "")}
+              placeholder="Enter your phone number"
+              className="phone-input-no-focus"
+              style={{
+                height: 58,
+                border: "1px solid #1f2933",
+                borderRadius: "6px",
+                paddingLeft: "12px",
+                fontSize: "16px",
+                fontFamily: "inherit",
+              }}
+            />
+          </div>
           <InputField
             title="Office address"
             placeholder="Enter office address"

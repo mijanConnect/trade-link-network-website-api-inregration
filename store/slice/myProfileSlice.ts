@@ -43,6 +43,7 @@ export interface ProfessionalProfile {
   approveStatus: string;
   verificationDocuments: VerificationDocument[];
   about?: string;
+  website?: string;
 }
 
 export interface MyProfileUser {

@@ -104,7 +104,7 @@ function AboutForm({ user }: AboutFormProps) {
     professional?.address ?? "",
   );
   const [email, setEmail] = useState(user.email ?? "");
-  const [website, setWebsite] = useState("");
+  const [website, setWebsite] = useState(professional?.website ?? "");
   const [about, setAbout] = useState(professional?.about ?? "");
   const [documentType] = useState<ProfessionalDocumentType | "">(
     professional?.verificationDocuments?.[0]?.documentType ?? "",
