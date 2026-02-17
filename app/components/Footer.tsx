@@ -119,15 +119,6 @@ export default function Footer() {
                 </h4>
                 <div className="flex gap-4">
                   <a
-                    href="https://www.instagram.com/accounts/login/?next=%2Ftradelink2026&source=omni_redirect"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:text-primary/70 transition-colors"
-                    aria-label="Facebook"
-                  >
-                    <Instagram />
-                  </a>
-                  <a
                     href="https://www.facebook.com/people/Trade-Link-Network/61586599067439/?mibextid=wwXIfr&rdid=IxZ1r3LNOSKscqVJ&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CMH837Yup%2F%3Fmibextid%3DwwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -135,6 +126,15 @@ export default function Footer() {
                     aria-label="Instagram"
                   >
                     <Facebook />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/accounts/login/?next=%2Ftradelink2026&source=omni_redirect"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/70 transition-colors"
+                    aria-label="Facebook"
+                  >
+                    <Instagram />
                   </a>
                 </div>
               </div>

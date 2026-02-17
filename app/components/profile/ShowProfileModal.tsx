@@ -71,6 +71,7 @@ export default function ShowProfileModal({
                     width={64}
                     height={64}
                     className="w-full h-full object-cover"
+                    unoptimized
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-4xl font-bold">
