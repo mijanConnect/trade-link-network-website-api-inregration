@@ -8,7 +8,7 @@ import { transformMyLeadToJobCard } from "@/lib/trade-person/myResponsesUtils";
 export default function MyResponsesTabPage() {
   const params = useParams();
   const router = useRouter();
-  const tab = (params.tab as string) || "hired";
+  const tab = (params.tab as string) || "pending";
   const jobId = params.jobId as string | undefined;
 
   // Fetch all my leads
@@ -40,17 +40,22 @@ export default function MyResponsesTabPage() {
   const currentJobs = isHired ? [...inProgressJobs, ...completedJobs] : pendingJobs;
   const defaultJobId = currentJobs[0]?.id;
 
-  // Redirect invalid tabs to hired
+  // Redirect invalid tabs to pending
   useEffect(() => {
     if (!isPending && !isHired) {
-      router.replace("/trade-person/my-responses/hired");
+      router.replace("/trade-person/my-responses/pending");
     }
   }, [isPending, isHired, router]);
 
-  // Redirect to default job if no job selected
+  // Redirect to default job if no job selected, or to a placeholder if no jobs available
   useEffect(() => {
-    if (!isLoading && !jobId && defaultJobId && (isPending || isHired)) {
-      router.replace(`/trade-person/my-responses/${tab}/${defaultJobId}`);
+    if (!isLoading && !jobId && (isPending || isHired)) {
+      if (defaultJobId) {
+        router.replace(`/trade-person/my-responses/${tab}/${defaultJobId}`);
+      } else {
+        // If no jobs available, redirect to a placeholder route to show "No data available"
+        router.replace(`/trade-person/my-responses/${tab}/no-data`);
+      }
     }
   }, [jobId, defaultJobId, tab, router, isPending, isHired, isLoading]);
 

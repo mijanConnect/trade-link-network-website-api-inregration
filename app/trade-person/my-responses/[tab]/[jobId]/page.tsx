@@ -8,12 +8,12 @@ import type { Lead } from "@/lib/trade-person/mock";
 import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useGetMyLeadsQuery, useGetMyLeadDetailsQuery } from "@/store/slice/myLeadSlice";
-import { transformMyLeadToJobCard, transformMyLeadDetailToLead, type JobCard } from "@/lib/trade-person/myResponsesUtils";
+import { transformMyLeadToJobCard, transformMyLeadDetailToLead } from "@/lib/trade-person/myResponsesUtils";
 
 export default function MyResponsesJobPage() {
   const params = useParams();
   const router = useRouter();
-  const tab = (params.tab as string) || "hired";
+  const tab = (params.tab as string) || "pending";
   const jobId = params.jobId as string;
 
   // Fetch all my leads
@@ -39,14 +39,15 @@ export default function MyResponsesJobPage() {
     [jobCards]
   );
 
-  const selectedJob = jobCards.find((j) => j.id === jobId);
+  const isNoDataPlaceholder = jobId === "no-data";
+  const selectedJob = isNoDataPlaceholder ? null : jobCards.find((j) => j.id === jobId);
 
   // Fetch job request details for the selected job
   const {
     data: jobRequestData,
     isLoading: isLoadingLead,
   } = useGetMyLeadDetailsQuery(jobId || "", {
-    skip: !jobId,
+    skip: !jobId || isNoDataPlaceholder,
   });
 
   // Transform job request to Lead format
@@ -63,15 +64,9 @@ export default function MyResponsesJobPage() {
   const [mobileSelectedJobId, setMobileSelectedJobId] = useState<string | null>(
     jobId || null,
   );
-  const [isLoading, setIsLoading] = useState(false);
   const [isTabChanging, setIsTabChanging] = useState(false);
-  const loadingTimerRef = useRef<NodeJS.Timeout | null>(null);
   const tabChangeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const prevTabRef = useRef<string>(tab);
-
-  const mobileSelectedJob = mobileSelectedJobId
-    ? jobCards.find((j) => j.id === mobileSelectedJobId)
-    : null;
 
   // Fetch job request details for mobile selected job
   const {
@@ -85,25 +80,26 @@ export default function MyResponsesJobPage() {
     if (!mobileJobRequestData) return null;
     return transformMyLeadDetailToLead(mobileJobRequestData);
   }, [mobileJobRequestData]);
+  
+  // Derive loading state from query states
+  const isLoading = isLoadingLead || isLoadingMobileLead;
 
   useEffect(() => {
-    if (!isLoadingMyLeads && (!selectedJob || (!isPending && !isHired))) {
-      // If no jobs available, redirect to hired tab
-      if (jobCards.length === 0) {
-        router.replace("/trade-person/my-responses/hired");
-        return;
-      }
-      // If selected job not found, redirect to first available job
-      const firstJob = isHired
-        ? [...inProgressJobs, ...completedJobs][0]
-        : pendingJobs[0];
+    if (!isLoadingMyLeads && (!isPending && !isHired)) {
+      // Redirect invalid tabs to pending
+      router.replace("/trade-person/my-responses/pending");
+      return;
+    }
+    // If selected job not found but tab has jobs, redirect to first available job
+    if (!isLoadingMyLeads && !selectedJob && (isPending || isHired)) {
+      const currentJobs = isHired ? [...inProgressJobs, ...completedJobs] : pendingJobs;
+      const firstJob = currentJobs[0];
       if (firstJob) {
         router.replace(`/trade-person/my-responses/${tab}/${firstJob.id}`);
-      } else {
-        router.replace("/trade-person/my-responses/hired");
       }
+      // If no jobs available, stay on current page to show "No data available" message
     }
-  }, [selectedJob, isPending, isHired, router, isLoadingMyLeads, jobCards, inProgressJobs, completedJobs, pendingJobs, tab]);
+  }, [selectedJob, isPending, isHired, router, isLoadingMyLeads, inProgressJobs, completedJobs, pendingJobs, tab]);
 
   // Handle tab change with smooth loading - no UI jump
   useEffect(() => {
@@ -141,43 +137,6 @@ export default function MyResponsesJobPage() {
     };
   }, [tab]);
 
-  // Handle loading state with timer when job/lead changes - smooth experience
-  useEffect(() => {
-    // Clear any existing timer
-    if (loadingTimerRef.current) {
-      clearTimeout(loadingTimerRef.current);
-      loadingTimerRef.current = null;
-    }
-
-    // Start loading timer (200ms delay) - only show loading if data takes time
-    // This prevents UI jerk for fast data loads
-    const showLoadingTimer = setTimeout(() => {
-      // Only show loading if data is not ready yet
-      if (isLoadingLead || isLoadingMobileLead) {
-        setIsLoading(true);
-      }
-    }, 200);
-
-    loadingTimerRef.current = showLoadingTimer;
-
-    // Hide loading when data is ready
-    if (!isLoadingLead && !isLoadingMobileLead) {
-      setIsLoading(false);
-      if (loadingTimerRef.current) {
-        clearTimeout(loadingTimerRef.current);
-        loadingTimerRef.current = null;
-      }
-    }
-
-    return () => {
-      if (loadingTimerRef.current) {
-        clearTimeout(loadingTimerRef.current);
-        loadingTimerRef.current = null;
-      }
-      // Reset loading state on cleanup
-      setIsLoading(false);
-    };
-  }, [jobId, mobileSelectedJobId, isLoadingLead, isLoadingMobileLead]);
 
   if (isLoadingMyLeads) {
     return (
@@ -187,13 +146,9 @@ export default function MyResponsesJobPage() {
     );
   }
 
-  if (!selectedJob) {
-    return (
-      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
-        <p className="text-slate-500">Job not found</p>
-      </div>
-    );
-  }
+  // Check if current tab has any jobs
+  const currentTabJobs = isHired ? [...inProgressJobs, ...completedJobs] : pendingJobs;
+  const hasJobsInTab = currentTabJobs.length > 0;
 
   return (
     <>
@@ -344,6 +299,12 @@ export default function MyResponsesJobPage() {
                     </div>
                   </div>
                 )}
+
+                {inProgressJobs.length === 0 && completedJobs.length === 0 && (
+                  <div className="flex items-center justify-center py-8">
+                    <p className="text-center text-slate-500">No data available</p>
+                  </div>
+                )}
               </>
             )}
 
@@ -388,7 +349,9 @@ export default function MyResponsesJobPage() {
                     })}
                   </div>
                 ) : (
-                  <div className="text-center text-slate-500">No pending jobs</div>
+                  <div className="flex items-center justify-center py-8">
+                    <p className="text-center text-slate-500">No data available</p>
+                  </div>
                 )}
               </>
             )}
@@ -403,7 +366,11 @@ export default function MyResponsesJobPage() {
               <div className="absolute inset-0 animate-fadeIn">
                 <LeadDetailLoading />
               </div>
-            ) : (
+            ) : !hasJobsInTab ? (
+              <div className="flex h-[600px] items-center justify-center rounded-lg border border-slate-200 bg-white">
+                <p className="text-slate-500">No data available</p>
+              </div>
+            ) : selectedLead ? (
               <div className="animate-fadeIn">
                 <LeadDetailPanel 
                   lead={selectedLead} 
@@ -412,6 +379,10 @@ export default function MyResponsesJobPage() {
                   createdAt={jobRequestData?.createdAt}
                   jobId={selectedLead?.id}
                 />
+              </div>
+            ) : (
+              <div className="flex h-[600px] items-center justify-center rounded-lg border border-slate-200 bg-white">
+                <p className="text-slate-500">No data available</p>
               </div>
             )}
           </div>
@@ -557,6 +528,12 @@ export default function MyResponsesJobPage() {
                       </div>
                     </div>
                   )}
+
+                  {inProgressJobs.length === 0 && completedJobs.length === 0 && (
+                    <div className="flex items-center justify-center py-8">
+                      <p className="text-center text-slate-500">No data available</p>
+                    </div>
+                  )}
                 </>
               )}
 
@@ -600,8 +577,8 @@ export default function MyResponsesJobPage() {
                     </div>
                     </div>
                   ) : (
-                    <div className="text-center text-slate-500 text-sm">
-                      No pending jobs
+                    <div className="flex items-center justify-center py-8">
+                      <p className="text-center text-slate-500">No data available</p>
                     </div>
                   )}
                 </>
@@ -632,7 +609,7 @@ export default function MyResponsesJobPage() {
                   <div className="absolute inset-0 animate-fadeIn">
                     <LeadDetailLoading />
                   </div>
-                ) : (
+                ) : mobileSelectedLead ? (
                   <div className="animate-fadeIn">
                     <LeadDetailPanel 
                       lead={mobileSelectedLead} 
@@ -641,6 +618,10 @@ export default function MyResponsesJobPage() {
                       createdAt={mobileJobRequestData?.createdAt}
                       jobId={mobileSelectedLead?.id}
                     />
+                  </div>
+                ) : (
+                  <div className="flex h-[400px] items-center justify-center rounded-lg border border-slate-200 bg-white">
+                    <p className="text-slate-500">No data available</p>
                   </div>
                 )}
               </div>
