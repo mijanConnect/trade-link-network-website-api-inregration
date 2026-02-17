@@ -152,7 +152,7 @@ export default function FAQ() {
           >
             Frequently <br /> Asked Questions
           </h2>
-          <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-12 mt-4 lg:mt-20">
+          <div className="flex flex-col lg:flex-row items-start gap-0 lg:gap-12 mt-4 lg:mt-20">
             {/* Left side */}
             <div
               className="w-full lg:w-1/2"

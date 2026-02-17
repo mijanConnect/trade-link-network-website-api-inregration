@@ -41,7 +41,7 @@ export default function UseUs() {
   return (
     <WhyUse
       title="Why use Us?"
-      subtitle="Why homeowners use us"
+      subtitle="Why homeowners trust Trade Link Network"
       items={useUsData}
       icons={icons}
     />

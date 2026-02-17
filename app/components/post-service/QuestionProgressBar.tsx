@@ -23,7 +23,7 @@ export default function QuestionProgressBar({
 
   return (
     <>
-      <div className="mb-6 lg:mb-8 sticky top-0 z-30 bg-cardBg pt-2">
+      <div className="mb-6 lg:mb-8 sticky top-0 z-10 bg-cardBg pt-2">
         <h2 className="text-[16px] lg:text-[18px] font-semibold text-primaryTextLight mb-2">
           {isLoading ? "Loading" : isError ? "Category" : selectedCategory.name}{" "}
           Service

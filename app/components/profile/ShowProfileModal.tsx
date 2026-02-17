@@ -57,16 +57,16 @@ export default function ShowProfileModal({
       {showProfileModal && (
         <>
           <div
-            className="fixed inset-0 z-30"
+            className="fixed inset-0 z-50"
             onClick={() => setShowProfileModal(false)}
           />
 
-          <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-40 overflow-hidden">
+          <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
             <div className="p-4 flex flex-col items-center border-b border-gray-200">
               <div className="w-16 h-16 rounded-full overflow-hidden mb-2">
-                {profileData?.profileImage ? (
+                {profileData?.customer?.profileImage ? (
                   <Image
-                    src={getImageUrl(profileData.profileImage)}
+                    src={getImageUrl(profileData?.customer?.profileImage)}
                     alt="Profile"
                     width={64}
                     height={64}
@@ -109,7 +109,7 @@ export default function ShowProfileModal({
                 View Profile
               </button>
 
-              <button
+              {/* <button
                 onClick={() => {
                   router.push("/trade-person");
                   setShowProfileModal(false);
@@ -117,7 +117,7 @@ export default function ShowProfileModal({
                 className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
               >
                 Switch to Tradeperson
-              </button>
+              </button> */}
 
               <button
                 onClick={() => {
