@@ -68,18 +68,18 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/about-us"
+                    href="/privacy-policy"
                     className="hover:underline transform transition-all"
                   >
-                    About Us
+                    Privacy Policy
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/privacy-policy"
+                    href="/terms-conditions"
                     className="hover:underline transform transition-all"
                   >
-                    Privacy/ Terms
+                    Terms and Conditions
                   </Link>
                 </li>
               </ul>
@@ -98,6 +98,14 @@ export default function Footer() {
                     className="hover:underline transform transition-all"
                   >
                     Code of Conduct
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/about-us"
+                    className="hover:underline transform transition-all"
+                  >
+                    About Us
                   </Link>
                 </li>
               </ul>

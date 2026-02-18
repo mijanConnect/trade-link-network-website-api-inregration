@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetDisclaimerQuery } from "@/store/slice/termsSlice";
+import { useGetDisclaimerQuery } from "@/store/slice/categoriesSlice";
 
 export default function Page() {
   const { data, isLoading, error } = useGetDisclaimerQuery(
@@ -9,9 +9,9 @@ export default function Page() {
 
   return (
     <>
-      <div className="py-6 lg:py-15">
-        <div className="max-w-4xl mx-auto p-4 lg:p-8 bg-white rounded-lg shadow-xl border border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+      <div className="container mx-auto px-4 my-6 lg:mt-15 lg:mb-30">
+        <div className="">
+          <h2 className="text-[24px] lg:text-[48px] font-semibold text-primaryTextmb-4 lg:mb-15 text-center">
             Terms and Conditions
           </h2>
 
@@ -23,13 +23,13 @@ export default function Page() {
 
           {error && (
             <div className="text-red-600 text-center py-10">
-              Failed to load terms and conditions. Please try again later.
+              Failed to load review policy. Please try again later.
             </div>
           )}
 
           {data?.content && (
             <div
-              className="prose prose-lg max-w-none text-gray-700"
+              className="text-primaryText text-[14px] lg:text-[18px]"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
           )}

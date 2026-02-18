@@ -226,6 +226,18 @@ export default function Navbar() {
             >
               Area Covered
             </Link>
+
+            <Link
+              href="/faq"
+              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
+                isActive("/faq")
+                  ? "text-blue active"
+                  : "text-primaryTextLight"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              FAQ
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
@@ -368,6 +380,18 @@ export default function Navbar() {
                   onClick={handleClose}
                 >
                   Area Covered
+                </Link>
+
+                <Link
+                  href="/faq"
+                  className={`nav-link py-4 text-[16px] font-normal transition-all ${
+                    isActive("/faq")
+                      ? "text-blue active"
+                      : "text-primaryTextLight"
+                  }`}
+                  onClick={handleClose}
+                >
+                  FAQ
                 </Link>
               </nav>
 
