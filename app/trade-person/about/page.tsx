@@ -10,7 +10,6 @@ import { Upload } from "lucide-react";
 import {
   useGetMyProfileQuery,
   useUpdateMyProfileMutation,
-  ProfessionalDocumentType,
 } from "@/store/slice/myProfileSlice";
 import type { MyProfileUser } from "@/store/slice/myProfileSlice";
 import { getImageUrl } from "@/app/components/ui/ImageURL";
@@ -106,9 +105,9 @@ function AboutForm({ user }: AboutFormProps) {
   const [email, setEmail] = useState(user.email ?? "");
   const [website, setWebsite] = useState(professional?.website ?? "");
   const [about, setAbout] = useState(professional?.about ?? "");
-  const [documentType] = useState<ProfessionalDocumentType | "">(
-    professional?.verificationDocuments?.[0]?.documentType ?? "",
-  );
+      // const [documentType] = useState<ProfessionalDocumentType | "">(
+      //   professional?.verificationDocuments?.[0]?.documentType ?? "",
+      // );
 
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
@@ -188,7 +187,7 @@ function AboutForm({ user }: AboutFormProps) {
       await updateMyProfile({
         businessName,
         serviceRadiusKm,
-        documentType: documentType || undefined,
+        // documentType: documentType || undefined,
         address: officeAddress,
         postcode: postcode,
         services: selectedProfessions,
@@ -394,6 +393,7 @@ function AboutForm({ user }: AboutFormProps) {
             initialValue={email}
             onChange={setEmail}
             type="email"
+            disabled={true}
           />
           <InputField
             title="Website (Optional)"
