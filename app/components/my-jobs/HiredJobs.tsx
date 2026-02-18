@@ -24,18 +24,6 @@ type ReviewData = {
   date?: string;
 };
 
-// interface HiredJobResponse {
-//   success: boolean;
-//   message: string;
-//   pagination: {
-//     total: number;
-//     limit: number;
-//     page: number;
-//     totalPage: number;
-//   };
-//   data: HiredJob[];
-// }
-
 interface HiredJob {
   _id: string;
   id: string;
@@ -101,7 +89,15 @@ export default function HiredJobs() {
     isLoading: historyJobsLoading,
   } = useGetHiredHistoryJobsQuery("COMPLETED");
 
-  if (recentJobsLoading) {
+  // Access the data arrays - data is already the array from transformResponse
+  const recentJobs: HiredJob[] = Array.isArray(hiredRecentJobs)
+    ? hiredRecentJobs
+    : (hiredRecentJobs?.data ?? []);
+  const historyJobs: HiredJob[] = Array.isArray(hiredHistoryJobs)
+    ? hiredHistoryJobs
+    : (hiredHistoryJobs?.data ?? []);
+
+  if (recentJobsLoading || historyJobsLoading) {
     return (
       <div className="flex flex-col gap-6">
         <MyJobSkeleton />
@@ -113,24 +109,8 @@ export default function HiredJobs() {
     return <div className="text-red-500">Error loading recent hired jobs</div>;
   }
 
-  if (hiredRecentJobs?.length === 0) {
-    return <div className="text-gray-500">No recent hired jobs yet</div>;
-  }
-
-  if (historyJobsLoading) {
-    return (
-      <div className="flex flex-col gap-6">
-        <MyJobSkeleton />
-      </div>
-    );
-  }
-
   if (historyJobsError) {
     return <div className="text-red-500">Error loading history hired jobs</div>;
-  }
-
-  if (hiredHistoryJobs?.length === 0) {
-    return <div className="text-gray-500">No history hired jobs yet</div>;
   }
 
   const handleReviewClick = (
@@ -235,9 +215,14 @@ export default function HiredJobs() {
         }}
         review={selectedReview}
       />
+
+      {/* Recent Jobs */}
       <div className="flex flex-col gap-6">
         <h3 className="text-[22px] font-bold text-primaryText">Recent</h3>
-        {(hiredRecentJobs ?? []).map((job: HiredJob) => (
+        {recentJobs.length === 0 && (
+          <div className="text-gray-500">No recent hired jobs yet</div>
+        )}
+        {recentJobs.map((job: HiredJob) => (
           <JobCard
             key={job._id}
             id={job._id}
@@ -264,9 +249,14 @@ export default function HiredJobs() {
           />
         ))}
       </div>
+
+      {/* History Jobs */}
       <div className="flex flex-col gap-6 mt-10 lg:mt-20">
         <h3 className="text-[22px] font-bold text-primaryText">History</h3>
-        {(hiredHistoryJobs ?? []).map((job: HiredJob) => (
+        {historyJobs.length === 0 && (
+          <div className="text-gray-500">No history hired jobs yet</div>
+        )}
+        {historyJobs.map((job: HiredJob) => (
           <JobCard
             key={job._id}
             id={job._id}

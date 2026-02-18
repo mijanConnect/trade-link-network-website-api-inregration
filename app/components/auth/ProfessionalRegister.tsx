@@ -82,6 +82,17 @@ function AboutForm() {
     ProfessionalDocumentType | ""
   >("");
 
+  // Error states
+  const [errors, setErrors] = useState<{
+    businessName?: string;
+    postcode?: string;
+    serviceRadiusKm?: string;
+    professionCategory?: string;
+    selectedProfessions?: string;
+    documentType?: string;
+    documentFile?: string;
+  }>({});
+
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
 
@@ -130,6 +141,41 @@ function AboutForm() {
   };
 
   const handleSave = async () => {
+    // Clear previous errors
+    const newErrors: typeof errors = {};
+
+    // Validate required fields
+    if (!businessName.trim()) {
+      newErrors.businessName = "Business Name is required";
+    }
+    if (!postcode.trim()) {
+      newErrors.postcode = "Postcode is required";
+    }
+    if (!serviceRadiusKm.trim()) {
+      newErrors.serviceRadiusKm = "Service radius is required";
+    }
+    if (!professionCategory.trim()) {
+      newErrors.professionCategory = "Please select a profession category";
+    }
+    if (selectedProfessions.length === 0) {
+      newErrors.selectedProfessions = "Please select at least one profession";
+    }
+    if (!documentType) {
+      newErrors.documentType = "Please select a document type";
+    }
+    if (!documentFile) {
+      newErrors.documentFile = "Please upload a document";
+    }
+
+    // If there are errors, show them and stop
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setErrors({});
+
     try {
       await updateMyProfile({
         businessName,
@@ -232,46 +278,96 @@ function AboutForm() {
           Profile Details
         </h2>
         <div className="space-y-4">
-          <InputField
-            title="Business Name"
-            placeholder="Enter business name"
-            initialValue={businessName}
-            onChange={setBusinessName}
-            required
-          />
-          <InputField
-            title="postcode"
-            placeholder="Enter postcode"
-            initialValue={postcode}
-            onChange={setpostcode}
-            required
-          />
-          <InputField
-            title="Service radius (km)"
-            placeholder="Enter service radius (km)"
-            type="number"
-            initialValue={serviceRadiusKm}
-            onChange={handleServiceRadiusChange}
-            required
-          />
-          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
-            Select profession category <span className="text-red-500">*</span>
+          <div>
+            <InputField
+              title="Business Name"
+              placeholder="Enter business name"
+              initialValue={businessName}
+              onChange={(val) => {
+                setBusinessName(val);
+                if (errors.businessName) {
+                  setErrors({ ...errors, businessName: undefined });
+                }
+              }}
+              required
+            />
+            {errors.businessName && (
+              <p className="text-red-500 text-[14px]">
+                {errors.businessName}
+              </p>
+            )}
           </div>
-          <CustomSelect
-            value={professionCategory}
-            options={professionOptions}
-            onChange={handleCategoryChange}
-            disabled={isCategoriesLoading}
-            required
-            placeholder={
-              isCategoriesLoading ? "Loading categories..." : "Select category"
-            }
-          />
+          <div>
+            <InputField
+              title="postcode"
+              placeholder="Enter postcode"
+              initialValue={postcode}
+              onChange={(val) => {
+                setpostcode(val);
+                if (errors.postcode) {
+                  setErrors({ ...errors, postcode: undefined });
+                }
+              }}
+              required
+            />
+            {errors.postcode && (
+              <p className="text-red-500 text-[14px]">
+                {errors.postcode}
+              </p>
+            )}
+          </div>
+          <div>
+            <InputField
+              title="Service radius (km)"
+              placeholder="Enter service radius (km)"
+              type="number"
+              initialValue={serviceRadiusKm}
+              onChange={(val) => {
+                handleServiceRadiusChange(val);
+                if (errors.serviceRadiusKm) {
+                  setErrors({ ...errors, serviceRadiusKm: undefined });
+                }
+              }}
+              required
+            />
+            {errors.serviceRadiusKm && (
+              <p className="text-red-500 text-[14px]">
+                {errors.serviceRadiusKm}
+              </p>
+            )}
+          </div>
           <div>
             <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Select profession category <span className="text-red-500">*</span>
+            </div>
+            <CustomSelect
+              value={professionCategory}
+              options={professionOptions}
+              onChange={(val) => {
+                handleCategoryChange(val);
+                if (errors.professionCategory) {
+                  setErrors({ ...errors, professionCategory: undefined });
+                }
+              }}
+              disabled={isCategoriesLoading}
+              required
+              placeholder={
+                isCategoriesLoading
+                  ? "Loading categories..."
+                  : "Select category"
+              }
+            />
+            {errors.professionCategory && (
+              <p className="text-red-500 text-[14px]">
+                {errors.professionCategory}
+              </p>
+            )}
+          </div>
+          <div>
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText">
               Select profession
             </div>
-            <div className="mt-2 flex flex-wrap gap-2 mb-3">
+            <div className="flex flex-wrap gap-2 mb-3">
               {selectedProfessions.map((serviceId) => (
                 <span
                   key={serviceId}
@@ -306,9 +402,19 @@ function AboutForm() {
                     value: service._id,
                   }))}
                 value={null}
-                onChange={(value) => handleAddProfession(value)}
+                onChange={(value) => {
+                  handleAddProfession(value);
+                  if (errors.selectedProfessions) {
+                    setErrors({ ...errors, selectedProfessions: undefined });
+                  }
+                }}
                 disabled={!professionCategory || availableServices.length === 0}
               />
+            )}
+            {errors.selectedProfessions && (
+              <p className="text-red-500 text-[14px]">
+                {errors.selectedProfessions}
+              </p>
             )}
           </div>
           <TextareaField
@@ -345,27 +451,43 @@ function AboutForm() {
               value: ProfessionalDocumentType.INSURANCE,
             },
           ]}
-          onChange={(value) =>
-            setDocumentType(value as ProfessionalDocumentType)
-          }
+          onChange={(value) => {
+            setDocumentType(value as ProfessionalDocumentType);
+            if (errors.documentType) {
+              setErrors({ ...errors, documentType: undefined });
+            }
+          }}
         />
+        {errors.documentType && (
+          <p className="text-red-500 text-[14px]">{errors.documentType}</p>
+        )}
         <label
           className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
-            documentType
-              ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
-              : "border-gray-200 bg-gray-50 cursor-not-allowed"
+            errors.documentFile
+              ? "border-red-500 bg-red-50"
+              : documentType
+                ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
+                : "border-gray-200 bg-gray-50 cursor-not-allowed"
           }`}
         >
           <div className="text-center">
             <Upload
               size={32}
               className={`mx-auto ${
-                documentType ? "text-slate-400" : "text-gray-300"
+                errors.documentFile
+                  ? "text-red-400"
+                  : documentType
+                    ? "text-slate-400"
+                    : "text-gray-300"
               }`}
             />
             <p
               className={`mt-2 text-[14px] ${
-                documentType ? "text-slate-600" : "text-gray-400"
+                errors.documentFile
+                  ? "text-red-600"
+                  : documentType
+                    ? "text-slate-600"
+                    : "text-gray-400"
               }`}
             >
               {documentFile ? documentFile.name : "Upload document"}
@@ -379,11 +501,19 @@ function AboutForm() {
           <input
             type="file"
             className="hidden"
-            onChange={handleDocumentChange}
+            onChange={(event) => {
+              handleDocumentChange(event);
+              if (errors.documentFile) {
+                setErrors({ ...errors, documentFile: undefined });
+              }
+            }}
             disabled={!documentType}
             accept=".pdf"
           />
         </label>
+        {errors.documentFile && (
+          <p className="text-red-500 text-[14px] mt-2">{errors.documentFile}</p>
+        )}
       </div>
 
       {/* Contact */}

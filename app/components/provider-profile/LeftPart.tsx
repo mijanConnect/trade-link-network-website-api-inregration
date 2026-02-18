@@ -86,7 +86,7 @@ export default function LeftPart() {
           </div>
         )}
         <h2 className="text-[22px] text-primaryText font-semibold mt-4">
-          {profile?.data?.professional?.businessName || "ABC Company"}
+          {profile?.data?.professional?.businessName || "N/A"}
         </h2>
         <div className="flex gap-2 items-center">
           <div className="flex gap-1 mt-1">

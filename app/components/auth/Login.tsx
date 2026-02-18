@@ -48,16 +48,9 @@ export default function LoginPage() {
       const token = response?.data?.accessToken;
       const role = token ? getRoleFromToken(token) : null;
       
-      console.log("Login response:", response);
-      console.log("Token:", token);
-      console.log("Role extracted from token:", role);
-      console.log("Role comparison (PROFESSIONAL):", role === "PROFESSIONAL");
-      
       if (role === "PROFESSIONAL") {
-        console.log("Redirecting to /trade-person");
         router.push("/trade-person");
       } else {
-        console.log("Redirecting to /");
         router.push("/");
       }
     } catch (err) {

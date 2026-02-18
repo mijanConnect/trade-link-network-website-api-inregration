@@ -59,7 +59,7 @@ export default function InterestedTradeperson() {
   >(null);
 
   const currentPage = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "2");
+  const limit = parseInt(searchParams.get("limit") || "10");
 
   const handleOpenAcceptModal = (jobRequestId: string) => {
     setSelectedJobRequestId(jobRequestId);
