@@ -15,7 +15,7 @@ const getRoleFromToken = (token: string): string | null => {
   try {
     const parts = token.split(".");
     if (parts.length !== 3) return null;
-    
+
     const decoded = JSON.parse(atob(parts[1]));
     return decoded?.role || null;
   } catch (error) {
@@ -47,7 +47,7 @@ export default function LoginPage() {
       // Extract role from JWT token
       const token = response?.data?.accessToken;
       const role = token ? getRoleFromToken(token) : null;
-      
+
       if (role === "PROFESSIONAL") {
         router.push("/trade-person");
       } else {

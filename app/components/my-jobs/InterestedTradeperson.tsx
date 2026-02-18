@@ -21,6 +21,7 @@ interface InterestedTradeperson {
       _id: string;
       name: string;
     };
+    jobNumber: string;
   };
   sender: {
     _id: string;
@@ -136,6 +137,7 @@ export default function InterestedTradeperson() {
             key={interested._id}
             id={interested._id}
             title={interested?.jobPost?.service?.name}
+            jobNumber={interested?.jobPost?.jobNumber}
             postedOn={`Interested on ${formatDateTime(interested.createdAt)}`}
             description={`${interested.sender.name} is interested in your ${interested.jobPost.service.name} job. Compare their profiles and book with confidence.`}
             actions={[

@@ -292,14 +292,12 @@ function AboutForm() {
               required
             />
             {errors.businessName && (
-              <p className="text-red-500 text-[14px]">
-                {errors.businessName}
-              </p>
+              <p className="text-red-500 text-[14px]">{errors.businessName}</p>
             )}
           </div>
           <div>
             <InputField
-              title="postcode"
+              title="Postcode"
               placeholder="Enter postcode"
               initialValue={postcode}
               onChange={(val) => {
@@ -311,9 +309,7 @@ function AboutForm() {
               required
             />
             {errors.postcode && (
-              <p className="text-red-500 text-[14px]">
-                {errors.postcode}
-              </p>
+              <p className="text-red-500 text-[14px]">{errors.postcode}</p>
             )}
           </div>
           <div>

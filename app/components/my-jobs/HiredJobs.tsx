@@ -227,6 +227,7 @@ export default function HiredJobs() {
             key={job._id}
             id={job._id}
             title={job.jobPost?.service?.name}
+            jobNumber={job?.jobPost?.jobNumber}
             postedOn={`Interested on ${formatDateTime(job.createdAt)}`}
             description={
               "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."
@@ -261,6 +262,7 @@ export default function HiredJobs() {
             key={job._id}
             id={job._id}
             title={job.jobPost?.service?.name}
+            jobNumber={job?.jobPost?.jobNumber}
             postedOn={`Interested on ${formatDateTime(job.createdAt)}`}
             description={
               "Your booking has been completed successfully. You can view details and contact your provider anytime from your dashboard."

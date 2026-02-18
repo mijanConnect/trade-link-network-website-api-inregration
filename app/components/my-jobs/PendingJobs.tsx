@@ -22,6 +22,10 @@ interface Job {
   service: {
     name: string;
   };
+  jobPost: {
+    jobNumber: string;
+  };
+  jobNumber?: string;
   description?: string;
   actions?: JobAction[];
   createdAt: string;
@@ -79,6 +83,7 @@ export default function PendingJobs() {
             key={job._id}
             id={job._id}
             title={job?.service?.name}
+            jobNumber={job?.jobPost?.jobNumber}
             postedOn={"Posted on " + formatDateTime(job?.createdAt)}
             description={
               "Suitable local tradespeople have been alerted about your job. As soon as one is interested we will let you know."
