@@ -44,6 +44,7 @@ export interface ProfessionalProfile {
   verificationDocuments: VerificationDocument[];
   about?: string;
   website?: string;
+  hasDocuments?: boolean;
 }
 
 export interface MyProfileUser {

@@ -11,6 +11,7 @@ import { Upload } from "lucide-react";
 import {
   useGetMyProfileQuery,
   useUpdateMyProfileMutation,
+  ProfessionalDocumentType,
 } from "@/store/slice/myProfileSlice";
 import type { MyProfileUser } from "@/store/slice/myProfileSlice";
 import { getImageUrl } from "@/app/components/ui/ImageURL";
@@ -91,6 +92,10 @@ function AboutForm({ user }: AboutFormProps) {
   );
   const [postcode, setpostcode] = useState(professional?.postcode ?? "");
 
+  const [documentType, setDocumentType] = useState<
+    ProfessionalDocumentType | ""
+  >("");
+
   // Store selected services as objectIds
   const [selectedProfessions, setSelectedProfessions] = useState<string[]>(
     initialSelectedServices,
@@ -109,6 +114,7 @@ function AboutForm({ user }: AboutFormProps) {
   // const [documentType] = useState<ProfessionalDocumentType | "">(
   //   professional?.verificationDocuments?.[0]?.documentType ?? "",
   // );
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
 
   const [updateMyProfile, { isLoading: isUpdating }] =
     useUpdateMyProfileMutation();
@@ -175,13 +181,13 @@ function AboutForm({ user }: AboutFormProps) {
   };
 
   // State to control select dropdown reset
-  const [selectKey, setSelectKey] = useState(0);
+  // const [selectKey, setSelectKey] = useState(0);
 
-  const handleAddProfessionWithReset = (serviceId: string) => {
-    handleAddProfession(serviceId);
-    // Reset select dropdown
-    setSelectKey((prev) => prev + 1);
-  };
+  // const handleAddProfessionWithReset = (serviceId: string) => {
+  //   handleAddProfession(serviceId);
+  //   // Reset select dropdown
+  //   setSelectKey((prev) => prev + 1);
+  // };
 
   // Error states
   const [errors, setErrors] = useState<{
@@ -199,14 +205,15 @@ function AboutForm({ user }: AboutFormProps) {
       await updateMyProfile({
         businessName,
         serviceRadiusKm,
-        // documentType: documentType || undefined,
+        documentType: documentType || undefined,
         address: officeAddress,
         postcode: postcode,
         services: selectedProfessions,
         phone,
-        about,
         website,
+        about,
         businessImageFile: businessImageFile ?? undefined,
+        verificationDocumentFile: documentFile ?? undefined,
       }).unwrap();
 
       toast.success("Profile updated successfully");
@@ -222,6 +229,13 @@ function AboutForm({ user }: AboutFormProps) {
     setBusinessImageFile(file);
     const previewUrl = URL.createObjectURL(file);
     setBusinessImagePreview(previewUrl);
+  };
+
+  const handleDocumentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setDocumentFile(file);
   };
 
   return (
@@ -371,6 +385,100 @@ function AboutForm({ user }: AboutFormProps) {
           />
         </div>
       </div>
+
+      {/* Documents */}
+      {professional?.hasDocuments && (
+        <div className="rounded-sm mt-6">
+          <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+            Add your business/personal documents
+          </h2>
+          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+            Select document type <span className="text-red-500">*</span>
+          </div>
+          <CustomSelect
+            value={documentType}
+            options={[
+              {
+                label: "Driving licence",
+                value: ProfessionalDocumentType.DRIVING_LICENSE,
+              },
+              {
+                label: "Passport",
+                value: ProfessionalDocumentType.PASSPORT,
+              },
+              {
+                label: "Insurance",
+                value: ProfessionalDocumentType.INSURANCE,
+              },
+            ]}
+            onChange={(value) => {
+              setDocumentType(value as ProfessionalDocumentType);
+              if (errors.documentType) {
+                setErrors({ ...errors, documentType: undefined });
+              }
+            }}
+          />
+          {errors.documentType && (
+            <p className="text-red-500 text-[14px]">{errors.documentType}</p>
+          )}
+          <label
+            className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
+              errors.documentFile
+                ? "border-red-500 bg-red-50"
+                : documentType
+                  ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
+                  : "border-gray-200 bg-gray-50 cursor-not-allowed"
+            }`}
+          >
+            <div className="text-center">
+              <Upload
+                size={32}
+                className={`mx-auto ${
+                  errors.documentFile
+                    ? "text-red-400"
+                    : documentType
+                      ? "text-slate-400"
+                      : "text-gray-300"
+                }`}
+              />
+              <p
+                className={`mt-2 text-[14px] ${
+                  errors.documentFile
+                    ? "text-red-600"
+                    : documentType
+                      ? "text-slate-600"
+                      : "text-gray-400"
+                }`}
+              >
+                {documentFile ? documentFile.name : "Upload document"}
+              </p>
+              {!documentType && (
+                <p className="mt-1 text-[12px] text-gray-400">
+                  Select document type first
+                </p>
+              )}
+            </div>
+            <input
+              type="file"
+              className="hidden"
+              onChange={(event) => {
+                handleDocumentChange(event);
+                if (errors.documentFile) {
+                  setErrors({ ...errors, documentFile: undefined });
+                }
+              }}
+              disabled={!documentType}
+              accept=".pdf"
+            />
+          </label>
+          {errors.documentFile && (
+            <p className="text-red-500 text-[14px] mt-2">
+              {errors.documentFile}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Contact */}
       <div className="rounded-sm mt-6">
         <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
