@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import InputFieldOriginal from "../ui/InputField";
 import Button from "../ui/Button";
+import TextareaField from "../ui/TextareaField";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const InputField = InputFieldOriginal;
 
@@ -23,6 +25,8 @@ export default function CreateAccount({
   answeredQuestions,
 }: CreateAccountProps) {
   const [postcode, setPostcode] = useState("");
+  const [description, setDescription] = useState("");
+  const [isUrgent, setIsUrgent] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -74,8 +78,8 @@ export default function CreateAccount({
         area: "Central London",
         locationName: "Central London, UK",
         answeredQuestions: answeredQuestions || [],
-        isUrgent: true,
-        description: "Job post from Trade Link Network 2",
+        isUrgent: isUrgent,
+        description: description || "",
         contactEmail: contactInfo?.email || "",
         contactPhone: contactInfo?.phone || "",
         clientName: contactInfo?.name || "",
@@ -87,12 +91,14 @@ export default function CreateAccount({
       setSuccess(true);
       // Reset form
       setPostcode("");
+      setDescription("");
+      setIsUrgent(false);
 
       // Redirect to my-jobs pending tab after 1 second
       setTimeout(() => {
         router.push("/my-jobs?tab=pending");
       }, 1000);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("Error:", err);
       const errorMessage =
@@ -116,17 +122,65 @@ export default function CreateAccount({
       {shouldShowJobDetails && (
         <>
           <div>
-            <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
-              Postcode for the job
-            </h3>
-            <p className="text-[16px] text-primaryTextLight mb-4">
-              To find tradespeople near you we need to know where the job is
-            </p>
-            <InputField
-              placeholder="Eg. SW1A 2AB"
-              // value={postcode}
-              onChange={(val: string) => setPostcode(val)}
-            />
+            <div className="mb-6">
+              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
+                Is this job urgent?
+              </h3>
+              <p className="text-[16px] text-primaryTextLight mb-4">
+                This will help us prioritise your job post and get you faster
+                responses
+              </p>
+              <RadioGroup
+                value={isUrgent ? "yes" : "no"}
+                onValueChange={(value) => setIsUrgent(value === "yes")}
+                className="flex gap-6"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="yes" id="urgent-yes" />
+                  <label
+                    htmlFor="urgent-yes"
+                    className="text-[16px] font-medium cursor-pointer"
+                  >
+                    Yes
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="no" id="urgent-no" />
+                  <label
+                    htmlFor="urgent-no"
+                    className="text-[16px] font-medium cursor-pointer"
+                  >
+                    No
+                  </label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="mb-6">
+              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
+                Description
+              </h3>
+              <p className="text-[16px] text-primaryTextLight mb-4">
+                Please provide details about your job requirements
+              </p>
+              <TextareaField
+                placeholder="Describe the work you need done..."
+                rows={5}
+                onChange={(val: string) => setDescription(val)}
+              />
+            </div>
+            <div>
+              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
+                Postcode for the job
+              </h3>
+              <p className="text-[16px] text-primaryTextLight mb-4">
+                To find tradespeople near you we need to know where the job is
+              </p>
+              <InputField
+                placeholder="Eg. SW1A 2AB"
+                // value={postcode}
+                onChange={(val: string) => setPostcode(val)}
+              />
+            </div>
           </div>
 
           {error && <p className="text-red-500 text-[14px]">{error}</p>}

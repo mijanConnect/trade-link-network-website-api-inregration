@@ -75,7 +75,7 @@ function AboutForm() {
 
   const [phone, setPhone] = useState("");
   const [officeAddress, setOfficeAddress] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [website, setWebsite] = useState("");
   const [about, setAbout] = useState("");
   const [documentType, setDocumentType] = useState<
@@ -139,7 +139,7 @@ function AboutForm() {
         postcode: postcode,
         services: selectedProfessions,
         phone,
-        email,
+        // email,
         website,
         about,
         businessImageFile: businessImageFile ?? undefined,
@@ -159,9 +159,10 @@ function AboutForm() {
         // No token, redirect to login
         router.push("/login");
       }
-    } catch (error) {
-      console.error("Failed to update profile", error);
-      toast.error("Failed to update profile");
+    } catch (error: any) {
+      const errorMessage =
+        error?.data?.message || error?.message || "Failed to update profile";
+      toast.error(errorMessage);
     }
   };
 
@@ -322,7 +323,7 @@ function AboutForm() {
         </h2>
         <div>
           <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
-            Document type
+            Document type (only pdf accepted)
           </div>
           <CustomSelect
             value={documentType}
@@ -377,7 +378,7 @@ function AboutForm() {
             className="hidden"
             onChange={handleDocumentChange}
             disabled={!documentType}
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            accept=".pdf"
           />
         </label>
       </div>
@@ -415,13 +416,13 @@ function AboutForm() {
             initialValue={officeAddress}
             onChange={setOfficeAddress}
           />
-          <InputField
+          {/* <InputField
             title="Email"
             placeholder="Enter email"
             initialValue={email}
             onChange={setEmail}
             type="email"
-          />
+          /> */}
           <InputField
             title="Website (Optional)"
             placeholder="Enter web address"
