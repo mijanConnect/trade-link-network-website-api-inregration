@@ -237,12 +237,14 @@ function AboutForm() {
             placeholder="Enter business name"
             initialValue={businessName}
             onChange={setBusinessName}
+            required
           />
           <InputField
             title="postcode"
             placeholder="Enter postcode"
             initialValue={postcode}
             onChange={setpostcode}
+            required
           />
           <InputField
             title="Service radius (km)"
@@ -250,18 +252,21 @@ function AboutForm() {
             type="number"
             initialValue={serviceRadiusKm}
             onChange={handleServiceRadiusChange}
+            required
           />
-          <div>
-            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
-              Select profession category
-            </div>
-            <CustomSelect
-              value={professionCategory}
-              options={professionOptions}
-              onChange={handleCategoryChange}
-              disabled={isCategoriesLoading}
-            />
+          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+            Select profession category <span className="text-red-500">*</span>
           </div>
+          <CustomSelect
+            value={professionCategory}
+            options={professionOptions}
+            onChange={handleCategoryChange}
+            disabled={isCategoriesLoading}
+            required
+            placeholder={
+              isCategoriesLoading ? "Loading categories..." : "Select category"
+            }
+          />
           <div>
             <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
               Select profession
@@ -321,31 +326,29 @@ function AboutForm() {
         <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Add your business/personal documents
         </h2>
-        <div>
-          <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
-            Document type (only pdf accepted)
-          </div>
-          <CustomSelect
-            value={documentType}
-            options={[
-              {
-                label: "Driving licence",
-                value: ProfessionalDocumentType.DRIVING_LICENSE,
-              },
-              {
-                label: "Passport",
-                value: ProfessionalDocumentType.PASSPORT,
-              },
-              {
-                label: "Insurance",
-                value: ProfessionalDocumentType.INSURANCE,
-              },
-            ]}
-            onChange={(value) =>
-              setDocumentType(value as ProfessionalDocumentType)
-            }
-          />
+        <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+          Select document type <span className="text-red-500">*</span>
         </div>
+        <CustomSelect
+          value={documentType}
+          options={[
+            {
+              label: "Driving licence",
+              value: ProfessionalDocumentType.DRIVING_LICENSE,
+            },
+            {
+              label: "Passport",
+              value: ProfessionalDocumentType.PASSPORT,
+            },
+            {
+              label: "Insurance",
+              value: ProfessionalDocumentType.INSURANCE,
+            },
+          ]}
+          onChange={(value) =>
+            setDocumentType(value as ProfessionalDocumentType)
+          }
+        />
         <label
           className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
             documentType

@@ -16,6 +16,7 @@ interface CustomSelectProps {
   value?: string | null;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  required?: boolean;
 }
 
 export function CustomSelect({
@@ -26,6 +27,7 @@ export function CustomSelect({
   value,
   onChange,
   disabled = false,
+  required = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState<string | null>(null);
@@ -36,6 +38,7 @@ export function CustomSelect({
       {label && (
         <label className="block text-[16px] lg:text-[18px] font-semibold text-primaryText mb-3">
           {label}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       <button

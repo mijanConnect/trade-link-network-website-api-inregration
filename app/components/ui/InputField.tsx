@@ -11,6 +11,7 @@ type InputFieldProps = {
   name?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  required?: boolean;
 };
 
 export default function InputField({
@@ -21,6 +22,7 @@ export default function InputField({
   name,
   onChange,
   disabled = false,
+  required = false,
 }: InputFieldProps) {
   const [value, setValue] = useState(initialValue);
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +45,7 @@ export default function InputField({
       {title && (
         <label className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
           {title}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
 
@@ -54,6 +57,7 @@ export default function InputField({
           placeholder={placeholder}
           onChange={handleChange}
           disabled={disabled}
+          required={required}
           className="
           mt-1
             w-full

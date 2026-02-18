@@ -10,6 +10,7 @@ type TextareaFieldProps = {
   onChange?: (value: string) => void;
   disabled?: boolean;
   rows?: number;
+  required?: boolean;
 };
 
 export default function TextareaField({
@@ -20,6 +21,7 @@ export default function TextareaField({
   onChange,
   disabled = false,
   rows = 4,
+  required = false,
 }: TextareaFieldProps) {
   const [value, setValue] = useState(initialValue);
 
@@ -39,6 +41,7 @@ export default function TextareaField({
       {title && (
         <label className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
           {title}
+          {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
 
@@ -49,6 +52,7 @@ export default function TextareaField({
         placeholder={placeholder}
         onChange={handleChange}
         disabled={disabled}
+        required={required}
         className="
           mt-1
           w-full
