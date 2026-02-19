@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Button from "./ui/Button";
 import { LogoNav, LogoNavMobile } from "./Svg";
 import ShowProfileModal from "./profile/ShowProfileModal";
+import { ChevronDown } from "lucide-react";
 
 const navbarStyles = `
   .nav-link {
@@ -20,6 +21,109 @@ const navbarStyles = `
   .nav-link.active {
     color: #1e3a5f;
     -webkit-text-stroke: 0.3px currentColor;
+  }
+
+  .dropdown-wrapper {
+    position: relative;
+  }
+
+  .dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+    z-index: 50;
+    margin-top: 4px;
+  }
+
+  .dropdown-wrapper:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    color: #5a5a5a;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 14px;
+  }
+
+  .dropdown-menu a:hover {
+    background-color: #f0f0f0;
+    color: #1e3a5f;
+  }
+
+  .dropdown-menu a:first-child {
+    border-radius: 4px 4px 0 0;
+  }
+
+  .dropdown-menu a:last-child {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .mobile-dropdown-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+  }
+
+  .mobile-dropdown-button:hover {
+    background-color: #f9f9f9;
+  }
+
+  .mobile-dropdown-menu {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #f0f0f0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .mobile-dropdown-menu.open {
+    max-height: 200px;
+  }
+
+  .mobile-dropdown-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #5a5a5a;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 14px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .mobile-dropdown-menu a:hover {
+    background-color: #f0f0f0;
+    color: #1e3a5f;
   }
 
   .hamburger-icon {
@@ -66,6 +170,7 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [open, setOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
@@ -227,17 +332,26 @@ export default function Navbar() {
               Area Covered
             </Link>
 
-            <Link
-              href="/faq"
-              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
-                isActive("/faq")
-                  ? "text-blue active"
-                  : "text-primaryTextLight"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              FAQ
-            </Link>
+            <div className="dropdown-wrapper">
+              <div className="nav-link py-1 transform transition-all text-[16px] font-normal dropdown-button text-primaryTextLight">
+                More
+                <ChevronDown className="w-[22px]" />
+              </div>
+              <div className="dropdown-menu">
+                <Link href="/faq" onClick={() => setOpen(false)}>
+                  FAQ
+                </Link>
+                <Link href="/contact-us" onClick={() => setOpen(false)}>
+                  Contact Us
+                </Link>
+                <Link href="/how-it-works" onClick={() => setOpen(false)}>
+                  How It Works
+                </Link>
+                <Link href="/about-us" onClick={() => setOpen(false)}>
+                  About Us
+                </Link>
+              </div>
+            </div>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
@@ -347,7 +461,7 @@ export default function Navbar() {
                 isClosing ? "mobile-menu closing" : "mobile-menu"
               }`}
             >
-              <nav className="container mx-auto px-4 py-2 flex flex-col text-center">
+              <nav className="container mx-auto px-4 pt-2 flex flex-col text-center">
                 <Link
                   href="/"
                   className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
@@ -372,7 +486,7 @@ export default function Navbar() {
 
                 <Link
                   href="/areas"
-                  className={`nav-link py-4 text-[16px] font-normal transition-all ${
+                  className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
                     isActive("/areas")
                       ? "text-blue active"
                       : "text-primaryTextLight"
@@ -382,17 +496,64 @@ export default function Navbar() {
                   Area Covered
                 </Link>
 
-                <Link
-                  href="/faq"
-                  className={`nav-link py-4 text-[16px] font-normal transition-all ${
-                    isActive("/faq")
-                      ? "text-blue active"
-                      : "text-primaryTextLight"
-                  }`}
-                  onClick={handleClose}
+                <button
+                  onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
+                  className="mobile-dropdown-button text-primaryTextLight"
                 >
-                  FAQ
-                </Link>
+                  More
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${
+                      mobileMoreOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                <div
+                  className={`mobile-dropdown-menu ${
+                    mobileMoreOpen ? "open" : ""
+                  }`}
+                >
+                  <Link
+                    href="/faq"
+                    className="text-primaryTextLight"
+                    onClick={() => {
+                      handleClose();
+                      setMobileMoreOpen(false);
+                    }}
+                  >
+                    FAQ
+                  </Link>
+                  <Link
+                    href="/contact-us"
+                    className="text-primaryTextLight"
+                    onClick={() => {
+                      handleClose();
+                      setMobileMoreOpen(false);
+                    }}
+                  >
+                    Contact Us
+                  </Link>
+                  <Link
+                    href="/how-it-works"
+                    className="text-primaryTextLight"
+                    onClick={() => {
+                      handleClose();
+                      setMobileMoreOpen(false);
+                    }}
+                  >
+                    How It Works
+                  </Link>
+                  <Link
+                    href="/about-us"
+                    className="text-primaryTextLight"
+                    onClick={() => {
+                      handleClose();
+                      setMobileMoreOpen(false);
+                    }}
+                  >
+                    About Us
+                  </Link>
+                </div>
               </nav>
 
               <div className="flex items-center gap-2 lg:gap-6">
