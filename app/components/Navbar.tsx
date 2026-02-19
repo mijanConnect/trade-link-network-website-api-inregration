@@ -42,7 +42,7 @@ const navbarStyles = `
     border: 1px solid #e5e7eb;
     border-radius: 4px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 160px;
+    min-width: 200px;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-8px);
@@ -347,6 +347,9 @@ export default function Navbar() {
                 <Link href="/how-it-works" onClick={() => setOpen(false)}>
                   How It Works
                 </Link>
+                <Link href="/how-tradeperson-works" onClick={() => setOpen(false)}>
+                  How Tradeperson Works
+                </Link>
                 <Link href="/about-us" onClick={() => setOpen(false)}>
                   About Us
                 </Link>
@@ -542,6 +545,16 @@ export default function Navbar() {
                     }}
                   >
                     How It Works
+                  </Link>
+                  <Link
+                    href="/how-tradeperson-works"
+                    className="text-primaryTextLight"
+                    onClick={() => {
+                      handleClose();
+                      setMobileMoreOpen(false);
+                    }}
+                  >
+                    How Tradeperson Works
                   </Link>
                   <Link
                     href="/about-us"
