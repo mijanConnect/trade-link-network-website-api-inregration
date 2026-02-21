@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { z } from "zod";
+import { useUserDataSendAdminMutation } from "@/store/slice/contactUsSlice";
 
 type EmailContact = {
   title: string;
@@ -60,6 +62,31 @@ const whyContactPoints = [
   "Fast response times",
 ];
 
+// Zod validation schema
+const contactUsSchema = z.object({
+  body: z
+    .object({
+      name: z
+        .string()
+        .min(1, "Name is required")
+        .min(2, "Name must be at least 2 characters long"),
+      email: z
+        .string()
+        .min(1, "Email is required")
+        .email("Invalid email address"),
+      phone: z.string().optional(),
+      subject: z
+        .string()
+        .min(1, "Subject is required")
+        .min(2, "Subject must be at least 2 characters long"),
+      message: z
+        .string()
+        .min(1, "Message is required")
+        .min(2, "Message must be at least 2 characters long"),
+    })
+    .strict(),
+});
+
 export default function ContactUsPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -71,6 +98,8 @@ export default function ContactUsPage() {
     privacyConsent: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userDataSendAdmin, { isLoading }] = useUserDataSendAdminMutation();
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -88,14 +117,55 @@ export default function ContactUsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear previous validation errors
+    setValidationErrors({});
+    
     if (!formData.privacyConsent) {
       toast.error("Please accept the privacy consent to continue.");
       return;
     }
+
+    // Prepare data for validation (map fullName to name)
+    const submitData = {
+      body: {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        subject: formData.subject,
+        message: formData.message,
+      },
+    };
+
+    // Validate with Zod
+    try {
+      contactUsSchema.parse(submitData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errors: Record<string, string> = {};
+        error.issues.forEach((issue) => {
+          const path = issue.path.join(".");
+          if (path.startsWith("body.")) {
+            const field = path.replace("body.", "");
+            errors[field] = issue.message;
+          }
+        });
+        setValidationErrors(errors);
+        
+        // Show first error in toast
+        const firstError = error.issues[0];
+        if (firstError) {
+          toast.error(firstError.message);
+        }
+        return;
+      }
+    }
+
     setIsSubmitting(true);
-    // TODO: Implement form submission logic
-    setTimeout(() => {
-      setIsSubmitting(false);
+    
+    try {
+      await userDataSendAdmin(submitData).unwrap();
+      
       toast.success("Message sent successfully!");
       setFormData({
         fullName: "",
@@ -105,7 +175,18 @@ export default function ContactUsPage() {
         message: "",
         privacyConsent: false,
       });
-    }, 1000);
+      setValidationErrors({});
+    } catch (error: unknown) {
+      console.error("Contact form submission error:", error);
+      const err = error as { data?: { message?: string }; message?: string };
+      toast.error(
+        err?.data?.message || 
+        err?.message || 
+        "Failed to send message. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const copyEmail = async (email: string) => {
@@ -297,9 +378,18 @@ export default function ContactUsPage() {
                     required
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
+                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
+                      validationErrors.name
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
                     placeholder="Enter your full name"
                   />
+                  {validationErrors.name && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {validationErrors.name}
+                    </p>
+                  )}
                 </div>
 
                 {/* Email */}
@@ -317,9 +407,18 @@ export default function ContactUsPage() {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
+                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
+                      validationErrors.email
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
                     placeholder="Enter your email address"
                   />
+                  {validationErrors.email && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {validationErrors.email}
+                    </p>
+                  )}
                 </div>
 
                 {/* Phone */}
@@ -356,9 +455,18 @@ export default function ContactUsPage() {
                     required
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
+                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
+                      validationErrors.subject
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
                     placeholder="Enter message subject"
                   />
+                  {validationErrors.subject && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {validationErrors.subject}
+                    </p>
+                  )}
                 </div>
 
                 {/* Message */}
@@ -376,9 +484,18 @@ export default function ContactUsPage() {
                     rows={6}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg resize-vertical"
+                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg resize-vertical ${
+                      validationErrors.message
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
                     placeholder="Enter your message"
                   />
+                  {validationErrors.message && (
+                    <p className="mt-1 text-sm text-red-500">
+                      {validationErrors.message}
+                    </p>
+                  )}
                 </div>
 
                 {/* Privacy Consent */}
@@ -405,10 +522,10 @@ export default function ContactUsPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLoading}
                   className="w-full bg-primary text-white font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-opacity-90 transition-colors text-lg shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting || isLoading ? "Sending..." : "Send Message"}
                 </button>
               </div>
             </form>

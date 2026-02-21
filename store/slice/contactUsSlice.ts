@@ -7,9 +7,22 @@ export const contactUsApi = baseApi.injectEndpoints({
     // ---------------------------------------
     sendMessage: builder.mutation({
       query: ({ email, issueTitle, message }) => ({
-        url: `/admin/contact-us`,
+        url: `/admin/issues/send`,
         method: "POST",
         body: { email, issueTitle, message },
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      invalidatesTags: ["HiredJobs"],
+    }),
+
+    userDataSendAdmin: builder.mutation({
+      query: ({body }) => ({
+        url: `/admin/contact-us`,
+        method: "POST",
+        body: body,
       }),
 
       transformResponse: (response) =>
@@ -20,4 +33,4 @@ export const contactUsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useSendMessageMutation } = contactUsApi;
+export const { useSendMessageMutation, useUserDataSendAdminMutation } = contactUsApi;

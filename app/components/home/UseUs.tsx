@@ -1,40 +1,50 @@
-import { Budget, File, Phone, Plus, Prople } from "../Svg";
+// import { Budget, File, Phone, Plus, Prople } from "../Svg";
+import { Building, File, IdCard, Phone, User2, Verified } from "lucide-react";
 import WhyUse from "../ui/WhyUse";
 
 const icons = {
-  File: <File />,
+  Verified: <Verified />,
+  IdCard: <IdCard />,
+  Building: <Building />,
+  User2: <User2 />,
   Phone: <Phone />,
-  Budget: <Budget />,
-  Users: <Prople />,
-  Plus: <Plus />,
+  File: <File />,
 };
 
 const useUsData = [
   {
     id: 1,
-    icon: "File",
-    title: "Trades see full job details upfront",
+    icon: Verified,
+    title: "Verified professionals",
   },
+
+
   {
     id: 2,
-    icon: "Phone",
-    title: "No endless phone calls",
+    icon: IdCard,
+    title: "ID Checked & vetted trades",
   },
   {
     id: 3,
-    icon: "Budget",
+    icon: Building,
     title: "Compare up to 3 quotes",
   },
   {
     id: 4,
-    icon: "Users",
+    icon: User2,
     title: "Local professionals only",
   },
   {
     id: 5,
-    icon: "Plus",
-    title: "Free to post a job",
+    icon: File,
+    title: "Trades see full job details upfront",
   },
+  {
+    id: 6,
+    icon: Phone,
+    title: "No endless phone calls",
+  },
+ 
 ];
 
 export default function UseUs() {
