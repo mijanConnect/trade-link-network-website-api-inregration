@@ -60,6 +60,9 @@ export default function StepsHome() {
               <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Receive real local job leads
               </h2>
+              {/* <p className="text-[10px] px-4 md:text-base font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              Only customers in your chosen service area.
+              </p> */}
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
