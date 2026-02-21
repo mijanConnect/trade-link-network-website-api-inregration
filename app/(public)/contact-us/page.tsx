@@ -167,7 +167,7 @@ export default function ContactUsPage() {
             Choose the right contact for your enquiry
           </p>
 
-          <div className="space-y-6 lg:space-y-12 max-w-4xl mx-auto">
+          <div className="space-y-6 lg:space-y-12 mx-auto">
             {emailContacts.map((contact, index) => (
               <div key={index} className="relative">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
@@ -214,7 +214,7 @@ export default function ContactUsPage() {
       {/* Phone & Company Info Section */}
       <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8  mx-auto">
             {/* Phone Support */}
             <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
@@ -245,14 +245,9 @@ export default function ContactUsPage() {
                 Kingdom, SS11 7PF
               </p>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Support Hours Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
+
+           
             <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                 Support Hours
@@ -270,6 +265,7 @@ export default function ContactUsPage() {
         </div>
       </section>
 
+  
       {/* Contact Form Section */}
       <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
