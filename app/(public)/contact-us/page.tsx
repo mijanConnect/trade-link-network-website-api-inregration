@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { toast } from "sonner";
 
 type EmailContact = {
   title: string;
@@ -124,7 +125,7 @@ export default function ContactUsPage() {
       // Check if clipboard API is available
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(email);
-        alert(`Email copied: ${email}`);
+        toast.success(`Email copied: ${email}`);
       } else {
         // Fallback for browsers that don't support clipboard API
         const textArea = document.createElement("textarea");
@@ -137,16 +138,16 @@ export default function ContactUsPage() {
         textArea.select();
         try {
           document.execCommand("copy");
-          alert(`Email copied: ${email}`);
+          toast.success(`Email copied: ${email}`);
         } catch (err) {
           console.error("Failed to copy email:", err);
-          alert(`Please copy manually: ${email}`);
+          toast.error(`Please copy manually: ${email}`);
         }
         document.body.removeChild(textArea);
       }
     } catch (err) {
       console.error("Failed to copy email:", err);
-      alert(`Please copy manually: ${email}`);
+      toast.error(`Please copy manually: ${email}`);
     }
   };
 
