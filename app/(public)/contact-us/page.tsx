@@ -169,14 +169,6 @@ export default function ContactUsPage() {
             </p>
           </div>
 
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
-
           {/* Email Contact Section */}
           <section
             data-aos="fade-up"
@@ -219,14 +211,6 @@ export default function ContactUsPage() {
             </div>
           </section>
 
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
-
           {/* Phone Support Section */}
           <section
             data-aos="fade-up"
@@ -245,14 +229,6 @@ export default function ContactUsPage() {
               </p>
             </div>
           </section>
-
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
 
           {/* Company Information Section */}
           <section
@@ -276,14 +252,6 @@ export default function ContactUsPage() {
             </div>
           </section>
 
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
-
           {/* Support Hours Section */}
           <section
             data-aos="fade-up"
@@ -303,14 +271,6 @@ export default function ContactUsPage() {
               </p>
             </div>
           </section>
-
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
 
           {/* Contact Form Section */}
           <section
@@ -457,14 +417,6 @@ export default function ContactUsPage() {
             </form>
           </section>
 
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
-
           {/* Privacy Section */}
           <section
             data-aos="fade-up"
@@ -480,14 +432,6 @@ export default function ContactUsPage() {
               </p>
             </div>
           </section>
-
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
 
           {/* Why Contact Section */}
           <section
@@ -529,14 +473,6 @@ export default function ContactUsPage() {
               ))}
             </div>
           </section>
-
-          {/* Divider */}
-          <div
-            data-aos="fade-up"
-            className="flex justify-center my-8 lg:my-12"
-          >
-            <div className="w-24 h-0.5 bg-stroke"></div>
-          </div>
 
           {/* FAQ Link Section */}
           <section
