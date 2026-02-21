@@ -214,7 +214,7 @@ export default function ContactUsPage() {
       {/* Phone & Company Info Section */}
       <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8  mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8  mx-auto">
             {/* Phone Support */}
             <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
