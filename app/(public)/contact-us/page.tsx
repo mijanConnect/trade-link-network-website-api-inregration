@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import { toast } from "sonner";
 
 type EmailContact = {
@@ -74,16 +72,6 @@ export default function ContactUsPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 600,
-      once: true,
-      easing: "ease-out",
-      offset: 50,
-      mirror: false,
-    });
-  }, []);
-
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -101,14 +89,14 @@ export default function ContactUsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.privacyConsent) {
-      alert("Please accept the privacy consent to continue.");
+      toast.error("Please accept the privacy consent to continue.");
       return;
     }
     setIsSubmitting(true);
     // TODO: Implement form submission logic
     setTimeout(() => {
       setIsSubmitting(false);
-      alert("Message sent successfully!");
+      toast.success("Message sent successfully!");
       setFormData({
         fullName: "",
         email: "",
@@ -152,134 +140,147 @@ export default function ContactUsPage() {
   };
 
   return (
-    <div>
-      <div className="container mx-auto px-4 lg:px-0">
-        <div className="pt-10 pb-15 lg:pt-15 lg:pb-40">
-          {/* Hero Section */}
-          <div
-            data-aos="fade-up"
-            className="text-center mb-8 lg:mb-16"
-          >
-            <h1 className="text-[20px] md:text-[40px] font-semibold text-primaryText max-w-2xl mx-auto mb-4">
-              📞 Contact Trade Link Network
-            </h1>
-            <p className="text-[16px] lg:text-[20px] text-gray-700 max-w-2xl mx-auto">
-              We&apos;re here to help. Whether you&apos;re a homeowner, tradesperson, or
-              business partner, our team is ready to assist.
-            </p>
-          </div>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="py-12 lg:py-20 px-4">
+        <div className="container mx-auto text-center">
+          <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4">
+            CONTACT TRADE LINK NETWORK
+          </h1>
+          <p className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6">
+            We&apos;re here to help.
+          </p>
+          <p className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto">
+            Whether you&apos;re a homeowner, tradesperson, or business partner,
+            our team is ready to assist.
+          </p>
+        </div>
+      </section>
 
-          {/* Email Contact Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-6 lg:mb-8">
-              ✉️ Contact by Email
-            </h2>
-            <div className="space-y-6">
-              {emailContacts.map((contact, index) => (
-                <div
-                  key={index}
-                  data-aos="fade-up"
-                  data-aos-delay={index * 50}
-                  className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-6"
-                >
-                  <h3 className="text-[16px] lg:text-[18px] font-semibold text-primaryText mb-2">
-                    {contact.title}
-                  </h3>
-                  <p className="text-[14px] lg:text-[16px] text-gray-700 mb-3">
-                    {contact.description}
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <a
-                      href={`mailto:${contact.email}`}
-                      className="text-primary font-medium text-[14px] lg:text-[16px] hover:underline"
-                    >
-                      📧 {contact.email}
-                    </a>
-                    <button
-                      onClick={() => copyEmail(contact.email)}
-                      className="text-gray-500 hover:text-primary text-sm"
-                      title="Copy email"
-                    >
-                      <i className="fa fa-copy"></i>
-                    </button>
+      {/* Email Contact Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+            Contact by Email
+          </h2>
+          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+            Choose the right contact for your enquiry
+          </p>
+
+          <div className="space-y-6 lg:space-y-12 max-w-4xl mx-auto">
+            {emailContacts.map((contact, index) => (
+              <div key={index} className="relative">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
+                  {/* Step Number Circle */}
+                  <div className="lg:col-span-1 flex justify-center lg:justify-start">
+                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl lg:text-3xl shadow-lg">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                  </div>
+
+                  {/* Contact Content */}
+                  <div className="lg:col-span-11">
+                    <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+                      <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                        {contact.title}
+                      </h3>
+                      <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2 lg:mb-4">
+                        {contact.description}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <a
+                          href={`mailto:${contact.email}`}
+                          className="text-primary font-semibold text-sm lg:text-lg hover:underline"
+                        >
+                          {contact.email}
+                        </a>
+                        <button
+                          onClick={() => copyEmail(contact.email)}
+                          className="text-gray-500 hover:text-primary text-sm"
+                          title="Copy email"
+                        >
+                          <i className="fa fa-copy"></i>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          {/* Phone Support Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-4 lg:mb-6">
-              📞 Phone Support
-            </h2>
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-6">
-              <p className="text-[14px] lg:text-[16px] text-gray-700 mb-2">
-                <span className="font-semibold">📱 Phone number</span> — to be
+      {/* Phone & Company Info Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
+            {/* Phone Support */}
+            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                Phone Support
+              </h3>
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2">
+                <span className="font-semibold">Phone number</span> — to be
                 confirmed (waiting on one, maybe a landline number)
               </p>
-              <p className="text-[14px] lg:text-[16px] text-gray-600 italic">
+              <p className="text-gray-600 italic text-sm lg:text-md lg:text-lg">
                 (Email is currently the fastest way to contact us.)
               </p>
             </div>
-          </section>
 
-          {/* Company Information Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-4 lg:mb-6">
-              📍 Company Information
-            </h2>
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-6">
-              <p className="text-[16px] lg:text-[18px] font-semibold text-primaryText mb-2">
+            {/* Company Information */}
+            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                Company Information
+              </h3>
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2 font-semibold">
                 Trade Link Network Ltd
               </p>
-              <p className="text-[14px] lg:text-[16px] text-gray-700 mb-1">
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2">
                 United Kingdom
               </p>
-              <p className="text-[14px] lg:text-[16px] text-gray-700">
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg">
                 Indecon Building, South Hanningfield Road, Wickford, United
                 Kingdom, SS11 7PF
               </p>
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* Support Hours Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-4 lg:mb-6">
-              🕒 Support Hours
-            </h2>
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-6">
-              <p className="text-[14px] lg:text-[16px] text-gray-700 mb-2">
+      {/* Support Hours Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                Support Hours
+              </h3>
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2">
                 <span className="font-semibold">Monday – Friday:</span> 9:00 AM
                 – 17:00 PM
               </p>
-              <p className="text-[14px] lg:text-[16px] text-gray-700">
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg">
                 <span className="font-semibold">Weekend:</span> Limited support
                 email only
               </p>
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* Contact Form Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-6 lg:mb-8">
-              💬 Send Us a Message
-            </h2>
+      {/* Contact Form Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+            Send Us a Message
+          </h2>
+          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+            Fill out the form below and we&apos;ll get back to you soon
+          </p>
+
+          <div className="max-w-4xl mx-auto">
             <form
               onSubmit={handleSubmit}
               className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-8"
@@ -289,7 +290,7 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="fullName"
-                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2"
+                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
                     Full name <span className="text-red-500">*</span>
                   </label>
@@ -300,7 +301,7 @@ export default function ContactUsPage() {
                     required
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-stroke rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-[14px] lg:text-[16px]"
+                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -309,7 +310,7 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2"
+                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
                     Email address <span className="text-red-500">*</span>
                   </label>
@@ -320,7 +321,7 @@ export default function ContactUsPage() {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-stroke rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-[14px] lg:text-[16px]"
+                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
                     placeholder="Enter your email address"
                   />
                 </div>
@@ -329,7 +330,7 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="phone"
-                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2"
+                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
                     Phone number <span className="text-gray-500">(optional)</span>
                   </label>
@@ -339,7 +340,7 @@ export default function ContactUsPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-stroke rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-[14px] lg:text-[16px]"
+                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
                     placeholder="Enter your phone number"
                   />
                 </div>
@@ -348,7 +349,7 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="subject"
-                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2"
+                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
                     Subject <span className="text-red-500">*</span>
                   </label>
@@ -359,7 +360,7 @@ export default function ContactUsPage() {
                     required
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-stroke rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-[14px] lg:text-[16px]"
+                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
                     placeholder="Enter message subject"
                   />
                 </div>
@@ -368,7 +369,7 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2"
+                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
                     Message <span className="text-red-500">*</span>
                   </label>
@@ -379,7 +380,7 @@ export default function ContactUsPage() {
                     rows={6}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-stroke rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-[14px] lg:text-[16px] resize-vertical"
+                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg resize-vertical"
                     placeholder="Enter your message"
                   />
                 </div>
@@ -393,11 +394,11 @@ export default function ContactUsPage() {
                     required
                     checked={formData.privacyConsent}
                     onChange={handleInputChange}
-                    className="mt-1 mr-3 w-4 h-4 text-primary border-stroke rounded focus:ring-primary"
+                    className="mt-1 mr-3 w-4 h-4 text-primary border-gray-200 rounded focus:ring-primary"
                   />
                   <label
                     htmlFor="privacyConsent"
-                    className="text-[14px] lg:text-[16px] text-gray-700"
+                    className="text-sm lg:text-lg text-gray-700"
                   >
                     I consent to the processing of my personal data in
                     accordance with the privacy policy.{" "}
@@ -409,94 +410,93 @@ export default function ContactUsPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary text-white font-semibold px-6 py-3 lg:py-4 rounded-md hover:bg-opacity-90 transition-colors text-[16px] lg:text-[18px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-primary text-white font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-opacity-90 transition-colors text-lg shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
               </div>
             </form>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* Privacy Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-4 lg:mb-6">
-              🔒 Your Privacy
-            </h2>
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-6">
-              <p className="text-[14px] lg:text-[16px] text-gray-700">
+      {/* Privacy Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                Your Privacy
+              </h3>
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg">
                 Your details are used only to respond to your enquiry and are
                 handled securely in line with UK data protection regulations.
               </p>
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          {/* Why Contact Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-6 lg:mb-8">
-              ⭐ Why Contact Trade Link Network?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              {whyContactPoints.map((point, index) => (
-                <div
-                  key={index}
-                  data-aos="fade-up"
-                  data-aos-delay={index * 50}
-                  className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-6"
-                >
-                  <div className="flex items-start">
-                    <div className="shrink-0">
-                      <svg
-                        className="w-6 h-6 text-green-500 mt-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                    <div className="ml-4">
-                      <p className="text-[14px] lg:text-[16px] font-semibold text-primaryText">
-                        {point}
-                      </p>
-                    </div>
+      {/* Why Contact Section */}
+      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-10 lg:py-24 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+            Why Contact Trade Link Network?
+          </h2>
+          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+            Discover what makes our service the preferred choice
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 max-w-4xl mx-auto">
+            {whyContactPoints.map((point, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-lg p-4 lg:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+              >
+                <div className="flex items-start">
+                  <div className="shrink-0">
+                    <svg
+                      className="w-6 h-6 text-green-500 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-lg font-semibold text-gray-900">
+                      {point}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
-
-          {/* FAQ Link Section */}
-          <section
-            data-aos="fade-up"
-            className="mb-8 lg:mb-16 max-w-4xl mx-auto text-center"
-          >
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primaryText mb-4 lg:mb-6">
-              ❓ Need Quick Answers?
-            </h2>
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-6">
-              <p className="text-[14px] lg:text-[16px] text-gray-700 mb-4">
-                Visit our Frequently Asked Questions page for common queries and
-                guidance.
-              </p>
-              <button
-                onClick={() => router.push("/faq")}
-                className="bg-primary text-white font-semibold px-6 py-3 lg:py-4 rounded-md hover:bg-opacity-90 transition-colors text-[14px] lg:text-[16px]"
-              >
-                Visit FAQ Page
-              </button>
-            </div>
-          </section>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-primary py-10 lg:py-20 px-4">
+        <div className="container mx-auto text-center">
+          <h2 className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-4">
+            Need Quick Answers?
+          </h2>
+          <p className="text-md lg:text-xl text-blue-100 mb-4 lg:mb-8 max-w-2xl mx-auto">
+            Visit our Frequently Asked Questions page for common queries and
+            guidance.
+          </p>
+          <button
+            onClick={() => router.push("/faq")}
+            className="bg-white text-primary font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-blue-50 transition-colors text-lg shadow-lg cursor-pointer"
+          >
+            Visit FAQ Page
+          </button>
+        </div>
+      </section>
+    </main>
   );
 }
