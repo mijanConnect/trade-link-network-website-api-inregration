@@ -36,7 +36,7 @@ function WhyUseCard({
       data-aos="zoom-in-up"
       data-aos-delay={index * 100}
     >
-      <div className="bg-[#E9EBEF] inline-block p-5 rounded-full mb-7">
+      <div className="bg-[#E9EBEF] inline-block p-5 rounded-full mb-7 text-[#1E3A5F] font-bold text-2xl">
         {icons[icon] || null}
       </div>
       <h3 className="text-[18px] md:text-[20px] text-primary font-semibold text-center">
