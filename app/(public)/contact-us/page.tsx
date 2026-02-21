@@ -119,9 +119,35 @@ export default function ContactUsPage() {
     }, 1000);
   };
 
-  const copyEmail = (email: string) => {
-    navigator.clipboard.writeText(email);
-    alert(`Email copied: ${email}`);
+  const copyEmail = async (email: string) => {
+    try {
+      // Check if clipboard API is available
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(email);
+        alert(`Email copied: ${email}`);
+      } else {
+        // Fallback for browsers that don't support clipboard API
+        const textArea = document.createElement("textarea");
+        textArea.value = email;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          alert(`Email copied: ${email}`);
+        } catch (err) {
+          console.error("Failed to copy email:", err);
+          alert(`Please copy manually: ${email}`);
+        }
+        document.body.removeChild(textArea);
+      }
+    } catch (err) {
+      console.error("Failed to copy email:", err);
+      alert(`Please copy manually: ${email}`);
+    }
   };
 
   return (
