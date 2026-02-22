@@ -167,10 +167,14 @@ function AboutForm({ user }: AboutFormProps) {
     setSelectedProfessions((prev) => prev.filter((p) => p !== serviceId));
   };
 
-  const handleAddProfession = (serviceId: string) => {
-    if (!selectedProfessions.includes(serviceId)) {
-      setSelectedProfessions((prev) => [...prev, serviceId]);
-    }
+  const handleAddProfession = (serviceId: string | null) => {
+    if (!serviceId) return;
+    setSelectedProfessions((prev) => {
+      if (!prev.includes(serviceId)) {
+        return [...prev, serviceId];
+      }
+      return prev;
+    });
   };
 
   // Reset selected services when category changes
@@ -208,7 +212,7 @@ function AboutForm({ user }: AboutFormProps) {
         documentType: documentType || undefined,
         address: officeAddress,
         postcode: postcode,
-        services: selectedProfessions,
+        services: Array.isArray(selectedProfessions) ? selectedProfessions : [],
         phone,
         website,
         about,
@@ -362,9 +366,11 @@ function AboutForm({ user }: AboutFormProps) {
                   }))}
                 value={null}
                 onChange={(value) => {
-                  handleAddProfession(value);
-                  if (errors.selectedProfessions) {
-                    setErrors({ ...errors, selectedProfessions: undefined });
+                  if (value) {
+                    handleAddProfession(value);
+                    if (errors.selectedProfessions) {
+                      setErrors({ ...errors, selectedProfessions: undefined });
+                    }
                   }
                 }}
                 disabled={!professionCategory || availableServices.length === 0}
@@ -387,7 +393,7 @@ function AboutForm({ user }: AboutFormProps) {
       </div>
 
       {/* Documents */}
-      {professional?.hasDocuments && (
+      {(!user.isProfileCompleted || !user.hasDocuments) && (
         <div className="rounded-sm mt-6">
           <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
             Add your business/personal documents

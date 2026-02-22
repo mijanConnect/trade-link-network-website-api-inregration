@@ -16,18 +16,24 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
           <div className="col-span-2 lg:col-span-1">
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h3 className="font-semibold text-primary text-[22px]">
+              {/* <h3 className="font-semibold text-primary text-[22px]">
                 Contact
-              </h3>
+              </h3> */}
+
+              <div className=" ">
+                <Link href="/">
+                  <LogoNav />
+                </Link>
+              </div>
               <ul className="flex flex-col gap-1 text-primary text-[16px] items-center md:items-start mt-2 lg:mt-4">
                 <li className="flex items-center gap-2">
                   <p>Phone :</p>
-                  <a href="tel:+61234567890">+61 234 567 890</a>
+                  <a href="tel:0330 160 2233">0330 160 2233</a>
                 </li>
                 <li className="flex items-center gap-2">
                   <p>Email :</p>
-                  <a href="mailto:tradelinknetwork@gmail.com">
-                    tradelinknetwork@gmail.com
+                  <a href="mailto:support@tradelinknetwork.co.uk">
+                    support@tradelinknetwork.co.uk
                   </a>
                 </li>
               </ul>
@@ -41,77 +47,56 @@ export default function Footer() {
               </Button>
             </div>
 
-            <div className="mt-12 hidden md:block">
-              <Link href="/">
-                <LogoNav />
-              </Link>
-            </div>
+
           </div>
-          <div className="mt-4 lg:mt-0">
+
+
+
+          <div>
+            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+              Quick Links
+            </h2>
+            <ul className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-primary text-[16px] font-medium ">
+              <li>
+                <Link href="/areas" className="hover:underline transition-all">
+                  Area Covered
+                </Link>
+              </li>
+              <li>
+                <Link href="/code-of-conduct" className="hover:underline transition-all">
+                  Code of Conduct
+                </Link>
+              </li>
+              <li>
+                <Link href="/about-us" className="hover:underline transition-all">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:underline transition-all">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-conditions" className="hover:underline transition-all">
+                  Terms and Conditions
+                </Link>
+              </li>
+              <li>
+                <Link href="/review-policy" className="hover:underline transition-all">
+                  Review Policy
+                </Link>
+              </li>
+
+            </ul>
+          </div>
+
+          <div className="">
             <div className="flex flex-col items-center md:items-end text-center md:text-right justify-between">
-              <ul className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-3 text-primary text-[16px] font-medium">
-                <li>
-                  <Link
-                    href="/services"
-                    className="hover:underline transform transition-all"
-                  >
-                    Services
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/areas"
-                    className="hover:underline transform transition-all"
-                  >
-                    Area Covered
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy-policy"
-                    className="hover:underline transform transition-all"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms-conditions"
-                    className="hover:underline transform transition-all"
-                  >
-                    Terms and Conditions
-                  </Link>
-                </li>
-              </ul>
-              <ul className="flex flex-wrap justify-center md:justify-end gap-x-8 gap-y-3 text-primary text-[16px] font-medium mt-3 lg:mt-4">
-                <li>
-                  <Link
-                    href="/review-policy"
-                    className="hover:underline transform transition-all"
-                  >
-                    Review Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/code-of-conduct"
-                    className="hover:underline transform transition-all"
-                  >
-                    Code of Conduct
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/about-us"
-                    className="hover:underline transform transition-all"
-                  >
-                    About Us
-                  </Link>
-                </li>
-              </ul>
+
               <div className="flex flex-col items-center lg:items-end">
                 <div>
-                  <h4 className="text-[18px] lg:text-[24px] font-semibold text-primary mt-4 lg:mt-10">
+                  <h4 className="text-[18px] lg:text-[24px] font-semibold text-primary ">
                     Are you a tradesperson?
                   </h4>
                 </div>
