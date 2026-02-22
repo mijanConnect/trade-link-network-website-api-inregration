@@ -455,9 +455,8 @@ export default function LeadDetailPage() {
 
             <div className="space-y-4">
               {filteredAndSortedLeads.map((lead) => (
-                <button
+                <div
                   key={lead.id}
-                  type="button"
                   onClick={() => {
                     // Prevent scroll restoration when clicking on a lead
                     shouldRestoreScrollRef.current = false;
@@ -478,10 +477,9 @@ export default function LeadDetailPage() {
                       router.push(`/trade-person/leads/${lead.id}`, { scroll: false });
                     });
                   }}
-                  className="block w-full text-left transition-opacity duration-200"
                 >
                   <LeadCard lead={lead} selected={lead.id === activeLeadId} />
-                </button>
+                </div>
               ))}
               {/* Loading indicator for infinite scroll */}
               {isLoadingMore && (
@@ -556,10 +554,8 @@ export default function LeadDetailPage() {
 
               <div className="space-y-3">
                 {filteredAndSortedLeads.map((lead) => (
-                  <button
+                  <div
                     key={lead.id}
-                    type="button"
-                    className="block w-full text-left transition-opacity duration-200"
                     onClick={() => {
                       // Don't set loading immediately - let useEffect handle it smoothly
                       setMobileSelectedLeadId(lead.id);
@@ -570,7 +566,7 @@ export default function LeadDetailPage() {
                       lead={lead}
                       selected={lead.id === mobileSelectedLeadId}
                     />
-                  </button>
+                  </div>
                 ))}
                 {/* Loading indicator for infinite scroll */}
                 {isLoadingMore && (
