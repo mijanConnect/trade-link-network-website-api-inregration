@@ -63,6 +63,8 @@ export interface MyProfileUser {
   updatedAt: string;
   __v?: number;
   professional?: ProfessionalProfile;
+  isProfileCompleted?: boolean;
+  hasDocuments?: boolean;
 }
 
 export interface MyProfileResponse {
@@ -159,8 +161,10 @@ const myProfileSlice = baseApi.injectEndpoints({
         if (data.documentType) {
           formData.append("documentType", data.documentType);
         }
-        if (Array.isArray(data.services)) {
-          data.services.forEach((s) => formData.append("services", s));
+        if (Array.isArray(data.services) && data.services.length > 0) {
+          // Use bracket notation to ensure backend treats it as an array
+          // This works for both single and multiple services
+          data.services.forEach((s) => formData.append("services[]", s));
         }
         if (data.businessImageFile) {
           formData.append("businessImage", data.businessImageFile);

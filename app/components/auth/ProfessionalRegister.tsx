@@ -127,10 +127,14 @@ function AboutForm() {
     setSelectedProfessions((prev) => prev.filter((p) => p !== serviceId));
   };
 
-  const handleAddProfession = (serviceId: string) => {
-    if (!selectedProfessions.includes(serviceId)) {
-      setSelectedProfessions((prev) => [...prev, serviceId]);
-    }
+  const handleAddProfession = (serviceId: string | null) => {
+    if (!serviceId) return;
+    setSelectedProfessions((prev) => {
+      if (!prev.includes(serviceId)) {
+        return [...prev, serviceId];
+      }
+      return prev;
+    });
   };
 
   // Reset selected services when category changes
@@ -183,7 +187,7 @@ function AboutForm() {
         documentType: documentType || undefined,
         address: officeAddress,
         postcode: postcode,
-        services: selectedProfessions,
+        services: Array.isArray(selectedProfessions) ? selectedProfessions : [],
         phone,
         // email,
         website,
@@ -205,9 +209,12 @@ function AboutForm() {
         // No token, redirect to login
         router.push("/login");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       const errorMessage =
-        error?.data?.message || error?.message || "Failed to update profile";
+        (error as { data?: { message?: string }; message?: string })?.data
+          ?.message ||
+        (error as { message?: string })?.message ||
+        "Failed to update profile";
       toast.error(errorMessage);
     }
   };
@@ -399,9 +406,11 @@ function AboutForm() {
                   }))}
                 value={null}
                 onChange={(value) => {
-                  handleAddProfession(value);
-                  if (errors.selectedProfessions) {
-                    setErrors({ ...errors, selectedProfessions: undefined });
+                  if (value) {
+                    handleAddProfession(value);
+                    if (errors.selectedProfessions) {
+                      setErrors({ ...errors, selectedProfessions: undefined });
+                    }
                   }
                 }}
                 disabled={!professionCategory || availableServices.length === 0}
