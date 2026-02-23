@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Script from "next/script";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 declare global {
   interface Window {
@@ -22,6 +24,14 @@ export default function TrustPilot() {
   };
 
   useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+
     // Try to load if script is already loaded
     const timer = setTimeout(() => {
       if (window.Trustpilot && ref.current) {
@@ -41,7 +51,11 @@ export default function TrustPilot() {
       />
       <section className="pb-8 lg:pb-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-6">
+          <div
+            className="max-w-4xl mx-auto text-center mb-6"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
               Building Trust Across the UK
             </h2>
@@ -50,7 +64,12 @@ export default function TrustPilot() {
               local tradespeople. Be among the first to share your experience.
             </p>
           </div>
-          <div className="max-w-5xl mx-auto">
+          <div
+            className="max-w-5xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             <div
               ref={ref}
               className="trustpilot-widget"

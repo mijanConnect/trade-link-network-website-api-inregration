@@ -30,7 +30,7 @@ interface CategoryListProps {
   ) => void;
 }
 
-export default function CategoryList({
+export default function ServiceCategoryList({
   categories,
   imageErrors = {},
   setImageErrors = () => {},
@@ -46,7 +46,7 @@ export default function CategoryList({
             data-aos-delay={index * 10}
           >
             <a
-              href={"/post-service/" + category.slug}
+              href={"/services/" + category.slug}
               className="group block h-full"
             >
               <div className="bg-white rounded-sm shadow-sm hover:shadow-md transition-shadow duration-300 ease-out h-full flex flex-col">
@@ -77,11 +77,11 @@ export default function CategoryList({
                   <h2 className="text-[14px] lg:text-[20px] font-semibold text-primaryTextLight flex-1 flex items-start">
                     {category.title || category.name}
                   </h2>
-                  {/* {category.description && (
+                  {category.description && (
                     <p className="mt-2 lg:mt-3 text-[12px] lg:text-[14px] text-gray-500">
                       {category.description || "No description available"}
                     </p>
-                  )} */}
+                  )}
                 </div>
               </div>
             </a>

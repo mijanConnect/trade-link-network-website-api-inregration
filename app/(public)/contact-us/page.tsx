@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { useUserDataSendAdminMutation } from "@/store/slice/contactUsSlice";
 
 type EmailContact = {
@@ -15,14 +17,12 @@ type EmailContact = {
 const emailContacts: EmailContact[] = [
   {
     title: "General enquiries",
-    description:
-      "For general questions about our platform or services:",
+    description: "For general questions about our platform or services:",
     email: "info@tradelinknetwork.co.uk",
   },
   {
     title: "Customer support",
-    description:
-      "Help posting a job, receiving quotes, or using the platform:",
+    description: "Help posting a job, receiving quotes, or using the platform:",
     email: "support@tradelinknetwork.co.uk",
   },
   {
@@ -43,8 +43,7 @@ const emailContacts: EmailContact[] = [
   },
   {
     title: "Sales & advertising enquiries",
-    description:
-      "Promotions, featured listings, or marketing opportunities:",
+    description: "Promotions, featured listings, or marketing opportunities:",
     email: "sales@tradelinknetwork.co.uk",
   },
   {
@@ -99,12 +98,24 @@ export default function ContactUsPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userDataSendAdmin, { isLoading }] = useUserDataSendAdminMutation();
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value, type } = e.target;
     if (type === "checkbox") {
@@ -117,10 +128,10 @@ export default function ContactUsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Clear previous validation errors
     setValidationErrors({});
-    
+
     if (!formData.privacyConsent) {
       toast.error("Please accept the privacy consent to continue.");
       return;
@@ -151,7 +162,7 @@ export default function ContactUsPage() {
           }
         });
         setValidationErrors(errors);
-        
+
         // Show first error in toast
         const firstError = error.issues[0];
         if (firstError) {
@@ -162,10 +173,10 @@ export default function ContactUsPage() {
     }
 
     setIsSubmitting(true);
-    
+
     try {
       await userDataSendAdmin(submitData).unwrap();
-      
+
       toast.success("Message sent successfully!");
       setFormData({
         fullName: "",
@@ -180,9 +191,9 @@ export default function ContactUsPage() {
       console.error("Contact form submission error:", error);
       const err = error as { data?: { message?: string }; message?: string };
       toast.error(
-        err?.data?.message || 
-        err?.message || 
-        "Failed to send message. Please try again."
+        err?.data?.message ||
+          err?.message ||
+          "Failed to send message. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -225,13 +236,27 @@ export default function ContactUsPage() {
       {/* Hero Section */}
       <section className="py-12 lg:py-20 px-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4">
+          <h1
+            className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             CONTACT TRADE LINK NETWORK
           </h1>
-          <p className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6">
+          <p
+            className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             We&apos;re here to help.
           </p>
-          <p className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto">
+          <p
+            className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             Whether you&apos;re a homeowner, tradesperson, or business partner,
             our team is ready to assist.
           </p>
@@ -241,16 +266,31 @@ export default function ContactUsPage() {
       {/* Email Contact Section */}
       <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+          <h2
+            className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Contact by Email
           </h2>
-          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+          <p
+            className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Choose the right contact for your enquiry
           </p>
 
           <div className="space-y-6 lg:space-y-12 mx-auto">
             {emailContacts.map((contact, index) => (
-              <div key={index} className="relative">
+              <div
+                key={index}
+                className="relative"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={index * 100}
+              >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
                   {/* Step Number Circle */}
                   <div className="lg:col-span-1 flex justify-center lg:justify-start">
@@ -297,7 +337,12 @@ export default function ContactUsPage() {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8  mx-auto">
             {/* Phone Support */}
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+            <div
+              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
+              data-aos-delay="0"
+            >
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                 Phone Support
               </h3>
@@ -311,7 +356,12 @@ export default function ContactUsPage() {
             </div>
 
             {/* Company Information */}
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+            <div
+              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
+              data-aos-delay="100"
+            >
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                 Company Information
               </h3>
@@ -327,9 +377,12 @@ export default function ContactUsPage() {
               </p>
             </div>
 
-
-           
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+            <div
+              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
+              data-aos-delay="200"
+            >
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                 Support Hours
               </h3>
@@ -346,18 +399,31 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-  
       {/* Contact Form Section */}
       <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+          <h2
+            className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Send Us a Message
           </h2>
-          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+          <p
+            className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Fill out the form below and we&apos;ll get back to you soon
           </p>
 
-          <div className="max-w-4xl mx-auto">
+          <div
+            className="max-w-4xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             <form
               onSubmit={handleSubmit}
               className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-8"
@@ -427,7 +493,8 @@ export default function ContactUsPage() {
                     htmlFor="phone"
                     className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
                   >
-                    Phone number <span className="text-gray-500">(optional)</span>
+                    Phone number{" "}
+                    <span className="text-gray-500">(optional)</span>
                   </label>
                   <input
                     type="tel"

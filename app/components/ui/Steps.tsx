@@ -56,7 +56,7 @@ export default function Steps() {
           <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -73,7 +73,7 @@ export default function Steps() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -91,7 +91,7 @@ export default function Steps() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -109,7 +109,7 @@ export default function Steps() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"

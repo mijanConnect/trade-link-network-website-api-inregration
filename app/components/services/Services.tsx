@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
-import CategoryList from "../home/CategoryList";
+import ServiceCategoryList from "./ServiceCategoryList";
 
 export default function Services() {
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function Services() {
         </h3>
 
         <div className="mt-4 lg:mt-10" data-aos="fade-up" data-aos-delay="200">
-          <CategoryList categories={data || []} />
+          <ServiceCategoryList categories={data || []} />
         </div>
       </div>
     </>

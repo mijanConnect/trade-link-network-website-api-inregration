@@ -1,10 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function HowItWorksPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
+
   const handleScrollToCategory = useCallback(() => {
     if (typeof window !== "undefined" && window.location.pathname === "/") {
       const target = document.getElementById("browse-category");
@@ -68,13 +81,27 @@ export default function HowItWorksPage() {
       {/* Hero Section */}
       <section className=" py-12 lg:py-20 px-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4">
+          <h1
+            className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             HOW IT WORKS
           </h1>
-          <p className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6">
+          <p
+            className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Simple. Fast. Stress-Free.
           </p>
-          <p className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto">
+          <p
+            className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             We make it easy to find trusted professionals for your job — without
             the hassle of searching, calling, and comparing endlessly.
           </p>
@@ -86,7 +113,13 @@ export default function HowItWorksPage() {
         <div className="container mx-auto">
           <div className="space-y-6 lg:space-y-12">
             {steps.map((step) => (
-              <div key={step.number} className="relative">
+              <div
+                key={step.number}
+                className="relative"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={step.number * 100}
+              >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
                   {/* Step Number Circle */}
                   <div className="lg:col-span-1 flex justify-center lg:justify-start">
@@ -150,10 +183,19 @@ export default function HowItWorksPage() {
       {/* Why Customers Love Section */}
       <section className="bg-linear-to-br from-gray-50 to-gray-100 py-10 lg:py-24 px-4">
         <div className="container mx-auto">
-          <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
+          <h2
+            className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Why Customers Love Our Process
           </h2>
-          <p className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg">
+          <p
+            className="text-center text-gray-600 mb-6 lg:mb-12 text-sm lg:text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Discover what makes our service the preferred choice
           </p>
 
@@ -162,6 +204,9 @@ export default function HowItWorksPage() {
               <div
                 key={index}
                 className="bg-white rounded-lg p-4 lg:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={index * 100}
               >
                 <div className="flex items-start">
                   <div className="shrink-0">
@@ -192,16 +237,28 @@ export default function HowItWorksPage() {
       {/* CTA Section */}
       <section className="bg-primary py-10 lg:py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-4">
+          <h2
+            className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Ready to Get Started?
           </h2>
-          <p className="text-md lg:text-xl text-blue-100 mb-4 lg:mb-8 max-w-2xl mx-auto">
+          <p
+            className="text-md lg:text-xl text-blue-100 mb-4 lg:mb-8 max-w-2xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Post your job today and connect with trusted professionals in your
             area.
           </p>
           <button
             className="bg-white text-primary font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-blue-50 transition-colors text-lg shadow-lg cursor-pointer"
             onClick={handleScrollToCategory}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
           >
             Post a Job Now
           </button>

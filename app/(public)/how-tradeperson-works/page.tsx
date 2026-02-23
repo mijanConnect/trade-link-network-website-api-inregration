@@ -1,8 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function HowTradepersonWorkPage() {
+  useEffect(() => {
+    AOS.init({
+      duration: 600,
+      once: true,
+      easing: "ease-out",
+      offset: 50,
+      mirror: false,
+    });
+  }, []);
   const steps = [
     {
       number: 1,
@@ -82,15 +94,29 @@ export default function HowTradepersonWorkPage() {
       {/* Hero Section */}
       <section className="py-16 lg:py-20 px-4">
         <div className="container mx-auto text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+          <h1
+            className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Grow Your Business With <br /> Quality Job Leads
           </h1>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-2">
+          <p
+            className="text-lg text-gray-700 max-w-3xl mx-auto mb-2"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Join our network and connect with customers actively looking for
             trusted professionals in your area. No cold calling. No chasing
             work. Just real opportunities delivered to you.
           </p>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+          <p
+            className="text-lg text-gray-700 max-w-3xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             Whether you&apos;re a sole trader or an established company, we help
             you find more jobs and grow your reputation.
           </p>
@@ -100,7 +126,11 @@ export default function HowTradepersonWorkPage() {
       {/* Why Join Us Section */}
       <section className="bg-white py-16 lg:py-24 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-12">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-12"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Why Join Us?
           </h2>
 
@@ -109,6 +139,9 @@ export default function HowTradepersonWorkPage() {
               <div
                 key={index}
                 className="rounded-md p-8 border hover:shadow-md transition-shadow"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={index * 100}
               >
                 <div className="flex items-start gap-4">
                   <svg
@@ -138,16 +171,31 @@ export default function HowTradepersonWorkPage() {
       {/* How It Works Section */}
       <section className="bg-linear-to-br from-gray-50 to-gray-100 py-16 lg:py-24 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             How It Works for Tradespeople
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p
+            className="text-center text-gray-600 mb-12 text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Five simple steps to start receiving job leads
           </p>
 
           <div className="space-y-8">
             {steps.map((step) => (
-              <div key={step.number} className="relative">
+              <div
+                key={step.number}
+                className="relative"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={step.number * 100}
+              >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-4xl mx-auto">
                   {/* Step Number Circle */}
                   <div className="lg:col-span-2 flex justify-center lg:justify-start">
@@ -177,14 +225,28 @@ export default function HowTradepersonWorkPage() {
       {/* Who Can Join Section */}
       <section className="py-16 lg:py-24 px-4 bg-white">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Who Can Join?
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p
+            className="text-center text-gray-600 mb-12 text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             We welcome qualified and reliable professionals, including:
           </p>
 
-          <div className="bg-linear-to-br from-gray-50 to-gray-100 rounded-md p-8 lg:p-12 border">
+          <div
+            className="bg-linear-to-br from-gray-50 to-gray-100 rounded-md p-8 lg:p-12 border"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="200"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {professions.map((profession, index) => (
                 <div key={index} className="flex items-center gap-3">
@@ -200,10 +262,19 @@ export default function HowTradepersonWorkPage() {
       {/* Requirements Section */}
       <section className="bg-linear-to-br from-gray-50 to-gray-100 py-16 lg:py-24 px-4">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Requirements
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p
+            className="text-center text-gray-600 mb-12 text-lg"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             To maintain high service standards, you must:
           </p>
 
@@ -212,6 +283,9 @@ export default function HowTradepersonWorkPage() {
               <div
                 key={index}
                 className="bg-white rounded-lg p-6 border flex items-start gap-4 hover:shadow-sm transition-shadow"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay={index * 100}
               >
                 <svg
                   className="w-6 h-6 text-primary shrink-0 mt-0.5"
@@ -236,14 +310,28 @@ export default function HowTradepersonWorkPage() {
       {/* CTA Section */}
       <section className="bg-primary py-16 lg:py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-white mb-4"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
             Ready to Get Started?
           </h2>
-          <p className="text-xl text-green-100 mb-8 max-w-2xl mx-auto">
+          <p
+            className="text-xl text-green-100 mb-8 max-w-2xl mx-auto"
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+            data-aos-delay="100"
+          >
             Join today and start receiving new job opportunities.
           </p>
           <Link href="/professional-register">
-            <button className="bg-white text-primary font-bold px-10 py-4 rounded-lg hover:bg-gray-50 transition-colors text-lg shadow-lg inline-flex items-center gap-2 cursor-pointer">
+            <button
+              className="bg-white text-primary font-bold px-10 py-4 rounded-lg hover:bg-gray-50 transition-colors text-lg shadow-lg inline-flex items-center gap-2 cursor-pointer"
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
+              data-aos-delay="200"
+            >
               Sign Up
             </button>
           </Link>

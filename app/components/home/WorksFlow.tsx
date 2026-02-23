@@ -43,7 +43,7 @@ export default function WorksFlow() {
           <div className="grid grid-cols-3 gap-2 md:gap-6 lg:gap-10">
             <div
               className="flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#works-flow"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -60,7 +60,7 @@ export default function WorksFlow() {
             </div>
             <div
               className="flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#works-flow"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -78,7 +78,7 @@ export default function WorksFlow() {
             </div>
             <div
               className="flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#works-flow"
               data-aos-offset="200"
               data-aos-duration="500"

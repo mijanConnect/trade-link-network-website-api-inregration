@@ -49,7 +49,7 @@ export default function StepsHome() {
           <div className="flex flex-wrap justify-center gap-x-4 md:gap-x-6 lg:gap-x-12 gap-y-4 md:gap-y-12 lg:gap-y-18">
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -66,7 +66,7 @@ export default function StepsHome() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -81,7 +81,7 @@ export default function StepsHome() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -96,7 +96,7 @@ export default function StepsHome() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
@@ -111,7 +111,7 @@ export default function StepsHome() {
             </div>
             <div
               className="w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.5rem)] flex flex-col items-center"
-              data-aos="fade-left"
+              data-aos="fade-up"
               data-aos-anchor="#steps"
               data-aos-offset="200"
               data-aos-duration="500"
