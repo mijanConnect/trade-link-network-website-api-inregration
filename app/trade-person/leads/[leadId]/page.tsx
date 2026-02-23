@@ -10,6 +10,7 @@ import LeadsFilterDrawer, {
 } from "@/app/components/trade-person/LeadsFilterDrawer";
 import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
 import { useGetAllLeadsQuery, useGetSingleLeadQuery, type Lead } from "@/store/slice/leadSlice";
+import { useGetMyProfileQuery } from "@/store/slice/myProfileSlice";
 import {
   transformApiLeadToMockLead,
   getDateBucketFromISO,
@@ -110,6 +111,9 @@ export default function LeadDetailPage() {
   } = useGetSingleLeadQuery(leadId || "", {
     skip: !leadId,
   });
+
+  // Get profile data to show user's services count
+  const { data: profileData } = useGetMyProfileQuery();
 
   // Accumulate leads when new page data arrives
   // This effect syncs external API data with React state, which is a valid use case
@@ -292,6 +296,28 @@ export default function LeadDetailPage() {
     selectedLead ??
     null;
 
+  // Get purchasedBy array from the original API lead data
+  const selectedLeadPurchasedBy = useMemo(() => {
+    if (singleLeadData?.purchasedBy && Array.isArray(singleLeadData.purchasedBy)) {
+      return singleLeadData.purchasedBy as string[];
+    }
+    // Fallback: find from allLeads if singleLeadData is not available
+    const apiLead = allLeads.find((l) => l._id === (selectedLead?.id || activeLeadId));
+    if (apiLead?.purchasedBy && Array.isArray(apiLead.purchasedBy)) {
+      return apiLead.purchasedBy as string[];
+    }
+    return [];
+  }, [singleLeadData, allLeads, selectedLead, activeLeadId]);
+
+  // Get purchasedBy for mobile selected lead
+  const mobileSelectedLeadPurchasedBy = useMemo(() => {
+    const apiLead = allLeads.find((l) => l._id === mobileSelectedLeadId);
+    if (apiLead?.purchasedBy && Array.isArray(apiLead.purchasedBy)) {
+      return apiLead.purchasedBy as string[];
+    }
+    return [];
+  }, [allLeads, mobileSelectedLeadId]);
+
   const isLoading = isLoadingLeads || isLoadingSingleLead;
 
   // Handle loading state with timer when lead changes - smooth experience
@@ -404,14 +430,22 @@ export default function LeadDetailPage() {
     );
   }
 
-  // Show empty state
-  if (!selectedLead && !defaultLeadId && filteredAndSortedLeads.length === 0 && !isLoadingLeads) {
-    return (
-      <div className="flex h-[calc(100vh-120px)] items-center justify-center">
-        <p className="text-slate-500">No leads found</p>
-      </div>
-    );
-  }
+  // Get services count from user's profile (not from leads)
+  const profileServices = profileData?.data?.professional?.services || [];
+  const uniqueServices = Array.isArray(profileServices) ? profileServices.length : 0;
+  
+  // Get location from profile or from first lead
+  const profileLocation = profileData?.data?.professional?.postcode 
+    ? `${profileData.data.professional.postcode} • ${profileData.data.professional.address || ""}`
+    : null;
+  
+  const firstLocation = allLeads[0]?.locationName || "Multiple locations";
+  const firstPostcode = allLeads[0]?.postcode || "";
+  const leadsLocationDisplay = firstPostcode 
+    ? `${firstPostcode} • ${firstLocation}` 
+    : firstLocation;
+  
+  const locationDisplay = profileLocation || leadsLocationDisplay;
 
   return (
     <>
@@ -427,15 +461,11 @@ export default function LeadDetailPage() {
             <div className="mt-3 flex flex-col gap-2 text-[13px]">
               <div className="flex items-center gap-2">
                 <Briefcase size={14} />
-                <span>
-                  {new Set(transformedLeads.map((l) => l.title)).size} Services
-                </span>
+                <span>{uniqueServices} Services</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={14} />
-                <span>
-                  {transformedLeads[0]?.customerAddress.split("•")[1]?.trim() || "Multiple locations"}
-                </span>
+                <span>{locationDisplay}</span>
               </div>
             </div>
           </div>
@@ -454,46 +484,54 @@ export default function LeadDetailPage() {
             </div>
 
             <div className="space-y-4">
-              {filteredAndSortedLeads.map((lead) => (
-                <button
-                  key={lead.id}
-                  type="button"
-                  onClick={() => {
-                    // Prevent scroll restoration when clicking on a lead
-                    shouldRestoreScrollRef.current = false;
-                    
-                    // 🔥 Instant UI feedback - update local state first
-                    setActiveLeadId(lead.id);
-                    
-                    // Save current scroll position
-                    if (listRef.current) {
-                      sessionStorage.setItem(
-                        "leadsScrollTop",
-                        listRef.current.scrollTop.toString(),
-                      );
-                    }
-                    
-                    // URL update (non-blocking, happens after UI update)
-                    requestAnimationFrame(() => {
-                      router.push(`/trade-person/leads/${lead.id}`, { scroll: false });
-                    });
-                  }}
-                  className="block w-full text-left transition-opacity duration-200"
-                >
-                  <LeadCard lead={lead} selected={lead.id === activeLeadId} />
-                </button>
-              ))}
-              {/* Loading indicator for infinite scroll */}
-              {isLoadingMore && (
-                <div className="flex justify-center py-4">
-                  <div className="text-sm text-slate-500">Loading more leads...</div>
+              {filteredAndSortedLeads.length === 0 ? (
+                <div className="flex items-center justify-center py-8">
+                  <p className="text-center text-slate-500">No data available</p>
                 </div>
-              )}
-              {/* End of list indicator */}
-              {!hasMore && filteredAndSortedLeads.length > 0 && (
-                <div className="flex justify-center py-4">
-                  <div className="text-sm text-slate-500">No more leads to load</div>
-                </div>
+              ) : (
+                <>
+                  {filteredAndSortedLeads.map((lead) => (
+                    <button
+                      key={lead.id}
+                      type="button"
+                      onClick={() => {
+                        // Prevent scroll restoration when clicking on a lead
+                        shouldRestoreScrollRef.current = false;
+                        
+                        // 🔥 Instant UI feedback - update local state first
+                        setActiveLeadId(lead.id);
+                        
+                        // Save current scroll position
+                        if (listRef.current) {
+                          sessionStorage.setItem(
+                            "leadsScrollTop",
+                            listRef.current.scrollTop.toString(),
+                          );
+                        }
+                        
+                        // URL update (non-blocking, happens after UI update)
+                        requestAnimationFrame(() => {
+                          router.push(`/trade-person/leads/${lead.id}`, { scroll: false });
+                        });
+                      }}
+                      className="block w-full text-left transition-opacity duration-200"
+                    >
+                      <LeadCard lead={lead} selected={lead.id === activeLeadId} />
+                    </button>
+                  ))}
+                  {/* Loading indicator for infinite scroll */}
+                  {isLoadingMore && (
+                    <div className="flex justify-center py-4">
+                      <div className="text-sm text-slate-500">Loading more leads...</div>
+                    </div>
+                  )}
+                  {/* End of list indicator */}
+                  {!hasMore && filteredAndSortedLeads.length > 0 && (
+                    <div className="flex justify-center py-4">
+                      <div className="text-sm text-slate-500">No more leads to load</div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -506,9 +544,17 @@ export default function LeadDetailPage() {
               <div className="absolute inset-0 animate-fadeIn">
                 <LeadDetailLoading />
               </div>
-            ) : (
+            ) : selectedLead ? (
               <div className="animate-fadeIn">
-                <LeadDetailPanel lead={selectedLead ?? null} source="leads" />
+                <LeadDetailPanel 
+                  lead={selectedLead} 
+                  source="leads" 
+                  purchasedBy={selectedLeadPurchasedBy}
+                />
+              </div>
+            ) : (
+              <div className="flex h-[600px] items-center justify-center rounded-lg border border-slate-200 bg-white">
+                <p className="text-slate-500">No data available</p>
               </div>
             )}
           </div>
@@ -528,15 +574,11 @@ export default function LeadDetailPage() {
               <div className="mt-3 flex flex-col gap-2 text-[12px]">
                 <div className="flex items-center gap-2">
                   <Briefcase size={14} />
-                  <span>
-                    {new Set(transformedLeads.map((l) => l.title)).size} Services
-                  </span>
+                  <span>{uniqueServices} Services</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin size={14} />
-                  <span>
-                    {transformedLeads[0]?.customerAddress.split("•")[1]?.trim() || "Multiple locations"}
-                  </span>
+                  <span>{locationDisplay}</span>
                 </div>
               </div>
             </div>
@@ -555,34 +597,42 @@ export default function LeadDetailPage() {
               </div>
 
               <div className="space-y-3">
-                {filteredAndSortedLeads.map((lead) => (
-                  <button
-                    key={lead.id}
-                    type="button"
-                    className="block w-full text-left transition-opacity duration-200"
-                    onClick={() => {
-                      // Don't set loading immediately - let useEffect handle it smoothly
-                      setMobileSelectedLeadId(lead.id);
-                      setShowDetailOnMobile(true);
-                    }}
-                  >
-                    <LeadCard
-                      lead={lead}
-                      selected={lead.id === mobileSelectedLeadId}
-                    />
-                  </button>
-                ))}
-                {/* Loading indicator for infinite scroll */}
-                {isLoadingMore && (
-                  <div className="flex justify-center py-4">
-                    <div className="text-sm text-slate-500">Loading more leads...</div>
+                {filteredAndSortedLeads.length === 0 ? (
+                  <div className="flex items-center justify-center py-8">
+                    <p className="text-center text-slate-500">No data available</p>
                   </div>
-                )}
-                {/* End of list indicator */}
-                {!hasMore && filteredAndSortedLeads.length > 0 && (
-                  <div className="flex justify-center py-4">
-                    <div className="text-sm text-slate-500">No more leads to load</div>
-                  </div>
+                ) : (
+                  <>
+                    {filteredAndSortedLeads.map((lead) => (
+                      <button
+                        key={lead.id}
+                        type="button"
+                        className="block w-full text-left transition-opacity duration-200"
+                        onClick={() => {
+                          // Don't set loading immediately - let useEffect handle it smoothly
+                          setMobileSelectedLeadId(lead.id);
+                          setShowDetailOnMobile(true);
+                        }}
+                      >
+                        <LeadCard
+                          lead={lead}
+                          selected={lead.id === mobileSelectedLeadId}
+                        />
+                      </button>
+                    ))}
+                    {/* Loading indicator for infinite scroll */}
+                    {isLoadingMore && (
+                      <div className="flex justify-center py-4">
+                        <div className="text-sm text-slate-500">Loading more leads...</div>
+                      </div>
+                    )}
+                    {/* End of list indicator */}
+                    {!hasMore && filteredAndSortedLeads.length > 0 && (
+                      <div className="flex justify-center py-4">
+                        <div className="text-sm text-slate-500">No more leads to load</div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -610,9 +660,17 @@ export default function LeadDetailPage() {
                   <div className="absolute inset-0 animate-fadeIn">
                     <LeadDetailLoading />
                   </div>
-                ) : (
+                ) : mobileSelectedLead ? (
                   <div className="animate-fadeIn">
-                    <LeadDetailPanel lead={mobileSelectedLead} source="leads" />
+                    <LeadDetailPanel 
+                      lead={mobileSelectedLead} 
+                      source="leads" 
+                      purchasedBy={mobileSelectedLeadPurchasedBy}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-[400px] items-center justify-center rounded-lg border border-slate-200 bg-white">
+                    <p className="text-slate-500">No data available</p>
                   </div>
                 )}
               </div>
