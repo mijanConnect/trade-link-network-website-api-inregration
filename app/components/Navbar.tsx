@@ -297,7 +297,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <nav className="hidden lg:flex lg:flex-1 items-center justify-center gap-12">
+          <nav className="hidden lg:flex lg:flex-1 items-center justify-center gap-6 2xl:gap-10">
             <Link
               href="/"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
