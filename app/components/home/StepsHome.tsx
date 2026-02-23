@@ -21,7 +21,7 @@ export default function StepsHome() {
 
   return (
     <>
-      <div className="bg-[#E9EBEF] pt-6 md:pt-10 lg:pt-[130px]" id="steps">
+      <div className="pt-6 md:pt-10 lg:pt-[130px]" id="steps">
         <div className="container mx-auto px-4 lg:px-0">
           <h1
             className="text-[20px] md:text-[40px] font-semibold text-primaryText mb-4 md:mb-8 lg:mb-1 text-center"
