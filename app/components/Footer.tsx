@@ -20,7 +20,7 @@ export default function Footer() {
                 Contact
               </h3> */}
 
-              <div className=" ">
+              <div className="mb-2">
                 <Link href="/">
                   <LogoNav />
                 </Link>
@@ -48,7 +48,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className="flex gap-x-16 gap-y-5 flex-wrap py-4 lg:py-0">
             <div>
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Company
@@ -56,10 +56,77 @@ export default function Footer() {
               <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
                 <li>
                   <Link
+                    href="/about-us"
+                    className="hover:underline transition-all"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact-us"
+                    className="hover:underline transition-all"
+                  >
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/areas"
                     className="hover:underline transition-all"
                   >
                     Area Covered
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Support
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link href="/faq" className="hover:underline transition-all">
+                    FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-it-works"
+                    className="hover:underline transition-all"
+                  >
+                    For Homeowners
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-tradeperson-works"
+                    className="hover:underline transition-all"
+                  >
+                    For Tradespeople
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact-us"
+                    className="hover:underline transition-all"
+                  >
+                    Support Centre
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Trust & Safety
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link
+                    href="/review-policy"
+                    className="hover:underline transition-all"
+                  >
+                    Review Policy
                   </Link>
                 </li>
                 <li>
@@ -70,14 +137,13 @@ export default function Footer() {
                     Code of Conduct
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/about-us"
-                    className="hover:underline transition-all"
-                  >
-                    About Us
-                  </Link>
-                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Legal
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
                 <li>
                   <Link
                     href="/privacy-policy"
@@ -91,15 +157,7 @@ export default function Footer() {
                     href="/terms-conditions"
                     className="hover:underline transition-all"
                   >
-                    Terms and Conditions
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/review-policy"
-                    className="hover:underline transition-all"
-                  >
-                    Review Policy
+                    Terms & Conditions
                   </Link>
                 </li>
               </ul>
