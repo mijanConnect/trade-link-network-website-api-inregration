@@ -5,10 +5,10 @@ import type { Lead } from "@/lib/trade-person/mock";
 // import TradePersonBadge from "@/app/components/trade-person/TradePersonBadge";
 // import { CheckCircle2, User, AlertCircle } from "lucide-react";
 import { FrequentUserIcon, UrgentIcon, VerifyIcon } from "./Svg";
-import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
-import { useState } from "react";
+// import { useLeadPurchaseMutation } from "@/store/slice/leadSlice";
+// import { useState } from "react";
 import React from "react";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 type Props = {
   lead: Lead;
@@ -28,10 +28,17 @@ function getResponseStatus(responsesCount: number): string {
   return `${responsesCount}/3`;
 }
 
-function LeadCard({ lead, selected }: Props) {
+function LeadCard({ lead, selected, onClick }: Props) {
   // const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
   // const [isProcessing, setIsProcessing] = useState(false);
   const isLeadAvailable = lead.responsesCount < 3;
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
 
   // const handleCheckoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
   //   e.preventDefault();
@@ -65,6 +72,10 @@ function LeadCard({ lead, selected }: Props) {
     <div className="overflow-hidden rounded-sm  bg-white shadow-sm cursor-pointer" >
       <div
         className={`w-full p-4 text-left transition ${selected ? "bg-white border-2 border-primary" : ""}`}
+        onClick={onClick}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
@@ -105,11 +116,8 @@ function LeadCard({ lead, selected }: Props) {
 
 
 
-        <button
-          type="button"
-          // onClick={handleCheckoutClick}
-          // disabled={!isLeadAvailable || isPurchasing || isProcessing}
-          className={`flex w-full items-center justify-between bg-primary px-4 mt-4 py-5 text-left text-white transition ${isLeadAvailable ? "hover:bg-slate-800 cursor-pointer" : "cursor-not-allowed opacity-60"}`}
+        <div
+          className={`flex w-full items-center justify-between bg-primary px-4 mt-4 py-5 text-left text-white transition pointer-events-none ${isLeadAvailable ? "hover:bg-slate-800" : "opacity-60"}`}
         >
           <div className="flex items-center gap-3">
             {/* three vertical lines icon */}
@@ -126,7 +134,7 @@ function LeadCard({ lead, selected }: Props) {
           </div>
 
           <div className="text-[13px] font-semibold">{lead.priceLabel}</div>
-        </button>
+        </div>
       </div>
 
       {/* Bottom checkout bar - similar to design */}

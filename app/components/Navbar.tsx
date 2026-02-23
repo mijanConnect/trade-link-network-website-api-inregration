@@ -297,7 +297,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <nav className="hidden lg:flex lg:flex-1 items-center justify-center gap-12">
+          <nav className="hidden lg:flex lg:flex-1 items-center justify-center gap-6 2xl:gap-10">
             <Link
               href="/"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
@@ -321,6 +321,30 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href="/how-it-works"
+              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
+                isActive("/how-it-works")
+                  ? "text-blue active"
+                  : "text-primaryTextLight"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              For Homeowners
+            </Link>
+
+            <Link
+              href="/how-tradeperson-works"
+              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
+                isActive("/how-tradeperson-works")
+                  ? "text-blue active"
+                  : "text-primaryTextLight"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              For Tradespeople
+            </Link>
+
+            <Link
               href="/areas"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
                 isActive("/areas")
@@ -332,7 +356,19 @@ export default function Navbar() {
               Area Covered
             </Link>
 
-            <div className="dropdown-wrapper">
+            <Link
+              href="/contact-us"
+              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
+                isActive("/contact-us")
+                  ? "text-blue active"
+                  : "text-primaryTextLight"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              Contact
+            </Link>
+
+            {/* <div className="dropdown-wrapper">
               <div className="nav-link py-1 transform transition-all text-[16px] font-normal dropdown-button text-primaryTextLight">
                 More
                 <ChevronDown className="w-[22px]" />
@@ -354,7 +390,7 @@ export default function Navbar() {
                   About Us
                 </Link>
               </div>
-            </div>
+            </div> */}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-4 ml-auto">
@@ -488,6 +524,30 @@ export default function Navbar() {
                 </Link>
 
                 <Link
+                  href="/how-it-works"
+                  className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
+                    isActive("/how-it-works")
+                      ? "text-blue active"
+                      : "text-primaryTextLight"
+                  }`}
+                  onClick={handleClose}
+                >
+                  For Homeowners
+                </Link>
+
+                <Link
+                  href="/how-tradeperson-works"
+                  className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
+                    isActive("/how-tradeperson-works")
+                      ? "text-blue active"
+                      : "text-primaryTextLight"
+                  }`}
+                  onClick={handleClose}
+                >
+                  For Tradespeople
+                </Link>
+
+                <Link
                   href="/areas"
                   className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
                     isActive("/areas")
@@ -499,7 +559,19 @@ export default function Navbar() {
                   Area Covered
                 </Link>
 
-                <button
+                <Link
+                  href="/contact-us"
+                  className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
+                    isActive("/contact-us")
+                      ? "text-blue active"
+                      : "text-primaryTextLight"
+                  }`}
+                  onClick={handleClose}
+                >
+                  Contact
+                </Link>
+
+                {/* <button
                   onClick={() => setMobileMoreOpen(!mobileMoreOpen)}
                   className="mobile-dropdown-button text-primaryTextLight"
                 >
@@ -509,7 +581,7 @@ export default function Navbar() {
                       mobileMoreOpen ? "rotate-180" : ""
                     }`}
                   />
-                </button>
+                </button> */}
 
                 <div
                   className={`mobile-dropdown-menu ${

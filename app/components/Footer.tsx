@@ -20,7 +20,7 @@ export default function Footer() {
                 Contact
               </h3> */}
 
-              <div className=" ">
+              <div className="mb-2">
                 <Link href="/">
                   <LogoNav />
                 </Link>
@@ -46,54 +46,126 @@ export default function Footer() {
                 Contact Us
               </Button>
             </div>
-
-
           </div>
 
-
-
-          <div>
-            <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
-              Quick Links
-            </h2>
-            <ul className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-primary text-[16px] font-medium ">
-              <li>
-                <Link href="/areas" className="hover:underline transition-all">
-                  Area Covered
-                </Link>
-              </li>
-              <li>
-                <Link href="/code-of-conduct" className="hover:underline transition-all">
-                  Code of Conduct
-                </Link>
-              </li>
-              <li>
-                <Link href="/about-us" className="hover:underline transition-all">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy-policy" className="hover:underline transition-all">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms-conditions" className="hover:underline transition-all">
-                  Terms and Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="/review-policy" className="hover:underline transition-all">
-                  Review Policy
-                </Link>
-              </li>
-
-            </ul>
+          <div className="flex gap-x-16 gap-y-5 flex-wrap py-4 lg:py-0">
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Company
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link
+                    href="/about-us"
+                    className="hover:underline transition-all"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact-us"
+                    className="hover:underline transition-all"
+                  >
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/areas"
+                    className="hover:underline transition-all"
+                  >
+                    Area Covered
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Support
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link href="/faq" className="hover:underline transition-all">
+                    FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-it-works"
+                    className="hover:underline transition-all"
+                  >
+                    For Homeowners
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/how-tradeperson-works"
+                    className="hover:underline transition-all"
+                  >
+                    For Tradespeople
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact-us"
+                    className="hover:underline transition-all"
+                  >
+                    Support Centre
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Trust & Safety
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link
+                    href="/review-policy"
+                    className="hover:underline transition-all"
+                  >
+                    Review Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/code-of-conduct"
+                    className="hover:underline transition-all"
+                  >
+                    Code of Conduct
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
+                Legal
+              </h2>
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+                <li>
+                  <Link
+                    href="/privacy-policy"
+                    className="hover:underline transition-all"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms-conditions"
+                    className="hover:underline transition-all"
+                  >
+                    Terms & Conditions
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div className="">
             <div className="flex flex-col items-center md:items-end text-center md:text-right justify-between">
-
               <div className="flex flex-col items-center lg:items-end">
                 <div>
                   <h4 className="text-[18px] lg:text-[24px] font-semibold text-primary ">
