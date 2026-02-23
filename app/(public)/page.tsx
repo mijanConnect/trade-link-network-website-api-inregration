@@ -1,6 +1,7 @@
 import Category from "../components/home/Category";
 import FAQ from "../components/home/FAQ";
-import Hero from "../components/home/Hero";
+// import Hero from "../components/home/Hero";
+import Hero3 from "../components/home/Hero3";
 import StepsHome from "../components/home/StepsHome";
 import TrustPilot from "../components/home/TrustPilot";
 import UseUs from "../components/home/UseUs";
@@ -11,7 +12,8 @@ export default function Home() {
   return (
     <main>
       <>
-        <Hero />
+        {/* <Hero /> */}
+        <Hero3 />
         <Category />
         <WorksFlow />
         <UseUs />

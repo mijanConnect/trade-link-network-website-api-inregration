@@ -43,9 +43,12 @@ export default function TrustPilot() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-6">
             <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">
-              Trusted by Thousands
+              Building Trust Across the UK
             </h2>
-            <p className="text-gray-600">See what our customers say about us</p>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We&apos;re a growing network connecting homeowners with verified
+              local tradespeople. Be among the first to share your experience.
+            </p>
           </div>
           <div className="max-w-5xl mx-auto">
             <div
