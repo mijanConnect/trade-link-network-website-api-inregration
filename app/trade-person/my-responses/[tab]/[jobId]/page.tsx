@@ -157,7 +157,7 @@ export default function MyResponsesJobPage() {
         {/* Left Sidebar */}
         <aside className="flex w-1/3 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">
           {/* Summary Header */}
-          <div className="bg-primary px-5 py-6 text-white">
+          {/* <div className="bg-primary px-5 py-6 text-white">
             <h1 className="text-[24px] font-bold">1,050 matching leads</h1>
             <div className="mt-3 flex flex-col gap-2 text-[13px]">
               <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function MyResponsesJobPage() {
             </div>
 
          
-          </div>
+          </div> */}
 
           <div >
                {/* Tabs */}

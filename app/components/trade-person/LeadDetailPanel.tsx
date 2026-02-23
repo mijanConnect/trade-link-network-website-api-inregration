@@ -12,6 +12,7 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import RefundModal from "./RefundModal";
 import { useRefundJobPostMutation } from "@/store/slice/myJobsSlice";
+import { useGetMyProfileQuery } from "@/store/slice/myProfileSlice";
 
 type Props = {
   lead: Lead | null;
@@ -19,6 +20,7 @@ type Props = {
   tab?: "pending" | "hired"; // Tab from my-responses page to determine which banner to show
   createdAt?: string; // CreatedAt date for refund eligibility check
   jobId?: string; // Job ID for refund request
+  purchasedBy?: string[]; // Array of user IDs who have purchased this lead
 };
 
 function highlightIcon(h: Lead["highlights"][0]) {
@@ -27,7 +29,12 @@ function highlightIcon(h: Lead["highlights"][0]) {
   return <UrgentIcon />;
 }
 
-function statusBanner(status: Lead["status"], source?: "leads" | "my-responses", tab?: "pending" | "hired") {
+function statusBanner(
+  status: Lead["status"], 
+  source?: "leads" | "my-responses", 
+  tab?: "pending" | "hired",
+  hasUserPurchased?: boolean
+) {
   // When viewing from my-responses page, prioritize tab over lead status
   if (source === "my-responses") {
     if (tab === "pending") {
@@ -62,6 +69,28 @@ function statusBanner(status: Lead["status"], source?: "leads" | "my-responses",
         </div>
       );
     }
+  }
+
+  // If user has purchased from leads page, show pending status
+  if (hasUserPurchased && source === "leads") {
+    return (
+      <div className="mb-4 rounded-sm bg-[#F4A2611A] px-4 py-3">
+        <div className="text-[14px] font-medium text-black">
+          You`ve successfully unlocked this customer request.
+        </div>
+        <div className="mt-2">
+          <span className="text-[14px] text-amber-700">Request Status</span>
+          <div className="mt-1 bg-[#F4A261] text-white px-2 py-2 rounded-md w-28 text-center">
+           Pending
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If user hasn't purchased and source is "leads", don't show status banner
+  if (!hasUserPurchased && source === "leads") {
+    return null;
   }
 
   // Fallback to lead status for leads page or when tab is not provided
@@ -114,11 +143,21 @@ function statusBanner(status: Lead["status"], source?: "leads" | "my-responses",
   return null;
 }
 
-export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt, jobId }: Props) {
+export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt, jobId, purchasedBy = [] }: Props) {
   const [purchaseLead, { isLoading: isPurchasing }] = useLeadPurchaseMutation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
   const [refundJobPost, { isLoading: isRefunding }] = useRefundJobPostMutation();
+  
+  // Get current user ID from profile
+  const { data: profileData } = useGetMyProfileQuery();
+  const currentUserId = profileData?.data?._id;
+  
+  // Check if current user has purchased this lead
+  const hasUserPurchased = useMemo(() => {
+    if (!currentUserId || !purchasedBy || purchasedBy.length === 0) return false;
+    return purchasedBy.includes(currentUserId);
+  }, [currentUserId, purchasedBy]);
 
   // Check if refund button should be enabled (24 hours after createdAt)
   // This hook must be called before any early returns
@@ -141,8 +180,10 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
     );
   }
 
-  const isUnlocked = source === "my-responses";
-  const showUnlockButton = source === "leads" && lead.status === "locked";
+  // If user has purchased, treat as unlocked even if source is "leads"
+  const isUnlocked = source === "my-responses" || hasUserPurchased;
+  // Show unlock button if user hasn't purchased (regardless of status) - so they can unlock it
+  const showUnlockButton = source === "leads" && !hasUserPurchased;
   
   // Get phone and email from lead data (lead is guaranteed to be non-null here)
   // Type assertion needed temporarily until TypeScript server refreshes
@@ -220,7 +261,7 @@ export default function LeadDetailPanel({ lead, source = "leads", tab, createdAt
 
   return (
     <div className="space-y-4 bg-background">
-      {statusBanner(lead.status, source, tab)}
+      {statusBanner(lead.status, source, tab, hasUserPurchased)}
 
       <TradePersonPanel title="Profile information  " >
         <div className="space-y-4 ">
