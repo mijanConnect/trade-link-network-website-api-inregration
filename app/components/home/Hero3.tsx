@@ -27,7 +27,7 @@ export default function Hero3() {
     <>
       <div
         data-aos="fade-down"
-        className="w-full h-[50vh] lg:h-[92vh] bg-[url('/assets/hero-image3.png')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
+        className="w-full h-[50vh] lg:h-[92vh] bg-[url('/assets/hero-image3.webp')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
       >
         <div
           className="container mx-auto px-4 mt-0 lg:-mt-12"
