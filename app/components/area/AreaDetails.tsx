@@ -32,15 +32,6 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
     }
     router.push("/#browse-category");
   }, [router]);
-  const popularTowns = [
-    "Mansfield",
-    "Chesterfield",
-    "Loughborough",
-    "Kettering",
-    "Corby",
-    "Grantham",
-    "Newark-on-Trent",
-  ];
 
   return (
     <>
@@ -96,12 +87,12 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
               Popular towns we commonly see jobs from include:
             </h4>
             <ul className="flex flex-col gap-2">
-              {popularTowns.map((town) => (
+              {selectedLocation?.popularTowns.map((town) => (
                 <li
-                  key={town}
+                  key={town.id}
                   className="text-[14px] lg:text-[18px] text-primaryText font-bold list-disc list-inside"
                 >
-                  {town}
+                  {town.name}
                 </li>
               ))}
             </ul>
