@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import ProfileCheckModal from "@/app/components/trade-person/ProfileCheckModal";
 
 export const metadata: Metadata = {
-  title: "Tradeperson Dashboard | TradeLink Network",
+  title: "Trade Person Dashboard | TradeLink Network",
   description:
     "Manage leads, responses, and your trade profile on TradeLink Network.",
   robots: { index: false, follow: false },
