@@ -6,9 +6,11 @@ import { LogoNav } from "./Svg";
 import Button from "./ui/Button";
 import ContactUs from "./ui/ContactUs";
 import { Facebook, Instagram } from "lucide-react";
+import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
 
 export default function Footer() {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const { openCookiePolicy } = useCookiePolicy();
 
   return (
     <footer className="bg-white">
@@ -159,6 +161,14 @@ export default function Footer() {
                   >
                     Terms & Conditions
                   </Link>
+                </li>
+                <li>
+                  <button
+                    onClick={openCookiePolicy}
+                    className="hover:underline transition-all text-left"
+                  >
+                    Manage Cookies
+                  </button>
                 </li>
               </ul>
             </div>
