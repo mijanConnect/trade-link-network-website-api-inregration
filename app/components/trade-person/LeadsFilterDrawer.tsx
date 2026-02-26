@@ -1,6 +1,6 @@
 "use client";
 
-import type { DateFilterKey, SortOption } from "@/app/trade-person/leads/[leadId]/page";
+import type { DateFilterKey, SortOption } from "@/components/trade-person/leadsComponents/LeadDetailsComponents";
 import { X, SlidersHorizontal } from "lucide-react";
 
 type Props = {
