@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useCookieConsent } from "@/lib/hooks/useCookieConsent";
 import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
 import { X, ChevronDown } from "lucide-react";
+import { useGetDisclaimerQuery } from "@/store/slice/categoriesSlice";
 
 interface CookieExpiry {
   necessary: string;
@@ -19,11 +20,14 @@ export default function CookiePolicyPopup() {
     rejectAll,
     saveCustom,
     hasGivenConsent,
+    isLoadingServer,
   } = useCookieConsent();
 
   const { showCookiePolicy, closeCookiePolicy } = useCookiePolicy();
+  const { data, isLoading, error } = useGetDisclaimerQuery("cookie-policy");
 
   const [showCustomization, setShowCustomization] = useState(false);
+  const [showPolicyModal, setShowPolicyModal] = useState(false);
   const [expandedCookie, setExpandedCookie] = useState<string | null>(null);
   const [customPreferences, setCustomPreferences] = useState({
     analytics: preferences?.analytics ?? false,
@@ -34,6 +38,7 @@ export default function CookiePolicyPopup() {
     analytics: "",
     advertisement: "",
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   // Display popup on first load if no consent given OR context shows it
   const shouldShow = isLoaded && (!hasGivenConsent() || showCookiePolicy);
@@ -71,22 +76,37 @@ export default function CookiePolicyPopup() {
     }
   }, [preferences]);
 
-  const handleAcceptAll = () => {
-    acceptAll();
-    closeCookiePolicy();
-    setShowCustomization(false);
+  const handleAcceptAll = async () => {
+    setIsSaving(true);
+    try {
+      await acceptAll();
+    } finally {
+      setIsSaving(false);
+      closeCookiePolicy();
+      setShowCustomization(false);
+    }
   };
 
-  const handleRejectAll = () => {
-    rejectAll();
-    closeCookiePolicy();
-    setShowCustomization(false);
+  const handleRejectAll = async () => {
+    setIsSaving(true);
+    try {
+      await rejectAll();
+    } finally {
+      setIsSaving(false);
+      closeCookiePolicy();
+      setShowCustomization(false);
+    }
   };
 
-  const handleSaveCustom = () => {
-    saveCustom(customPreferences);
-    closeCookiePolicy();
-    setShowCustomization(false);
+  const handleSaveCustom = async () => {
+    setIsSaving(true);
+    try {
+      await saveCustom(customPreferences);
+    } finally {
+      setIsSaving(false);
+      closeCookiePolicy();
+      setShowCustomization(false);
+    }
   };
 
   const handleToggle = (type: "analytics" | "advertisement") => {
@@ -99,8 +119,8 @@ export default function CookiePolicyPopup() {
   if (!shouldShow) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl w-[600px] h-[650px] max-w-full max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-2xl w-2xl h-[650px] max-w-full max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-300">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex-1">
@@ -358,15 +378,17 @@ export default function CookiePolicyPopup() {
               <div className="flex gap-3">
                 <button
                   onClick={handleRejectAll}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  disabled={isSaving || isLoadingServer}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Reject All
+                  {isSaving ? "Saving..." : "Reject All"}
                 </button>
                 <button
                   onClick={handleAcceptAll}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                  disabled={isSaving || isLoadingServer}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Accept All
+                  {isSaving ? "Saving..." : "Accept All"}
                 </button>
               </div>
 
@@ -374,19 +396,20 @@ export default function CookiePolicyPopup() {
               <div className="flex flex-col gap-2">
                 <button
                   onClick={() => setShowCustomization(true)}
-                  className="w-full px-4 py-2 text-sm text-blue-600 font-medium hover:text-blue-700 transition-colors"
+                  disabled={isSaving || isLoadingServer}
+                  className="w-full px-4 py-2 text-sm text-blue-600 font-medium hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Customize Preferences
                 </button>
                 <p className="text-xs text-gray-500 text-center">
                   You have the right to withdraw consent or access your data
                   anytime.
-                  <a
-                    href="/privacy-policy"
-                    className="text-blue-600 hover:text-blue-700 ml-1"
+                  <button
+                    onClick={() => setShowPolicyModal(true)}
+                    className="text-blue-600 hover:text-blue-700 ml-1 underline"
                   >
-                    Privacy Policy
-                  </a>
+                    Cookies Policy
+                  </button>
                 </p>
               </div>
             </div>
@@ -625,14 +648,85 @@ export default function CookiePolicyPopup() {
             <div className="flex-none border-t border-gray-200 p-6 bg-white">
               <button
                 onClick={handleSaveCustom}
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isSaving || isLoadingServer}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Save Preferences
+                {isSaving ? "Saving..." : "Save Preferences"}
               </button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Cookie Policy Modal */}
+      {showPolicyModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl w-2xl max-w-full max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-300 overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Cookie Policy
+                </h2>
+                {data?.updatedAt && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Last updated:{" "}
+                    {new Date(data.updatedAt).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={() => setShowPolicyModal(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {isLoading ? (
+                <div className="flex items-center justify-center h-32">
+                  <p className="text-gray-500">Loading policy...</p>
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center justify-center h-32">
+                  <p className="text-red-500">Error loading policy</p>
+                  <p className="text-xs text-gray-500 mt-2">
+                    {typeof error === "string" ? error : JSON.stringify(error)}
+                  </p>
+                </div>
+              ) : !data || data === null ? (
+                <div className="flex items-center justify-center h-32">
+                  <p className="text-gray-500 text-center">
+                    Cookie Policy content is not available yet. <br />
+                    <span className="text-xs">Please contact support.</span>
+                  </p>
+                </div>
+              ) : data?.content ? (
+                <div
+                  className="space-y-4"
+                  dangerouslySetInnerHTML={{ __html: data.content }}
+                />
+              ) : (
+                <p className="text-gray-500 text-center py-8">
+                  No policy content available
+                </p>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="border-t border-gray-200 p-6 bg-gray-50 shrink-0">
+              <button
+                onClick={() => setShowPolicyModal(false)}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

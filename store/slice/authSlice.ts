@@ -207,11 +207,55 @@ export const authApi = baseApi.injectEndpoints({
     // ---------------------------------------
     wallet: builder.query({
       query: () => ({
-        url: "/wallets/mine",
+        url: "/wallets/mine/me",
         method: "GET",
       }),
-      transformResponse: (response) =>
-        response?.data ?? response,
+      transformResponse: (response) => response?.data ?? response,
+      providesTags: ["Profile"],
+    }),
+    // ---------------------------------------
+    // UPDATE CONSENTS
+    // Body: { analytics: boolean, marketing: boolean }
+    // Stores user consent settings in database
+    // ---------------------------------------
+    updateConsents: builder.mutation({
+      query: (data) => ({
+        url: "/consents/update",
+        method: "POST",
+        body: {
+          analytics: data.analytics,
+          marketing: data.marketing,
+        },
+      }),
+      transformResponse: (response) => response?.data ?? response,
+      invalidatesTags: ["Profile"],
+    }),
+
+    // ---------------------------------------
+    // GET CONSENTS
+    // Returns user's consent settings from database
+    // Returns: { analytics: boolean, marketing: boolean }
+    // ---------------------------------------
+    getConsents: builder.query({
+      query: () => ({
+        url: "/consents/me",
+        method: "GET",
+      }),
+      transformResponse: (response) => response?.data ?? response,
+      providesTags: ["Profile"],
+    }),
+
+    // ---------------------------------------
+    // GET COOKIE POLICY
+    // Returns cookie policy content
+    // Returns: { content, title, lastUpdated }
+    // ---------------------------------------
+    getCookiePolicy: builder.query({
+      query: () => ({
+        url: "/disclaimers/cookie-policy",
+        method: "GET",
+      }),
+      transformResponse: (response) => response?.data ?? response,
       providesTags: ["Profile"],
     }),
   }),
@@ -232,4 +276,7 @@ export const {
   useCreateCustomerMutation,
   useVerifyPhoneMutation,
   useWalletQuery,
+  useUpdateConsentsMutation,
+  useGetConsentsQuery,
+  useGetCookiePolicyQuery,
 } = authApi;

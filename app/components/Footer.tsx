@@ -15,9 +15,9 @@ export default function Footer() {
   return (
     <footer className="bg-white">
       <div className="container mx-auto flex flex-col gap-6 px-4 py-8 md:py-8 sm:py-12 lg:py-12 bg-[url('/assets/watermark.png')] bg-contain bg-center bg-no-repeat">
-        <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-0">
+        <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-4 lg:gap-0">
           <div className="col-span-2 lg:col-span-1">
-            <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* <h3 className="font-semibold text-primary text-[22px]">
                 Contact
               </h3> */}
@@ -27,13 +27,13 @@ export default function Footer() {
                   <LogoNav />
                 </Link>
               </div>
-              <ul className="flex flex-col gap-1 text-primary text-[16px] items-center md:items-start mt-2 lg:mt-4">
-                <li className="flex items-center gap-2">
+              <ul className="flex flex-col gap-1 text-primary text-[16px] items-center lg:items-start text-center lg:text-left mt-2 lg:mt-4">
+                <li className="flex items-center lg:items-start gap-2">
                   <p>Phone :</p>
                   <a href="tel:0330 160 2233">0330 160 2233</a>
                 </li>
-                <li className="flex items-center gap-2">
-                  <p>Email :</p>
+                <li className="flex items-center lg:items-start gap-2">
+                  <p className="text-nowrap">Email :</p>
                   <a href="mailto:support@tradelinknetwork.co.uk">
                     support@tradelinknetwork.co.uk
                   </a>
@@ -50,12 +50,12 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex gap-x-16 gap-y-5 flex-wrap py-4 lg:py-0">
-            <div>
+          <div className="flex gap-x-16 gap-y-5 flex-wrap py-4 lg:py-0 justify-center lg:justify-start">
+            <div className="text-center lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Company
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
                 <li>
                   <Link
                     href="/about-us"
@@ -82,11 +82,11 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div>
+            <div className="text-center lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Support
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
                 <li>
                   <Link href="/faq" className="hover:underline transition-all">
                     FAQ
@@ -118,17 +118,33 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div>
+            <div className="text-center lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Trust & Safety
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
                 <li>
                   <Link
                     href="/review-policy"
                     className="hover:underline transition-all"
                   >
                     Review Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/cookies-policy"
+                    className="hover:underline transition-all"
+                  >
+                    Cookies Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/compliance-policy"
+                    className="hover:underline transition-all"
+                  >
+                    Compliance Policy
                   </Link>
                 </li>
                 <li>
@@ -141,11 +157,11 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div>
+            <div className="text-center lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Legal
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium ">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
                 <li>
                   <Link
                     href="/privacy-policy"
@@ -165,7 +181,7 @@ export default function Footer() {
                 <li>
                   <button
                     onClick={openCookiePolicy}
-                    className="hover:underline transition-all text-left"
+                    className="hover:underline transition-all text-left lg:text-left"
                   >
                     Manage Cookies
                   </button>
@@ -175,20 +191,20 @@ export default function Footer() {
           </div>
 
           <div className="">
-            <div className="flex flex-col items-center md:items-end text-center md:text-right justify-between">
+            <div className="flex flex-col items-center lg:items-end text-center lg:text-right justify-center lg:justify-between">
               <div className="flex flex-col items-center lg:items-end">
                 <div>
                   <h4 className="text-[18px] lg:text-[24px] font-semibold text-primary ">
                     Are you a tradesperson?
                   </h4>
                 </div>
-                <Link href="/register" className="inline-block mt-4 lg:mt-4">
+                <Link href="/register" className="inline-block mt-4">
                   <Button className="px-10! font-semibold! inline-block">
                     Sign Up
                   </Button>
                 </Link>
               </div>
-              <div className="flex flex-col items-center lg:items-end mt-6 lg:mt-6">
+              <div className="flex flex-col items-center lg:items-end mt-6">
                 <h4 className="text-[16px] font-semibold text-primary mb-3">
                   Follow Us
                 </h4>

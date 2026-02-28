@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  useUpdateConsentsMutation,
+  useGetConsentsQuery,
+} from "@/store/slice/authSlice";
 
 export interface CookiePreferences {
   necessary: boolean;
@@ -16,9 +20,26 @@ const COOKIE_CONSENT_KEY = "tln_cookie_consent";
 const COOKIE_CONSENT_EXPIRY_KEY = "tln_cookie_consent_expiry";
 const COOKIE_CONSENT_EXPIRY_DAYS = 365;
 
+// Check if user is logged in
+const isUserLoggedIn = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const token =
+    localStorage.getItem("accessToken") || localStorage.getItem("token");
+  return !!token;
+};
+
 export const useCookieConsent = () => {
-  const [preferences, setPreferences] = useState<CookiePreferences | null>(null);
+  const [preferences, setPreferences] = useState<CookiePreferences | null>(
+    null,
+  );
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Redux hooks
+  const [updateConsents] = useUpdateConsentsMutation();
+  const { data: serverConsents, isLoading: isLoadingServer } =
+    useGetConsentsQuery(undefined, {
+      skip: !isUserLoggedIn(), // Skip if user not logged in
+    });
 
   // Load preferences from localStorage
   useEffect(() => {
@@ -39,8 +60,22 @@ export const useCookieConsent = () => {
     setIsLoaded(true);
   }, []);
 
+  // Load preferences from server if available and user is logged in
+  useEffect(() => {
+    if (isUserLoggedIn() && serverConsents && !isLoadingServer) {
+      const serverPrefs: CookiePreferences = {
+        necessary: true,
+        analytics: serverConsents?.analytics ?? false,
+        advertisement: serverConsents?.marketing ?? false, // Map marketing to advertisement
+      };
+      setPreferences(serverPrefs);
+      // Also save to localStorage
+      savePreferencesLocal(serverPrefs);
+    }
+  }, [serverConsents, isLoadingServer]);
+
   // Save preferences to localStorage
-  const savePreferences = (newPreferences: CookiePreferences) => {
+  const savePreferencesLocal = (newPreferences: CookiePreferences) => {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + COOKIE_CONSENT_EXPIRY_DAYS);
 
@@ -50,31 +85,51 @@ export const useCookieConsent = () => {
     setPreferences(newPreferences);
   };
 
+  // Sync with server
+  const syncWithServer = async (prefs: CookiePreferences) => {
+    if (!isUserLoggedIn()) return;
+
+    try {
+      await updateConsents({
+        analytics: prefs.analytics,
+        marketing: prefs.advertisement, // Map advertisement to marketing
+      }).unwrap();
+    } catch (error) {
+      console.error("Error syncing consents with server:", error);
+    }
+  };
+
   // Accept all cookies
-  const acceptAll = () => {
-    savePreferences({
+  const acceptAll = async () => {
+    const prefs = {
       necessary: true,
       analytics: true,
       advertisement: true,
-    });
+    };
+    savePreferencesLocal(prefs);
+    await syncWithServer(prefs);
   };
 
   // Reject all non-necessary cookies
-  const rejectAll = () => {
-    savePreferences({
+  const rejectAll = async () => {
+    const prefs = {
       necessary: true,
       analytics: false,
       advertisement: false,
-    });
+    };
+    savePreferencesLocal(prefs);
+    await syncWithServer(prefs);
   };
 
   // Save custom preferences
-  const saveCustom = (custom: Partial<CookiePreferences>) => {
-    savePreferences({
+  const saveCustom = async (custom: Partial<CookiePreferences>) => {
+    const prefs = {
       necessary: true, // Always required
       analytics: custom.analytics ?? false,
       advertisement: custom.advertisement ?? false,
-    });
+    };
+    savePreferencesLocal(prefs);
+    await syncWithServer(prefs);
   };
 
   // Check if user has given consent
@@ -85,10 +140,11 @@ export const useCookieConsent = () => {
   return {
     preferences,
     isLoaded,
-    savePreferences,
+    savePreferences: savePreferencesLocal,
     acceptAll,
     rejectAll,
     saveCustom,
     hasGivenConsent,
+    isLoadingServer,
   };
 };
