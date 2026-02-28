@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import {
   useUpdateConsentsMutation,
@@ -20,6 +22,35 @@ const COOKIE_CONSENT_KEY = "tln_cookie_consent";
 const COOKIE_CONSENT_EXPIRY_KEY = "tln_cookie_consent_expiry";
 const COOKIE_CONSENT_EXPIRY_DAYS = 365;
 
+// Helper to set cookie
+const setCookie = (name: string, value: string, days: number = 365) => {
+  if (typeof document === "undefined") return;
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + days);
+  const cookieString = `${name}=${encodeURIComponent(value)}; Path=/; Expires=${expiryDate.toUTCString()}; SameSite=Lax`;
+  document.cookie = cookieString;
+};
+
+// Helper to get cookie
+const getCookie = (name: string): string | null => {
+  if (typeof document === "undefined") return null;
+  const nameEQ = name + "=";
+  const cookies = document.cookie.split(";");
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.indexOf(nameEQ) === 0) {
+      return decodeURIComponent(cookie.substring(nameEQ.length));
+    }
+  }
+  return null;
+};
+
+// Helper to delete cookie
+const deleteCookie = (name: string) => {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+};
+
 // Check if user is logged in
 const isUserLoggedIn = (): boolean => {
   if (typeof window === "undefined") return false;
@@ -41,10 +72,10 @@ export const useCookieConsent = () => {
       skip: !isUserLoggedIn(), // Skip if user not logged in
     });
 
-  // Load preferences from localStorage
+  // Load preferences from Cookies
   useEffect(() => {
-    const savedPreferences = localStorage.getItem(COOKIE_CONSENT_KEY);
-    const savedExpiry = localStorage.getItem(COOKIE_CONSENT_EXPIRY_KEY);
+    const savedPreferences = getCookie(COOKIE_CONSENT_KEY);
+    const savedExpiry = getCookie(COOKIE_CONSENT_EXPIRY_KEY);
 
     if (savedPreferences && savedExpiry) {
       const expiryDate = new Date(savedExpiry);
@@ -52,8 +83,8 @@ export const useCookieConsent = () => {
         setPreferences(JSON.parse(savedPreferences));
       } else {
         // Clear expired preferences
-        localStorage.removeItem(COOKIE_CONSENT_KEY);
-        localStorage.removeItem(COOKIE_CONSENT_EXPIRY_KEY);
+        deleteCookie(COOKIE_CONSENT_KEY);
+        deleteCookie(COOKIE_CONSENT_EXPIRY_KEY);
       }
     }
 
@@ -69,18 +100,26 @@ export const useCookieConsent = () => {
         advertisement: serverConsents?.marketing ?? false, // Map marketing to advertisement
       };
       setPreferences(serverPrefs);
-      // Also save to localStorage
+      // Also save to Cookies
       savePreferencesLocal(serverPrefs);
     }
   }, [serverConsents, isLoadingServer]);
 
-  // Save preferences to localStorage
+  // Save preferences to Cookies
   const savePreferencesLocal = (newPreferences: CookiePreferences) => {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + COOKIE_CONSENT_EXPIRY_DAYS);
 
-    localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(newPreferences));
-    localStorage.setItem(COOKIE_CONSENT_EXPIRY_KEY, expiryDate.toISOString());
+    setCookie(
+      COOKIE_CONSENT_KEY,
+      JSON.stringify(newPreferences),
+      COOKIE_CONSENT_EXPIRY_DAYS,
+    );
+    setCookie(
+      COOKIE_CONSENT_EXPIRY_KEY,
+      expiryDate.toISOString(),
+      COOKIE_CONSENT_EXPIRY_DAYS,
+    );
 
     setPreferences(newPreferences);
   };
