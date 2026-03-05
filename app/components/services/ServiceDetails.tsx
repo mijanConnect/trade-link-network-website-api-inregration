@@ -52,7 +52,7 @@ export default function ServiceDetails() {
             data-aos="fade-up"
             className="text-[22px] lg:text-[40px] font-bold text-primaryText"
           >
-            Fint Trusted{" "}
+            Find Trusted{" "}
             {isLoading
               ? "Loading"
               : isError
