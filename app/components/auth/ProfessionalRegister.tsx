@@ -321,8 +321,8 @@ function AboutForm() {
           </div>
           <div>
             <InputField
-              title="Service radius (km)"
-              placeholder="Enter service radius (km)"
+              title="Service radius (miles)"
+              placeholder="Enter service radius (miles)"
               type="number"
               initialValue={serviceRadiusKm}
               onChange={(val) => {

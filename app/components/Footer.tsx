@@ -15,7 +15,7 @@ export default function Footer() {
   return (
     <footer className="bg-white">
       <div className="container mx-auto flex flex-col gap-6 px-4 py-8 md:py-8 sm:py-12 lg:py-12 bg-[url('/assets/watermark.png')] bg-contain bg-center bg-no-repeat">
-        <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-4 lg:gap-0">
+        <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-4 lg:gap-4">
           <div className="col-span-2 lg:col-span-1">
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
               {/* <h3 className="font-semibold text-primary text-[22px]">
@@ -32,7 +32,7 @@ export default function Footer() {
                   <p>Phone :</p>
                   <a href="tel:0330 160 2233">0330 160 2233</a>
                 </li>
-                <li className="flex items-center lg:items-start gap-2">
+                <li className="flex items-center lg:items-start gap-2 flex-wrap">
                   <p className="text-nowrap">Email :</p>
                   <a href="mailto:support@tradelinknetwork.co.uk">
                     support@tradelinknetwork.co.uk

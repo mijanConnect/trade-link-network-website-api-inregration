@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { Poppins } from "next/font/google";
 import Providers from "./providers";
 
-
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -18,6 +17,31 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "@id": "https://www.tradelinknetwork.co.uk/#organization",
+              name: "Trade Link Network",
+              url: "https://www.tradelinknetwork.co.uk",
+              description:
+                "A UK-wide platform connecting homeowners with vetted and trusted trade professionals.",
+              founder: {
+                "@type": "Person",
+                name: "Lee Farrugia",
+                worksFor: {
+                  "@type": "LocalBusiness",
+                  name: "Essex Landscaping & Paving",
+                  url: "https://www.essexlandscapingandpaving.co.uk",
+                },
+              },
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${poppins.variable} bg-[--background] text-[--foreground]`}
       >
