@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import InputFieldOriginal from "../ui/InputField";
 import Button from "../ui/Button";
-import TextareaField from "../ui/TextareaField";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-const InputField = InputFieldOriginal;
+import IsJobUrgentQuestion from "./IsJobUrgentQuestion";
+import JobDescriptionField from "./JobDescriptionField";
+import JobPostcodeField from "./JobPostcodeField";
 
 import "react-phone-number-input/style.css";
 import { useCreateJobPostMutation } from "@/store/slice/categoriesSlice";
@@ -122,65 +120,12 @@ export default function CreateAccount({
       {shouldShowJobDetails && (
         <>
           <div>
-            <div className="mb-6">
-              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
-                Is this job urgent?
-              </h3>
-              <p className="text-[16px] text-primaryTextLight mb-4">
-                This will help us prioritise your job post and get you faster
-                responses
-              </p>
-              <RadioGroup
-                value={isUrgent ? "yes" : "no"}
-                onValueChange={(value) => setIsUrgent(value === "yes")}
-                className="flex gap-6"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="yes" id="urgent-yes" />
-                  <label
-                    htmlFor="urgent-yes"
-                    className="text-[16px] font-medium cursor-pointer"
-                  >
-                    Yes
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="no" id="urgent-no" />
-                  <label
-                    htmlFor="urgent-no"
-                    className="text-[16px] font-medium cursor-pointer"
-                  >
-                    No
-                  </label>
-                </div>
-              </RadioGroup>
-            </div>
-            <div className="mb-6">
-              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
-                Description
-              </h3>
-              <p className="text-[16px] text-primaryTextLight mb-4">
-                Please provide details about your job requirements
-              </p>
-              <TextareaField
-                placeholder="Describe the work you need done..."
-                rows={5}
-                onChange={(val: string) => setDescription(val)}
-              />
-            </div>
-            <div>
-              <h3 className="block text-[18px] font-semibold text-primaryText mb-1">
-                Postcode for the job
-              </h3>
-              <p className="text-[16px] text-primaryTextLight mb-4">
-                To find tradespeople near you we need to know where the job is
-              </p>
-              <InputField
-                placeholder="Eg. SW1A 2AB"
-                // value={postcode}
-                onChange={(val: string) => setPostcode(val)}
-              />
-            </div>
+            <IsJobUrgentQuestion value={isUrgent} onChange={setIsUrgent} />
+            <JobDescriptionField
+              value={description}
+              onChange={setDescription}
+            />
+            <JobPostcodeField value={postcode} onChange={setPostcode} />
           </div>
 
           {error && <p className="text-red-500 text-[14px]">{error}</p>}
