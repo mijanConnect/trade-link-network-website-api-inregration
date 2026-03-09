@@ -6,7 +6,6 @@ interface JobPostcodeFieldProps {
 }
 
 export default function JobPostcodeField({
-  value,
   onChange,
 }: JobPostcodeFieldProps) {
   return (
@@ -20,7 +19,6 @@ export default function JobPostcodeField({
       <InputField
         placeholder="Eg. SW1A 2AB"
         onChange={(val: string) => onChange(val)}
-        value={value}
       />
     </div>
   );
