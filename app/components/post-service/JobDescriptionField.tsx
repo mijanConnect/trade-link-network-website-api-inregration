@@ -6,7 +6,6 @@ interface JobDescriptionFieldProps {
 }
 
 export default function JobDescriptionField({
-  value,
   onChange,
 }: JobDescriptionFieldProps) {
   return (
@@ -21,7 +20,6 @@ export default function JobDescriptionField({
         placeholder="Describe the work you need done..."
         rows={5}
         onChange={(val: string) => onChange(val)}
-        value={value}
       />
     </div>
   );
