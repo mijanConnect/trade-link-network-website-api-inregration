@@ -8,6 +8,7 @@ import Button from "../ui/Button";
 import {
   useGetCategoriesQuery,
   useGetCategoriesServicesQuery,
+  useGetCategoryDetailsQuery,
 } from "@/store/slice/categoriesSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 
@@ -41,6 +42,11 @@ export default function ServiceDetails() {
     categoryId || skipToken,
   );
 
+  // Fetch category details for descriptions
+  const { data: categoryDetailsData } = useGetCategoryDetailsQuery(
+    categoryId || skipToken,
+  );
+
   const services =
     (servicesData as { _id: string; name: string }[] | undefined) || [];
 
@@ -65,10 +71,7 @@ export default function ServiceDetails() {
             data-aos-delay="100"
             className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10"
           >
-            Find trusted, verified tradespeople across Greater London for
-            landscaping, building work, repairs and specialist services.Trade
-            Link Network connects homeowners with suitable local professionals,
-            making it easy to compare options and manage everything online
+            {categoryDetailsData?.servicesDetailsDescription1}
           </p>
 
           <div data-aos="fade-up" data-aos-delay="200">
@@ -103,6 +106,13 @@ export default function ServiceDetails() {
                 <li>No services available.</li>
               )}
             </ul>
+            <p
+              data-aos="fade-up"
+              data-aos-delay="100"
+              className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10"
+            >
+              {categoryDetailsData?.servicesDetailsDescription2}
+            </p>
           </div>
         </div>
       </div>

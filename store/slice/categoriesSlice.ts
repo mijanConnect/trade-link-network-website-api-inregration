@@ -87,6 +87,20 @@ export const categoriesApi = baseApi.injectEndpoints({
       invalidatesTags: ["Categories"],
     }),
     // ---------------------------------------
+    // GET CATEGORY DETAILS
+    // ---------------------------------------
+    getCategoryDetails: builder.query({
+      query: (id: string) => ({
+        url: `/categories/${id}/details`,
+        method: "GET",
+      }),
+
+      transformResponse: (response) =>
+        response?.data ?? response?.user ?? response,
+
+      providesTags: ["Categories"],
+    }),
+    // ---------------------------------------
     // GET DISCLAIMER
     // ---------------------------------------
     getDisclaimer: builder.query({
@@ -106,6 +120,7 @@ export const {
   useGetCategoriesServicesQuery,
   useGetCategoriesFaqsQuery,
   useGetCategoriesServicesQuestionsQuery,
+  useGetCategoryDetailsQuery,
   useCreateCustomerMutation,
   useCreateJobPostMutation,
   useGetDisclaimerQuery,

@@ -17,7 +17,7 @@ export default function Footer() {
       <div className="container mx-auto flex flex-col gap-6 px-4 py-8 md:py-8 sm:py-12 lg:py-12 bg-[url('/assets/watermark.png')] bg-contain bg-center bg-no-repeat">
         <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-4 lg:gap-4">
           <div className="col-span-2 lg:col-span-1">
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="flex flex-col items-start lg:items-start">
               {/* <h3 className="font-semibold text-primary text-[22px]">
                 Contact
               </h3> */}
@@ -27,12 +27,12 @@ export default function Footer() {
                   <LogoNav />
                 </Link>
               </div>
-              <ul className="flex flex-col gap-1 text-primary text-[16px] items-center lg:items-start text-center lg:text-left mt-2 lg:mt-4">
-                <li className="flex items-center lg:items-start gap-2">
+              <ul className="flex flex-col gap-1 text-primary text-[16px] items-start lg:items-start text-center lg:text-left mt-2 lg:mt-4">
+                <li className="flex  gap-2">
                   <p>Phone :</p>
                   <a href="tel:0330 160 2233">0330 160 2233</a>
                 </li>
-                <li className="flex items-center lg:items-start gap-2 flex-wrap">
+                <li className="flex gap-2 flex-wrap">
                   <p className="text-nowrap">Email :</p>
                   <a href="mailto:support@tradelinknetwork.co.uk">
                     support@tradelinknetwork.co.uk
@@ -50,12 +50,12 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex gap-x-16 gap-y-5 flex-wrap py-4 lg:py-0 justify-center lg:justify-start">
-            <div className="text-center lg:text-left">
+          <div className="flex gap-x-16 gap-y-5 flex-wrap flex-col md:flex-row py-4 lg:py-0 justify-start lg:justify-start">
+            <div className="text-left lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Company
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-star lg:items-start">
                 <li>
                   <Link
                     href="/about-us"
@@ -82,11 +82,11 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-start lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Support
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-start lg:items-start">
                 <li>
                   <Link href="/faq" className="hover:underline transition-all">
                     FAQ
@@ -118,11 +118,11 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-left lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Trust & Safety
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-start lg:items-start">
                 <li>
                   <Link
                     href="/review-policy"
@@ -157,11 +157,11 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-left lg:text-left">
               <h2 className="text-[18px] lg:text-[24px] font-semibold text-primary mb-4 ">
                 Legal
               </h2>
-              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-center lg:items-start">
+              <ul className="flex flex-col gap-2 text-primary text-[16px] font-medium items-start lg:items-start">
                 <li>
                   <Link
                     href="/privacy-policy"
