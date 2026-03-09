@@ -70,6 +70,11 @@ function AboutForm() {
     initialSelectedServices,
   );
 
+  // Map service IDs to names - persists across category changes so we always show names
+  const [userAddedServiceNames, setUserAddedServiceNames] = useState<
+    Record<string, string>
+  >({});
+
   // Initialize professionCategory - use first category if available, or empty string
   const [professionCategory, setProfessionCategory] = useState<string>("");
 
@@ -110,12 +115,20 @@ function AboutForm() {
     value: cat._id,
   }));
 
-  // Get service names for display from selected objectIds
-  const getServiceName = (serviceId: string) => {
-    const service = availableServices.find((s) => s._id === serviceId);
-    if (service) return service.name;
-    return serviceId; // Fallback to ID if name not found
-  };
+  // Merged id->name map for display (current category services + user-added)
+  const serviceIdToNameMap = useMemo(() => {
+    const map: Record<string, string> = { ...userAddedServiceNames };
+    const services =
+      (servicesData as Array<{ _id: string; name: string }>) || [];
+    services.forEach((s) => {
+      map[s._id] = s.name;
+    });
+    return map;
+  }, [servicesData, userAddedServiceNames]);
+
+  // Get service names for display - uses merged map so names show across category switches
+  const getServiceName = (serviceId: string) =>
+    serviceIdToNameMap[serviceId] ?? serviceId;
 
   // Update professionCategory when categories are loaded (only once)
   // Using a ref to track initialization to avoid linter warnings
@@ -129,6 +142,13 @@ function AboutForm() {
 
   const handleAddProfession = (serviceId: string | null) => {
     if (!serviceId) return;
+    const service = availableServices.find((s) => s._id === serviceId);
+    if (service) {
+      setUserAddedServiceNames((prev) => ({
+        ...prev,
+        [serviceId]: service.name,
+      }));
+    }
     setSelectedProfessions((prev) => {
       if (!prev.includes(serviceId)) {
         return [...prev, serviceId];
