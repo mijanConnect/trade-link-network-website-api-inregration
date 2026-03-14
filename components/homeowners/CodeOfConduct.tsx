@@ -1,16 +1,16 @@
 "use client";
 
-import { useGetDisclaimerQuery } from "@/store/slice/termsSlice";
+import { useGetDisclaimerQuery } from "@/store/slice/categoriesSlice";
 
-export default function AboutUs() {
-  const { data, isLoading, error } = useGetDisclaimerQuery("about-us");
+export default function CodeOfConduct() {
+  const { data, isLoading, error } = useGetDisclaimerQuery("code-of-conduct");
 
   return (
     <>
       <div className="container mx-auto px-4 my-6 lg:mt-15 lg:mb-30">
         <div className="">
           <h2 className="text-[24px] lg:text-[48px] font-semibold text-primaryTextmb-4 lg:mb-15 text-center">
-            About Us
+            Code of Conduct
           </h2>
 
           {isLoading && (
@@ -21,7 +21,7 @@ export default function AboutUs() {
 
           {error && (
             <div className="text-red-600 text-center py-10">
-              Failed to load review policy. Please try again later.
+              Failed to load code of conduct. Please try again later.
             </div>
           )}
 

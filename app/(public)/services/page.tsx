@@ -1,4 +1,7 @@
 import Services from "@/app/components/services/Services";
+import { getMetadata } from "@/components/homeowners/MetadataConfig";
+
+export const metadata = getMetadata("services");
 
 export default function Page() {
   return (

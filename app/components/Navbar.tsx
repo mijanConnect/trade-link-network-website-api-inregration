@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import Button from "./ui/Button";
 import { LogoNav, LogoNavMobile } from "./Svg";
 import ShowProfileModal from "./profile/ShowProfileModal";
-import { ChevronDown } from "lucide-react";
+import Button from "./ui/Button";
 
 const navbarStyles = `
   .nav-link {

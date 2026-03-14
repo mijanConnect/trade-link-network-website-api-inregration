@@ -3,9 +3,9 @@
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { StepHome1, StepHome2, StepHome3, StepHome4, StepHome5 } from "../Svg";
 import { useRouter } from "next/navigation";
 import Button from "../ui/Button";
+import { StepHome1, StepHome2, StepHome3, StepHome4, StepHome5 } from "../Svg";
 
 export default function StepsHome() {
   const router = useRouter();

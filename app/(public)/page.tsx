@@ -8,6 +8,9 @@ import TrustPilot from "../components/home/TrustPilot";
 import UseUs from "../components/home/UseUs";
 import WorksFlow from "../components/home/WorksFlow";
 import CTA from "../components/ui/CTA";
+import { getMetadata } from "@/components/homeowners/MetadataConfig";
+
+export const metadata = getMetadata("home");
 
 export default function Home() {
   return (

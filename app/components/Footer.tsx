@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LogoNav } from "./Svg";
-import Button from "./ui/Button";
 import ContactUs from "./ui/ContactUs";
 import { Facebook, Instagram } from "lucide-react";
 import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
+import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   const [isContactOpen, setIsContactOpen] = useState(false);
