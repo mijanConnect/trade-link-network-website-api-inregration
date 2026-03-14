@@ -222,6 +222,45 @@ export default function HowTradepersonWorkPage() {
         </div>
       </section>
 
+      {/* SEO Content Section */}
+      <section className="py-12 lg:py-28 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="">
+            <h2
+              className="text-2xl lg:text-4xl font-bold text-gray-900 mb-6 lg:mb-12 text-center"
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
+            >
+              How Trade Link Network Helps <br /> Tradespeople Find More Local
+              Work
+            </h2>
+            <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg max-w-4xl mx-auto">
+              <p
+                className="leading-relaxed"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay="100"
+              >
+                Trade Link Network helps tradespeople across the UK connect with
+                homeowners who are actively looking for reliable professionals.
+                Instead of spending time advertising or searching for customers,
+                tradespeople can receive job opportunities directly through the
+                platform.
+              </p>
+              <p
+                className="leading-relaxed"
+                data-aos="fade-up"
+                data-aos-anchor-placement="top-bottom"
+                data-aos-delay="200"
+              >
+                When homeowners post a job request, the system matches the job
+                with suitable tradespeople based on their services and location.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Who Can Join Section */}
       <section className="py-16 lg:py-24 px-4 bg-white">
         <div className="container mx-auto max-w-4xl">

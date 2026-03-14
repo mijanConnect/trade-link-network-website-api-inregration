@@ -189,8 +189,8 @@ export default function HowItWorksPage() {
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
             >
-              How Trade Link Network Helps <br /> Tradespeople Find More Local
-              Work
+              How Trade Link Network Helps <br /> Homeowners Find Trusted
+              Tradespeople
             </h2>
             <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg max-w-4xl mx-auto">
               <p
@@ -199,11 +199,12 @@ export default function HowItWorksPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay="100"
               >
-                Trade Link Network helps tradespeople across the UK connect with
-                homeowners who are actively looking for reliable professionals.
-                Instead of spending time advertising or searching for customers,
-                tradespeople can receive job opportunities directly through the
-                platform.
+                Trade Link Network makes it simple for homeowners across the UK
+                to find trusted local tradespeople for a wide range of property
+                services. Instead of spending time searching online and
+                contacting multiple companies, homeowners can post their job
+                once and receive responses from suitable professionals operating
+                in their area.
               </p>
               <p
                 className="leading-relaxed"
@@ -211,8 +212,11 @@ export default function HowItWorksPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay="200"
               >
-                When homeowners post a job request, the system matches the job
-                with suitable tradespeople based on their services and location.
+                After submitting a job request, the platform shares the details
+                with verified tradespeople who match the service and location
+                requirements. Homeowners can then compare quotes, review
+                responses, and choose the professional that best suits their
+                project and budget.
               </p>
             </div>
           </div>
