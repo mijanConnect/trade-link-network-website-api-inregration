@@ -22,7 +22,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "https://www.tradelinknetwork.co.uk/assets/hero.webp",
+        url: "https://www.tradelinknetwork.co.uk/assets/hero-2.webp",
         width: 1200,
         height: 630,
         alt: "Trade Link Network",
