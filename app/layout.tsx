@@ -12,6 +12,23 @@ const poppins = Poppins({
 
 export const metadata = {
   title: "Trade Link Network",
+  description:
+    "Connect with vetted and trusted trade professionals across the UK. Post your job for free and get instant quotes.",
+  openGraph: {
+    title: "Trade Link Network | Find Trusted Trade Professionals",
+    description:
+      "Connect with vetted and trusted trade professionals across the UK. Post your job for free and get instant quotes.",
+    url: "https://www.tradelinknetwork.co.uk/",
+    type: "website",
+    images: [
+      {
+        url: "/assets/hero.webp",
+        width: 1200,
+        height: 630,
+        alt: "Trade Link Network",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
