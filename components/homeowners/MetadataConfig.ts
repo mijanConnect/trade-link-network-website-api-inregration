@@ -116,7 +116,7 @@ export const pageMetadata: Record<string, Metadata> = {
       type: "website",
       images: [
         {
-          url: "/assets/hero.webp",
+          url: "https://www.tradelinknetwork.co.uk/assets/hero.webp",
           width: 1200,
           height: 630,
           alt: "Trade Link Network",
