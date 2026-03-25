@@ -419,6 +419,9 @@ function AboutForm({ user }: AboutFormProps) {
           <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
             Select document type <span className="text-red-500">*</span>
           </div>
+          <p className="text-[13px] text-gray-500 mb-3">
+            Only PDF files can be accepted
+          </p>
           <CustomSelect
             value={documentType}
             options={[

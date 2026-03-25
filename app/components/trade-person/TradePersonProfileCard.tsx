@@ -13,7 +13,7 @@ export default function TradePersonProfileCard() {
     return (
       <aside className="p-10">
         <div className="flex flex-col items-center text-center">
-          <div className="h-[160px] w-[160px] animate-pulse rounded-full bg-slate-200" />
+          <div className="h-40 w-40 animate-pulse rounded-full bg-slate-200" />
           <div className="mt-4 h-5 w-32 animate-pulse rounded bg-slate-200" />
           <div className="mt-2 h-4 w-20 animate-pulse rounded bg-slate-200" />
           <div className="mt-6 flex flex-wrap justify-center gap-2 p-6">
@@ -33,7 +33,7 @@ export default function TradePersonProfileCard() {
     return (
       <aside className="p-10">
         <div className="flex flex-col items-center text-center">
-          <div className="h-[160px] w-[160px] overflow-hidden rounded-full border border-slate-200 bg-slate-100" />
+          <div className="h-40 w-40 overflow-hidden rounded-full border border-slate-200 bg-slate-100" />
           <h2 className="mt-4 text-[18px] font-semibold text-primaryText">
             No profile data available
           </h2>
@@ -59,7 +59,7 @@ export default function TradePersonProfileCard() {
   return (
     <aside className="p-10">
       <div className="flex flex-col items-center text-center">
-        <div className="h-[160px] w-[160px] overflow-hidden rounded-full border border-slate-200">
+        <div className="h-40 w-40 overflow-hidden rounded-full border border-slate-200">
           <Image
             src={getImageUrl(professional?.businessImage)}
             alt={`${businessName} avatar`}
