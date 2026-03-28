@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import LeadDetailPanel from "@/app/components/trade-person/LeadDetailPanel";
 import LeadDetailLoading from "@/app/components/trade-person/LeadDetailLoading";
 import type { Lead } from "@/lib/trade-person/mock";
-import { Briefcase, MapPin, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useGetMyLeadsQuery, useGetMyLeadDetailsQuery } from "@/store/slice/myLeadSlice";
 import { transformMyLeadToJobCard, transformMyLeadDetailToLead } from "@/lib/trade-person/myResponsesUtils";
@@ -391,39 +391,25 @@ export default function MyResponsesJobPage() {
 
       {/* Mobile layout (under md) */}
       <div className="block h-[calc(100vh-120px)] md:hidden">
-        {/* List view (default) */}
+        {/* List view (default) — same tab strip as desktop, no static placeholder header */}
         {!showDetailOnMobile && (
-          <div className="flex h-full flex-col overflow-hidden border border-slate-200 bg-white">
-            {/* Summary Header */}
-            <div className="bg-primary px-4 py-5 text-white">
-              <h1 className="text-[20px] font-bold">1,050 matching leads</h1>
-              <div className="mt-3 flex flex-col gap-2 text-[12px]">
-                <div className="flex items-center gap-2">
-                  <Briefcase size={14} />
-                  <span>02 Services</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin size={14} />
-                  <span>Avondale, Harare</span>
-                </div>
-              </div>
-
-              {/* Tabs */}
-              <div className="mt-4 flex gap-2">
+          <div className="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white">
+            <div>
+              <div className="flex gap-2 bg-tradeBg p-4">
                 <Link
                   href="/trade-person/my-responses/pending"
-                  className={`flex-1 rounded-md px-3 py-2 text-center text-[12px] font-semibold transition-all duration-200 ${isPending
-                      ? "bg-white text-primary"
-                      : "bg-white/20 text-white hover:bg-white/30"
+                  className={`flex-1 cursor-pointer rounded px-4 py-4 text-center text-[14px] font-semibold transition-all duration-200 sm:py-6 ${isPending
+                      ? "bg-primary font-semibold text-white"
+                      : "bg-white text-black"
                     }`}
                 >
                   Pending
                 </Link>
                 <Link
                   href="/trade-person/my-responses/hired"
-                  className={`flex-1 rounded-md px-3 py-2 text-center text-[12px] font-semibold transition-all duration-200 ${isHired
-                      ? "bg-white text-primary"
-                      : "bg-white/20 text-white hover:bg-white/30"
+                  className={`flex-1 cursor-pointer rounded px-4 py-4 text-center text-[14px] transition-all duration-200 sm:py-6 ${isHired
+                      ? "bg-primary font-semibold text-white"
+                      : "bg-white text-black"
                     }`}
                 >
                   Hired
@@ -432,7 +418,7 @@ export default function MyResponsesJobPage() {
             </div>
 
             {/* Job List */}
-            <div className="relative flex-1 overflow-y-auto px-3 py-4">
+            <div className="relative flex-1 overflow-y-auto bg-tradeBg px-3 py-4 md:px-4">
               {/* Loading overlay - doesn't affect layout */}
               {isTabChanging && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm transition-opacity duration-200">
@@ -445,7 +431,7 @@ export default function MyResponsesJobPage() {
                 <>
                   {inProgressJobs.length > 0 && (
                     <div className="mb-4">
-                      <h3 className="mb-2 text-[13px] font-semibold text-primaryText">
+                      <h3 className="mb-2 text-[14px] font-semibold text-primaryText">
                         Job In Progress
                       </h3>
                       <div className="space-y-3">
@@ -459,9 +445,9 @@ export default function MyResponsesJobPage() {
                                 setMobileSelectedJobId(job.id);
                                 setShowDetailOnMobile(true);
                               }}
-                              className={`w-full rounded-lg border p-3 text-left transition-opacity duration-200 ${job.id === mobileSelectedJobId
-                                  ? "border-primary bg-primary/5"
-                                  : "border-slate-200 bg-white hover:bg-slate-50"
+                              className={`w-full rounded-md border p-4 text-left transition-opacity duration-200 ${job.id === mobileSelectedJobId
+                                  ? "border-primary bg-background border-2"
+                                  : "border-slate-200 bg-white"
                                 }`}
                             >
                               <div className="flex items-center justify-between">
@@ -472,12 +458,13 @@ export default function MyResponsesJobPage() {
                                   {job.dateLabel}
                                 </span>
                               </div>
-                              <div className="mt-2 text-[13px] font-semibold text-primaryText">
+                              <div className="mt-2 text-[14px] font-semibold text-primaryText">
                                 You&apos;ve Been Hired!
                               </div>
-                              <p className="mt-1 text-[11px] text-slate-600">
+                              <p className="mt-1 text-[12px] text-slate-600">
                                 Congratulations! A customer has hired you for their
-                                request.
+                                request. Please check the job details and prepare to
+                                proceed.
                               </p>
                             </button>
                           );
@@ -488,7 +475,7 @@ export default function MyResponsesJobPage() {
 
                   {completedJobs.length > 0 && (
                     <div>
-                      <h3 className="mb-2 text-[13px] font-semibold text-primaryText">
+                      <h3 className="mb-2 text-[14px] font-semibold text-primaryText">
                         Completed job
                       </h3>
                       <div className="space-y-3">
@@ -502,9 +489,9 @@ export default function MyResponsesJobPage() {
                                 setMobileSelectedJobId(job.id);
                                 setShowDetailOnMobile(true);
                               }}
-                              className={`w-full rounded-lg border p-3 text-left transition-opacity duration-200 ${job.id === mobileSelectedJobId
-                                  ? "border-primary bg-primary/5"
-                                  : "border-slate-200 bg-white hover:bg-slate-50"
+                              className={`w-full rounded-md border p-4 text-left transition-opacity duration-200 ${job.id === mobileSelectedJobId
+                                  ? "border-primary bg-background border-2"
+                                  : "border-slate-200 bg-white"
                                 }`}
                             >
                               <div className="flex items-center justify-between">
@@ -515,12 +502,13 @@ export default function MyResponsesJobPage() {
                                   {job.completedAt ? `Completed: ${job.dateLabel}` : job.dateLabel}
                                 </span>
                               </div>
-                              <div className="mt-2 text-[13px] font-semibold text-primaryText">
+                              <div className="mt-2 text-[14px] font-semibold text-primaryText">
                                 You&apos;ve Been Hired!!
                               </div>
-                              <p className="mt-1 text-[11px] text-slate-600">
+                              <p className="mt-1 text-[12px] text-slate-600">
                                 Congratulations! A customer has hired you for their
-                                request.
+                                request. Please check the job details and prepare to
+                                proceed.
                               </p>
                             </button>
                           );
@@ -551,8 +539,8 @@ export default function MyResponsesJobPage() {
                               setMobileSelectedJobId(job.id);
                               setShowDetailOnMobile(true);
                             }}
-                            className={`w-full rounded-lg border p-3 text-left transition ${job.id === mobileSelectedJobId
-                                ? "border-primary bg-primary/5"
+                            className={`w-full rounded-md border p-4 text-left transition ${job.id === mobileSelectedJobId
+                                ? "border-primary bg-background border-2"
                                 : "border-slate-200 bg-white hover:bg-slate-50"
                               }`}
                           >
@@ -564,10 +552,10 @@ export default function MyResponsesJobPage() {
                                 {job.dateLabel}
                               </span>
                             </div>
-                            <div className="mt-2 text-[13px] font-semibold text-primaryText">
+                            <div className="mt-2 text-[14px] font-semibold text-primaryText">
                               Waiting for Response
                             </div>
-                            <p className="mt-1 text-[11px] text-slate-600">
+                            <p className="mt-1 text-[12px] text-slate-600">
                               Your response has been sent. Waiting for customer to
                               review and respond.
                             </p>
