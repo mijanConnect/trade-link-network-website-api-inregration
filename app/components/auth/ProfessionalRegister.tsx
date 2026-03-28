@@ -24,13 +24,13 @@ import AuthLogo from "./AuthLogo";
 
 export default function ProfessionalRefister() {
   return (
-    <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-[550px] border border-gray-200 mt-12 mb-12">
+    <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-5xl border border-gray-200 mt-12 mb-12 mx-auto">
       <div className="border-b border-stroke mb-2">
         <AuthLogo />
       </div>
-      <div className="flex flex-col  md:flex-row">
-        {/* Right Column - Edit Form */}
-        <div className="w-full flex-1 space-y-6 md:w-2/3 bg-background">
+      <div className="flex flex-col md:flex-row">
+        {/* Form — full width for 2-column grid inside */}
+        <div className="w-full flex-1 space-y-6 bg-background">
           <h1 className="text-[18px] font-medium text-primaryText md:text-[24px] text-center">
             Register as a Professional
           </h1>
@@ -268,13 +268,14 @@ function AboutForm() {
   };
 
   return (
-    <div className="max-w-2xl border rounded-sm p-4">
-      {/* Business Photos */}
-      <div className="rounded-sm">
-        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+    <div className="max-w-4xl border rounded-sm p-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Business Photos */}
+        <div className="rounded-sm">
+        <h2 className="mb-2 text-[18px]  text-primaryText">
           Add your business photos
         </h2>
-        <label className="flex h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
+        <label className="flex h-[256px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
           {businessImagePreview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -299,12 +300,114 @@ function AboutForm() {
         </label>
       </div>
 
+        {/* Documents */}
+        <div className="rounded-sm ">
+        <h2 className="mb-4 text-[18px]  text-primaryText">
+          Add your documents <span className="text-[11px] text-gray-500 mb-3">Only PDF, JPG, JPEG, PNG files can be accepted</span>
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div>
+            {/* <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Select document type <span className="text-red-500">*</span>
+            </div> */}
+            {/* <p className="text-[13px] text-gray-500 mb-3">
+              Only PDF, JPG, JPEG, PNG files can be accepted
+            </p> */}
+            <CustomSelect
+              dropdownLayout="overlay"
+              value={documentType}
+              options={[
+                {
+                  label: "Driving licence",
+                  value: ProfessionalDocumentType.DRIVING_LICENSE,
+                },
+                {
+                  label: "Passport",
+                  value: ProfessionalDocumentType.PASSPORT,
+                },
+                {
+                  label: "Insurance",
+                  value: ProfessionalDocumentType.INSURANCE,
+                },
+              ]}
+              onChange={(value) => {
+                setDocumentType(value as ProfessionalDocumentType);
+                if (errors.documentType) {
+                  setErrors({ ...errors, documentType: undefined });
+                }
+              }}
+            />
+            {errors.documentType && (
+              <p className="text-red-500 text-[14px]">{errors.documentType}</p>
+            )}
+          </div>
+          <label
+            className={`flex h-[180px] items-center justify-center rounded-lg border-2 border-dashed transition-all md:h-full md:min-h-[180px] ${
+            errors.documentFile
+              ? "border-red-500 bg-red-50"
+              : documentType
+                ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
+                : "border-gray-200 bg-gray-50 cursor-not-allowed"
+          }`}
+          >
+            <div className="text-center">
+              <Upload
+                size={32}
+                className={`mx-auto ${
+                  errors.documentFile
+                    ? "text-red-400"
+                    : documentType
+                      ? "text-slate-400"
+                      : "text-gray-300"
+                }`}
+              />
+              <p
+                className={`mt-2 text-[14px] ${
+                  errors.documentFile
+                    ? "text-red-600"
+                    : documentType
+                      ? "text-slate-600"
+                      : "text-gray-400"
+                }`}
+              >
+                {documentFile ? documentFile.name : "Upload document"}
+              </p>
+              {!documentType && (
+                <p className="mt-1 text-[12px] text-gray-400">
+                  Select document type first
+                </p>
+              )}
+            </div>
+            <input
+              type="file"
+              className="hidden"
+              onChange={(event) => {
+                handleDocumentChange(event);
+                if (errors.documentFile) {
+                  setErrors({ ...errors, documentFile: undefined });
+                }
+              }}
+              disabled={!documentType}
+              accept=".pdf, .jpg, .jpeg, .png, .heic, .heif"
+            />
+          </label>
+          {errors.documentFile && (
+            <p className="text-red-500 text-[14px] mt-2 md:col-span-2">
+              {errors.documentFile}
+            </p>
+          )}
+        </div>
+      </div>
+</div>
+
+
+
       {/* Profile Details */}
       <div className="rounded-sm mt-6">
-        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+        <h2 className="mb-2 text-[18px]  text-primaryText">
           Profile Details
         </h2>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <InputField
               title="Business Name"
@@ -386,7 +489,7 @@ function AboutForm() {
               </p>
             )}
           </div>
-          <div>
+          <div className="md:col-span-2">
             <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText">
               Select profession
             </div>
@@ -442,114 +545,26 @@ function AboutForm() {
               </p>
             )}
           </div>
-          <TextareaField
-            title="About"
-            initialValue={about}
-            onChange={setAbout}
-            rows={6}
-            placeholder="Tell us about your business..."
-          />
+          <div className="md:col-span-2">
+            <TextareaField
+              title="About"
+              initialValue={about}
+              onChange={setAbout}
+              rows={6}
+              placeholder="Tell us about your business..."
+            />
+          </div>
         </div>
       </div>
 
-      {/* Documents */}
-      <div className="rounded-sm mt-6">
-        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
-          Add your business/personal documents
-        </h2>
-        <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
-          Select document type <span className="text-red-500">*</span>
-        </div>
-        <p className="text-[13px] text-gray-500 mb-3">
-          Only PDF files can be accepted
-        </p>
-        <CustomSelect
-          value={documentType}
-          options={[
-            {
-              label: "Driving licence",
-              value: ProfessionalDocumentType.DRIVING_LICENSE,
-            },
-            {
-              label: "Passport",
-              value: ProfessionalDocumentType.PASSPORT,
-            },
-            {
-              label: "Insurance",
-              value: ProfessionalDocumentType.INSURANCE,
-            },
-          ]}
-          onChange={(value) => {
-            setDocumentType(value as ProfessionalDocumentType);
-            if (errors.documentType) {
-              setErrors({ ...errors, documentType: undefined });
-            }
-          }}
-        />
-        {errors.documentType && (
-          <p className="text-red-500 text-[14px]">{errors.documentType}</p>
-        )}
-        <label
-          className={`mt-4 flex h-[150px] items-center justify-center rounded-lg border-2 border-dashed transition-all ${
-            errors.documentFile
-              ? "border-red-500 bg-red-50"
-              : documentType
-                ? "border-slate-300 bg-white hover:bg-slate-50 cursor-pointer"
-                : "border-gray-200 bg-gray-50 cursor-not-allowed"
-          }`}
-        >
-          <div className="text-center">
-            <Upload
-              size={32}
-              className={`mx-auto ${
-                errors.documentFile
-                  ? "text-red-400"
-                  : documentType
-                    ? "text-slate-400"
-                    : "text-gray-300"
-              }`}
-            />
-            <p
-              className={`mt-2 text-[14px] ${
-                errors.documentFile
-                  ? "text-red-600"
-                  : documentType
-                    ? "text-slate-600"
-                    : "text-gray-400"
-              }`}
-            >
-              {documentFile ? documentFile.name : "Upload document"}
-            </p>
-            {!documentType && (
-              <p className="mt-1 text-[12px] text-gray-400">
-                Select document type first
-              </p>
-            )}
-          </div>
-          <input
-            type="file"
-            className="hidden"
-            onChange={(event) => {
-              handleDocumentChange(event);
-              if (errors.documentFile) {
-                setErrors({ ...errors, documentFile: undefined });
-              }
-            }}
-            disabled={!documentType}
-            accept=".pdf"
-          />
-        </label>
-        {errors.documentFile && (
-          <p className="text-red-500 text-[14px] mt-2">{errors.documentFile}</p>
-        )}
-      </div>
+    
 
       {/* Contact */}
       <div className="rounded-sm mt-6">
-        <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
+        <h2 className="mb-4 text-[20px] font-semibold text-primaryText">
           Contact
         </h2>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="mb-2">Phone Number</p>
             <PhoneInput
@@ -562,7 +577,7 @@ function AboutForm() {
               placeholder="Enter your phone number"
               className="phone-input-no-focus"
               style={{
-                height: 58,
+                height: 50,
                 border: "1px solid #1f2933",
                 borderRadius: "6px",
                 paddingLeft: "12px",
@@ -584,12 +599,14 @@ function AboutForm() {
             onChange={setEmail}
             type="email"
           /> */}
-          <InputField
-            title="Website (Optional)"
-            placeholder="Enter web address"
-            initialValue={website}
-            onChange={setWebsite}
-          />
+          <div className="md:col-span-2">
+            <InputField
+              title="Website (Optional)"
+              placeholder="Enter web address"
+              initialValue={website}
+              onChange={setWebsite}
+            />
+          </div>
         </div>
       </div>
 
