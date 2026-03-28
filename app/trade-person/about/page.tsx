@@ -267,7 +267,7 @@ function AboutForm({ user }: AboutFormProps) {
         <h2 className="mb-2 text-[20px] font-semibold text-primaryText">
           Add your business photos
         </h2>
-        <label className="flex h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
+        <label className="flex h-[300px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
           {businessImagePreview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -420,7 +420,7 @@ function AboutForm({ user }: AboutFormProps) {
             Select document type <span className="text-red-500">*</span>
           </div>
           <p className="text-[13px] text-gray-500 mb-3">
-            Only PDF files can be accepted
+            Only PDF, JPG, JPEG, PNG files can be accepted
           </p>
           <CustomSelect
             value={documentType}
@@ -495,7 +495,7 @@ function AboutForm({ user }: AboutFormProps) {
                 }
               }}
               disabled={!documentType}
-              accept=".pdf"
+              accept=".pdf, .jpg, .jpeg, .png, .heic, .heif"
             />
           </label>
           {errors.documentFile && (
