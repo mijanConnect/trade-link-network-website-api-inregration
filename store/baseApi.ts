@@ -27,6 +27,7 @@ export const baseApi = createApi({
     "HiredJobs",
     "ProfessionalProfile",
     "Leads",
+    "Locations",
   ],
   endpoints: () => ({}),
 });

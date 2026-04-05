@@ -20,7 +20,7 @@ export default function NotFound() {
             Go Home
           </Link>
           <Link
-            href="/services"
+            href="/categories"
             className="px-8 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition w-[200px]"
           >
             Browse Services

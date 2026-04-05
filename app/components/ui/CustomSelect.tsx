@@ -13,10 +13,12 @@ interface CustomSelectProps {
   label?: string;
   header?: string;
   placeholder?: string;
+  searchPlaceholder?: string;
   value?: string | null;
   onChange?: (value: string) => void;
   disabled?: boolean;
   required?: boolean;
+  searchable?: boolean;
   /**
    * "expand" — options push layout height (default).
    * "overlay" — options float below the trigger; parent height stays fixed.
@@ -29,16 +31,31 @@ export function CustomSelect({
   label,
   header,
   placeholder = "Please select",
+  searchPlaceholder = "Search options...",
   value,
   onChange,
   disabled = false,
   required = false,
+  searchable = false,
   dropdownLayout = "expand",
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [internalValue, setInternalValue] = useState<string | null>(null);
   const selected = value ?? internalValue;
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const filteredOptions = searchable
+    ? options.filter((option) =>
+        option.label.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+    : options;
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchTerm("");
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || dropdownLayout !== "overlay") return;
@@ -61,25 +78,42 @@ export function CustomSelect({
           {header}
         </div>
       )}
+      {searchable && (
+        <div className="p-3 border-b border-gray-200">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder={searchPlaceholder}
+            className="w-full h-10 px-3 text-sm text-primaryText border border-primaryTextLight rounded-sm outline-none focus:border-primary"
+          />
+        </div>
+      )}
       <div className="max-h-[250px] overflow-y-auto">
-        {options.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => {
-              setInternalValue(option.value);
-              onChange?.(option.value);
-              setIsOpen(false);
-            }}
-            className={`w-full px-5 py-1 lg:py-2 text-[14px] lg:text-[16px] text-left transition-colors transform duration-100 ${
-              selected === option.value
-                ? "bg-primary text-white font-semibold"
-                : "text-primaryText hover:bg-primary hover:text-white"
-            }`}
-          >
-            {option.label}
-          </button>
-        ))}
+        {filteredOptions.length ? (
+          filteredOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => {
+                setInternalValue(option.value);
+                onChange?.(option.value);
+                setIsOpen(false);
+              }}
+              className={`w-full px-5 py-1 lg:py-2 text-[14px] lg:text-[16px] text-left transition-colors transform duration-100 ${
+                selected === option.value
+                  ? "bg-primary text-white font-semibold"
+                  : "text-primaryText hover:bg-primary hover:text-white"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))
+        ) : (
+          <div className="px-5 py-3 text-sm text-gray-500">
+            No options found
+          </div>
+        )}
       </div>
     </div>
   );
@@ -135,25 +169,42 @@ export function CustomSelect({
                 {header}
               </div>
             )}
+            {searchable && (
+              <div className="p-3 border-b border-gray-200">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full h-10 px-3 text-sm text-primaryText border border-primaryTextLight rounded-sm outline-none focus:border-primary"
+                />
+              </div>
+            )}
             <div className="max-h-[250px] overflow-y-auto">
-              {options.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    setInternalValue(option.value);
-                    onChange?.(option.value);
-                    setIsOpen(false);
-                  }}
-                  className={`w-full px-5 py-1 lg:py-2 text-[14px] lg:text-[16px] text-left transition-colors transform duration-100 ${
-                    selected === option.value
-                      ? "bg-primary text-white font-semibold"
-                      : "text-primaryText hover:bg-primary hover:text-white"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
+              {filteredOptions.length ? (
+                filteredOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => {
+                      setInternalValue(option.value);
+                      onChange?.(option.value);
+                      setIsOpen(false);
+                    }}
+                    className={`w-full px-5 py-1 lg:py-2 text-[14px] lg:text-[16px] text-left transition-colors transform duration-100 ${
+                      selected === option.value
+                        ? "bg-primary text-white font-semibold"
+                        : "text-primaryText hover:bg-primary hover:text-white"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))
+              ) : (
+                <div className="px-5 py-3 text-sm text-gray-500">
+                  No options found
+                </div>
+              )}
             </div>
           </div>
         </div>

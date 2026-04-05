@@ -308,6 +308,18 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href="/categories"
+              className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
+                isActive("/categories")
+                  ? "text-blue active"
+                  : "text-primaryTextLight"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              Categories
+            </Link>
+
+            <Link
               href="/services"
               className={`nav-link py-1 transform transition-all text-[16px] font-normal ${
                 isActive("/services")

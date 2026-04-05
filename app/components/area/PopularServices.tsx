@@ -8,7 +8,7 @@ export default function PopularServices() {
     <>
       <div>
         <div className="mt-6 lg:mt-8">
-          <ServiceList categories={data || []} route="services" />
+          <ServiceList categories={data || []} route="categories" />
         </div>
       </div>
     </>
