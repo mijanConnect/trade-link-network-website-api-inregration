@@ -104,7 +104,7 @@ export default function ServiceLocationSelector({
         />
 
         <CustomSelect
-          label="County"
+          label="County (optional)"
           placeholder="Select county"
           searchPlaceholder="Search counties..."
           searchable
@@ -123,7 +123,7 @@ export default function ServiceLocationSelector({
         />
 
         <CustomSelect
-          label="City"
+          label="City (optional)"
           placeholder="Select city"
           searchPlaceholder="Search cities..."
           searchable
@@ -141,7 +141,7 @@ export default function ServiceLocationSelector({
         />
 
         <CustomSelect
-          label="Town"
+          label="Town (optional)"
           placeholder="Select town"
           searchPlaceholder="Search towns..."
           searchable
