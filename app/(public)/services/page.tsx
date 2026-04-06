@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import AOS from "aos";
-import Button from "@/app/components/ui/Button";
 import Breadcrumb from "@/app/components/services/Breadcrumb";
 import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
 import CategoryServicesCard from "@/app/components/services/CategoryServicesCard";
@@ -33,9 +31,9 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gray-50 text-white">
+      <div className="bg-gray-100">
         <div className="container mx-auto px-4 py-16 lg:py-24 text-center">
           <h1
             data-aos="fade-up"
@@ -101,7 +99,7 @@ export default function ServicesPage() {
         </div>
 
         {/* How It Works Section */}
-        <div className="bg-white rounded-lg shadow-md p-8 lg:p-12 my-16">
+        {/* <div className="bg-white rounded-lg shadow-md p-8 lg:p-12 my-16">
           <h2
             data-aos="fade-up"
             className="text-3xl lg:text-4xl font-bold text-primaryText mb-12 text-center"
@@ -160,10 +158,10 @@ export default function ServicesPage() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* CTA Section */}
-        <div
+        {/* <div
           data-aos="fade-up"
           className="bg-primary text-white rounded-lg p-8 lg:p-12 text-center"
         >
@@ -179,7 +177,7 @@ export default function ServicesPage() {
               Post a Job Now
             </Button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

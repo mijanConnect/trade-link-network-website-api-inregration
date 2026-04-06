@@ -143,7 +143,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await fetchServiceLocationData(service, location);
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk";
   const canonicalUrl = `${baseUrl}/services/${service}/${location}`;
 
   if (!data) {
@@ -248,13 +248,13 @@ export default async function ServiceLocationPage({ params }: Props) {
                 provider: {
                   "@type": "LocalBusiness",
                   name: "TradeLink Network",
-                  url: "https://tradelink.network",
+                  url: "https://www.tradelinknetwork.co.uk",
                 },
                 areaServed: {
                   "@type": "AdministrativeArea",
                   name: locationData.name,
                 },
-                image: `${process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network"}/og-image.jpg`,
+                image: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk"}/assets/hero-2.webp`,
               },
               {
                 "@type": "BreadcrumbList",
@@ -263,27 +263,27 @@ export default async function ServiceLocationPage({ params }: Props) {
                     "@type": "ListItem",
                     position: 1,
                     name: "Home",
-                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network"}`,
+                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk"}`,
                   },
                   {
                     "@type": "ListItem",
                     position: 2,
                     name: "Services",
-                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network"}/services`,
+                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk"}/services`,
                   },
                   ...(locationData.hierarchy
                     ? locationData.hierarchy.map((item, index) => ({
                         "@type": "ListItem",
                         position: 3 + index,
                         name: item.name,
-                        item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network"}/areas/${item.slug}`,
+                        item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk"}/areas/${item.slug}`,
                       }))
                     : []),
                   {
                     "@type": "ListItem",
                     position: (locationData.hierarchy?.length || 0) + 3,
                     name: serviceData.name,
-                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://tradelink.network"}/services/${service}/${location}`,
+                    item: `${process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk"}/services/${service}/${location}`,
                   },
                 ],
               },
@@ -328,25 +328,25 @@ export default async function ServiceLocationPage({ params }: Props) {
               </h2>
               <ul className="space-y-4 text-primaryTextLight">
                 <li className="flex items-start">
-                  <span className="text-blue-600 font-bold mr-3">✓</span>
+                  <span className="text-primary font-bold mr-3">✓</span>
                   <span>
                     All professionals are verified and have proven track records
                   </span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 font-bold mr-3">✓</span>
+                  <span className="text-primary font-bold mr-3">✓</span>
                   <span>Get up to 3 competitive quotes for comparison</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 font-bold mr-3">✓</span>
+                  <span className="text-primary font-bold mr-3">✓</span>
                   <span>Post your job for free - no hidden charges</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 font-bold mr-3">✓</span>
+                  <span className="text-primary font-bold mr-3">✓</span>
                   <span>Local professionals - serving {locationData.name}</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-blue-600 font-bold mr-3">✓</span>
+                  <span className="text-primary font-bold mr-3">✓</span>
                   <span>
                     Customer reviews and ratings help you choose the best
                   </span>
@@ -355,7 +355,7 @@ export default async function ServiceLocationPage({ params }: Props) {
             </div>
 
             {/* How It Works */}
-            <div className="bg-white rounded-lg shadow-md p-8 mb-8">
+            {/* <div className="bg-white rounded-lg shadow-md p-8 mb-8">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
                 How It Works
               </h2>
@@ -397,7 +397,7 @@ export default async function ServiceLocationPage({ params }: Props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Local Notes */}
             {content.localNotes && (
@@ -477,13 +477,13 @@ export default async function ServiceLocationPage({ params }: Props) {
                 </h3>
                 <Link
                   href="/contact-us"
-                  className="text-blue-600 hover:underline block mb-2"
+                  className="text-primary hover:underline block mb-2"
                 >
-                  Contact Support
+                  Support Centre
                 </Link>
                 <Link
                   href="/faq"
-                  className="text-blue-600 hover:underline block"
+                  className="text-primary hover:underline block"
                 >
                   View FAQ
                 </Link>

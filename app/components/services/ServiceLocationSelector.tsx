@@ -156,8 +156,8 @@ export default function ServiceLocationSelector({
         />
       </div>
 
-      <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50 p-4">
-        <p className="text-sm text-blue-800">
+      <div className="mt-6 rounded-lg border border-primary/20 bg-primary/10 p-4">
+        <p className="text-sm text-primaryTextLight">
           <span className="font-semibold">Selected:</span>{" "}
           {[region?.name, county?.name, city?.name, town?.name]
             .filter(Boolean)
@@ -172,19 +172,13 @@ export default function ServiceLocationSelector({
               ? `/services/${serviceSlug}/${selectedLocationSlug}`
               : "#"
           }
-          className={`inline-flex h-11 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors ${
+          className={`inline-flex h-13 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors ${
             canContinue
               ? "bg-primary text-white hover:opacity-90"
               : "bg-gray-200 text-gray-500 pointer-events-none"
           }`}
         >
           Continue with this location
-        </Link>
-        <Link
-          href="/services"
-          className="text-sm text-blue-600 hover:underline"
-        >
-          Back to all services
         </Link>
       </div>
     </div>
