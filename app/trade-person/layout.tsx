@@ -8,10 +8,14 @@ export const metadata: Metadata = {
   title: "Trade Person Dashboard | TradeLink Network",
   description:
     "Manage leads, responses, and your trade profile on TradeLink Network.",
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: false },
 };
 
-export default function TradePersonLayout({ children }: { children: ReactNode }) {
+export default function TradePersonLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
     <div className="min-h-screen bg-[#F7F9FB]">
       <ProfileCheckModal />

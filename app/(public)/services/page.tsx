@@ -34,17 +34,17 @@ export default function ServicesPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="bg-gray-100">
-        <div className="container mx-auto px-4 py-16 lg:py-24 text-center">
+        <div className="container mx-auto px-4 py-8 lg:py-24 text-center">
           <h1
             data-aos="fade-up"
-            className="text-3xl lg:text-5xl font-bold mb-4 text-black"
+            className="text-2xl lg:text-5xl font-bold mb-4 text-black"
           >
             Professional Services Near You
           </h1>
           <p
             data-aos="fade-up"
             data-aos-delay="100"
-            className="text-lg lg:text-xl opacity-90 max-w-2xl mx-auto text-primary"
+            className="text-md lg:text-xl opacity-90 max-w-2xl mx-auto text-primary"
           >
             Find trusted, verified trade professionals for all your service
             needs. Get instant quotes and compare professionals in your area.
@@ -53,7 +53,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8 lg:py-16">
         {/* Breadcrumb Navigation */}
         <div className="mb-6">
           <Breadcrumb
@@ -64,7 +64,7 @@ export default function ServicesPage() {
           />
         </div>
         {/* Categories and Services Section */}
-        <div className="mb-16">
+        <div>
           {/* <h2
             data-aos="fade-up"
             className="text-3xl lg:text-4xl font-bold text-primaryText mb-4 text-center"

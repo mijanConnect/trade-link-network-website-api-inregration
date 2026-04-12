@@ -79,10 +79,10 @@ export default function HowItWorksPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className=" py-12 lg:py-20 px-4">
+      <section className=" py-8 lg:py-16 px-4">
         <div className="container mx-auto text-center">
           <h1
-            className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
