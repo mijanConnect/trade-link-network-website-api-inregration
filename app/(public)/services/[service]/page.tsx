@@ -33,8 +33,8 @@ export default async function ServiceLocationsPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-gray-100 text-white">
-        <div className="container mx-auto px-4 py-14 lg:py-18 text-center">
-          <h1 className="text-3xl lg:text-5xl font-bold mb-3 text-black">
+        <div className="container mx-auto px-4 py-8 lg:py-18 text-center">
+          <h1 className="text-2xl lg:text-5xl font-bold mb-3 text-black">
             {serviceName} Services
           </h1>
           <p className="text-base lg:text-lg opacity-90 max-w-3xl text-primary text-center mx-auto">
@@ -44,7 +44,7 @@ export default async function ServiceLocationsPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 lg:py-16">
+      <div className="container mx-auto px-4 py-8 lg:py-16">
         {/* Breadcrumb Navigation */}
         <div className="bg-gray-50 mb-6">
           <Breadcrumb

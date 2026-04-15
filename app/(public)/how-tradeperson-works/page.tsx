@@ -92,17 +92,17 @@ export default function HowTradepersonWorkPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-16 lg:py-20 px-4">
+      <section className="py-8 lg:py-16 px-4">
         <div className="container mx-auto text-center">
           <h1
-            className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6"
+            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             Grow Your Business With <br /> Quality Job Leads
           </h1>
           <p
-            className="text-lg text-gray-700 max-w-3xl mx-auto mb-2"
+            className="text-md lg:text-lg text-gray-700 max-w-3xl mx-auto mb-2"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
@@ -112,7 +112,7 @@ export default function HowTradepersonWorkPage() {
             work. Just real opportunities delivered to you.
           </p>
           <p
-            className="text-lg text-gray-700 max-w-3xl mx-auto"
+            className="text-md lg:text-lg text-gray-700 max-w-3xl mx-auto"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
@@ -124,21 +124,21 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Why Join Us Section */}
-      <section className="bg-white py-16 lg:py-24 px-4">
+      <section className="bg-white py-8 lg:py-24 px-4">
         <div className="container mx-auto">
           <h2
-            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-12"
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-6 lg:mb-12"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             Why Join Us?
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8 mx-auto">
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="rounded-md p-8 border hover:shadow-md transition-shadow"
+                className="rounded-md p-4 lg:p-8 border hover:shadow-md transition-shadow"
                 data-aos="fade-up"
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 100}
@@ -169,10 +169,10 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-16 lg:py-24 px-4">
+      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-8 lg:py-16 px-4">
         <div className="container mx-auto">
           <h2
-            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
+            className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
@@ -187,7 +187,7 @@ export default function HowTradepersonWorkPage() {
             Five simple steps to start receiving job leads
           </p>
 
-          <div className="space-y-8">
+          <div className="space-y-6 lg:space-y-8">
             {steps.map((step) => (
               <div
                 key={step.number}
@@ -196,7 +196,7 @@ export default function HowTradepersonWorkPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={step.number * 100}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center max-w-4xl mx-auto">
                   {/* Step Number Circle */}
                   <div className="lg:col-span-2 flex justify-center lg:justify-start">
                     <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl lg:text-3xl shadow-lg">
@@ -206,7 +206,7 @@ export default function HowTradepersonWorkPage() {
 
                   {/* Step Content */}
                   <div className="lg:col-span-10">
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-8">
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">
                         {step.title}
                       </h3>
@@ -223,7 +223,7 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* SEO Content Section */}
-      <section className="py-12 lg:py-28 px-4 bg-gray-50">
+      <section className="py-8 lg:py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <div className="">
             <h2
@@ -262,7 +262,7 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Who Can Join Section */}
-      <section className="py-16 lg:py-24 px-4 bg-white">
+      <section className="py-8 lg:py-16 px-4 bg-white">
         <div className="container mx-auto max-w-4xl">
           <h2
             className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
@@ -299,7 +299,7 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Requirements Section */}
-      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-16 lg:py-24 px-4">
+      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-8 lg:py-16 px-4">
         <div className="container mx-auto max-w-4xl">
           <h2
             className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
@@ -347,7 +347,7 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary py-16 lg:py-20 px-4">
+      <section className="bg-primary py-8 lg:py-16 px-4">
         <div className="container mx-auto text-center">
           <h2
             className="text-3xl lg:text-4xl font-bold text-white mb-4"

@@ -33,7 +33,7 @@ export default function Services() {
           data-aos="fade-up"
           className="text-[24px] lg:text-[48px] font-semibold text-primaryText mb-4 lg:mb-6 text-center"
         >
-          Services
+          Categories
         </h2>
 
         <h3
@@ -41,7 +41,7 @@ export default function Services() {
           data-aos-delay="100"
           className="text-[20px] lg:text-[32px] font-bold text-center text-primaryTextLight max-w-[800px] mx-auto"
         >
-          Choose the service you need and get matched with trusted, verified
+          Choose the category you need and get matched with trusted, verified
           local tradespeople.
         </h3>
 

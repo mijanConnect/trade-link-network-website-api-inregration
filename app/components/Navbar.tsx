@@ -340,7 +340,7 @@ export default function Navbar() {
               }`}
               onClick={() => setOpen(false)}
             >
-              For Homeowners
+              Homeowners
             </Link>
 
             <Link
@@ -352,7 +352,7 @@ export default function Navbar() {
               }`}
               onClick={() => setOpen(false)}
             >
-              For Tradespeople
+              Tradeperson
             </Link>
 
             <Link
@@ -523,6 +523,18 @@ export default function Navbar() {
                 </Link>
 
                 <Link
+                  href="/categories"
+                  className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
+                    isActive("/categories")
+                      ? "text-blue active"
+                      : "text-primaryTextLight"
+                  }`}
+                  onClick={handleClose}
+                >
+                  Categories
+                </Link>
+
+                <Link
                   href="/services"
                   className={`nav-link py-4 text-[16px] font-normal transition-all border-b ${
                     isActive("/services")
@@ -543,7 +555,7 @@ export default function Navbar() {
                   }`}
                   onClick={handleClose}
                 >
-                  For Homeowners
+                  Homeowners
                 </Link>
 
                 <Link
@@ -555,7 +567,7 @@ export default function Navbar() {
                   }`}
                   onClick={handleClose}
                 >
-                  For Tradespeople
+                  Tradeperson
                 </Link>
 
                 <Link
