@@ -4,9 +4,8 @@ import Button from "@/app/components/ui/Button";
 import Breadcrumb from "@/app/components/services/Breadcrumb";
 import ServiceLocationDynamicContent from "@/app/components/services/ServiceLocationDynamicContent";
 
-// Build this route with static content and param-based text.
-export const dynamic = "force-dynamic";
 export const dynamicParams = true;
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{
@@ -75,22 +74,13 @@ async function fetchDynamicServiceLocationSeo(
   }
 }
 
-// 📊 Static Generation - Pre-generate popular service + location combinations
+// 📊 Static Generation - Disabled for this high-cardinality route
+// Since dynamicParams is true, routes will be rendered on-demand with ISR caching
 export async function generateStaticParams() {
-  const serviceLocationCombos = [
-    { service: "roofing", location: "essex" },
-    { service: "roofing", location: "chelmsford" },
-    { service: "roofing", location: "manchester" },
-    { service: "electrician", location: "essex" },
-    { service: "electrician", location: "manchester" },
-    { service: "plumbing", location: "essex" },
-    { service: "plumbing", location: "manchester" },
-    { service: "carpentry", location: "essex" },
-    { service: "painting", location: "manchester" },
-    { service: "heating-cooling", location: "essex" },
-  ];
-
-  return serviceLocationCombos;
+  // Return empty array to disable static generation for all combinations
+  // This prevents build-time errors from generating too many routes
+  console.log("ℹ️ Dynamic route - serving on-demand with ISR");
+  return [];
 }
 
 // ⚡ SEO Meta Generation
@@ -273,28 +263,60 @@ export default async function ServiceLocationPage({ params }: Props) {
               </Link>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
-              <h2 className="text-2xl font-bold text-primaryText mb-4">
-                Core {pageData.serviceName} Service Description
-              </h2>
-              <p className="text-primaryTextLight">
-                {pageData.coreDescription}
-              </p>
-            </div>
+            {dynamicData?.service?.description && (
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+                <h2 className="text-2xl font-bold text-primaryText mb-4">
+                  {pageData.serviceName} Description
+                </h2>
+                <p className="text-primaryTextLight">
+                  {dynamicData.service.description}
+                </p>
+              </div>
+            )}
 
-            <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
-              <h2 className="text-2xl font-bold text-primaryText mb-4">
-                Detailed Service Information
-              </h2>
-              <ul className="space-y-3 text-primaryTextLight">
-                {pageData.detailedInfo.map((item) => (
-                  <li key={item} className="flex items-start">
-                    <span className="text-primary font-bold mr-3">•</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {dynamicData?.service?.detailedDescription &&
+            dynamicData.service.detailedDescription.length > 0 ? (
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+                <h2 className="text-2xl font-bold text-primaryText mb-4">
+                  Detailed Service Information
+                </h2>
+                <ul className="space-y-3 text-primaryTextLight">
+                  {dynamicData.service.detailedDescription.map(
+                    (item: string) => (
+                      <li key={item} className="flex items-start">
+                        <span className="text-primary font-bold mr-3">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+                <h2 className="text-2xl font-bold text-primaryText mb-4">
+                  Core {pageData.serviceName} Service Description
+                </h2>
+                <p className="text-primaryTextLight">
+                  {pageData.coreDescription}
+                </p>
+              </div>
+            )}
+
+            {!dynamicData?.service?.description && (
+              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+                <h2 className="text-2xl font-bold text-primaryText mb-4">
+                  Detailed Service Information Fallback
+                </h2>
+                <ul className="space-y-3 text-primaryTextLight">
+                  {pageData.detailedInfo.map((item: string) => (
+                    <li key={item} className="flex items-start">
+                      <span className="text-primary font-bold mr-3">•</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
