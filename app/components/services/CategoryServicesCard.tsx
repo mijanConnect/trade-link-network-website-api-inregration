@@ -42,13 +42,13 @@ export default function CategoryServicesCard({
     <div
       data-aos="fade-up"
       data-aos-delay={index * 50}
-      className="group bg-white rounded-xl border border-gray-200 p-5 lg:p-6 w-full transition-all duration-300 hover:border-blue-300 hover:shadow-md"
+      className="group bg-white rounded-xl border border-gray-200 p-5 lg:p-6 w-full transition-all duration-300 hover:border-primary hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-3 mb-5">
         <h3 className="font-semibold text-primaryText text-lg leading-snug">
           {category?.title || category?.name || "Category"}
         </h3>
-        <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+        <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
           {services.length} services
         </span>
       </div>
@@ -66,7 +66,7 @@ export default function CategoryServicesCard({
             <li key={service._id}>
               <Link
                 href={`/services/${service?.slug || toSlug(service?.name || "service")}`}
-                className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200"
+                className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 hover:border-primary hover:bg-primary/10 hover:text-primary transition-all duration-200"
               >
                 <span>{service?.name || "Service"}</span>
                 <svg

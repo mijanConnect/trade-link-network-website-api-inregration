@@ -22,6 +22,7 @@ export const baseApi = createApi({
   tagTypes: [
     "Profile",
     "Categories",
+    "Services",
     "PendingJobs",
     "InterestedJobs",
     "HiredJobs",

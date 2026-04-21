@@ -234,10 +234,10 @@ export default function ContactUsPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-12 lg:py-20 px-4">
+      <section className="py-8 lg:py-20 px-4">
         <div className="container mx-auto text-center">
           <h1
-            className="text-3xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
@@ -333,7 +333,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* Phone & Company Info Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
+      <section className="py-8 lg:py-24 px-4 bg-gary-50">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8  mx-auto">
             {/* Phone Support */}
@@ -600,23 +600,6 @@ export default function ContactUsPage() {
         </div>
       </section>
 
-      {/* Privacy Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
-                Your Privacy
-              </h3>
-              <p className="text-gray-700 text-sm lg:text-md lg:text-lg">
-                Your details are used only to respond to your enquiry and are
-                handled securely in line with UK data protection regulations.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Why Contact Section */}
       <section className="bg-linear-to-br from-gray-50 to-gray-100 py-10 lg:py-24 px-4">
         <div className="container mx-auto">
@@ -655,6 +638,23 @@ export default function ContactUsPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Privacy Section */}
+      <section className="py-8 lg:py-24 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
+                Your Privacy
+              </h3>
+              <p className="text-gray-700 text-sm lg:text-md lg:text-lg">
+                Your details are used only to respond to your enquiry and are
+                handled securely in line with UK data protection regulations.
+              </p>
+            </div>
           </div>
         </div>
       </section>
