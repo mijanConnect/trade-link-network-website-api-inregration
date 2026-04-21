@@ -18,6 +18,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.xml",
+        destination:
+          "https://api.tradelinknetwork.co.uk/api/v1/analytics/sitemap.xml",
+      },
+      {
+        source: "/sitemap/:path*",
+        destination:
+          "https://api.tradelinknetwork.co.uk/api/v1/analytics/sitemap/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
