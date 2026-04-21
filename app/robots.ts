@@ -7,39 +7,6 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-<<<<<<< HEAD
-        userAgent: "*",
-        allow: ["/"],
-        disallow: [
-          "/api/",
-          "/admin/",
-          "/*.json$",
-          "/*?*sort=",
-          "/*?*filter=",
-          "/login",
-          "/register",
-          "/professional-register",
-          "/forgot-password",
-          "/update-password",
-          "/verify-otp",
-          "/verify-register-otp",
-          "/post-service",
-          "/my-jobs",
-          "/profile",
-          "/provider-profile",
-        ],
-      },
-      {
-        userAgent: "AdsBot-Google",
-        allow: ["/"],
-      },
-      {
-        userAgent: "GoogleBot",
-        allow: ["/"],
-      },
-    ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-=======
         // Allow all major search engines and crawlers
         userAgent: ["Googlebot", "Bingbot", "Slurp", "DuckDuckBot"],
         allow: ["/"],
@@ -119,6 +86,5 @@ export default function robots(): MetadataRoute.Robots {
 
     // Host specification
     host: baseUrl,
->>>>>>> 9649d9468c6701b784c3c8918e78f9de023c9a03
   };
 }
