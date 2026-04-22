@@ -184,12 +184,12 @@ function AboutForm() {
     if (selectedProfessions.length === 0) {
       newErrors.selectedProfessions = "Please select at least one profession";
     }
-    if (!documentType) {
-      newErrors.documentType = "Please select a document type";
-    }
-    if (!documentFile) {
-      newErrors.documentFile = "Please upload a document";
-    }
+    // if (!documentType) {
+    //   newErrors.documentType = "Please select a document type";
+    // }
+    // if (!documentFile) {
+    //   newErrors.documentFile = "Please upload a document";
+    // }
 
     // If there are errors, show them and stop
     if (Object.keys(newErrors).length > 0) {
