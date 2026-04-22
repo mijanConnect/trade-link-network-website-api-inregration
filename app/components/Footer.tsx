@@ -6,7 +6,7 @@ import { LogoNav } from "./Svg";
 import ContactUs from "./ui/ContactUs";
 import { Facebook, Instagram } from "lucide-react";
 import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
-import { Button } from "@/components/ui/button";
+import Button from "./ui/Button";
 
 export default function Footer() {
   const [isContactOpen, setIsContactOpen] = useState(false);

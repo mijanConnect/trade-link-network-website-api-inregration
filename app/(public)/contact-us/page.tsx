@@ -7,6 +7,8 @@ import { z } from "zod";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useUserDataSendAdminMutation } from "@/store/slice/contactUsSlice";
+import Button from "@/app/components/ui/Button";
+import InputField from "@/app/components/ui/InputField";
 
 type EmailContact = {
   title: string;
@@ -429,27 +431,17 @@ export default function ContactUsPage() {
               className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-8"
             >
               <div className="space-y-4 lg:space-y-6">
-                {/* Full Name */}
                 <div>
-                  <label
-                    htmlFor="fullName"
-                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
-                  >
-                    Full name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
+                  <InputField
+                    title="Full name"
                     name="fullName"
-                    required
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
-                      validationErrors.name
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
                     placeholder="Enter your full name"
+                    type="text"
+                    initialValue={formData.fullName}
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, fullName: value }))
+                    }
+                    required
                   />
                   {validationErrors.name && (
                     <p className="mt-1 text-sm text-red-500">
@@ -460,25 +452,16 @@ export default function ContactUsPage() {
 
                 {/* Email */}
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
-                  >
-                    Email address <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
+                  <InputField
+                    title="Email address"
                     name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
-                      validationErrors.email
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
                     placeholder="Enter your email address"
+                    type="email"
+                    initialValue={formData.email}
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, email: value }))
+                    }
+                    required
                   />
                   {validationErrors.email && (
                     <p className="mt-1 text-sm text-red-500">
@@ -489,45 +472,30 @@ export default function ContactUsPage() {
 
                 {/* Phone */}
                 <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
-                  >
-                    Phone number{" "}
-                    <span className="text-gray-500">(optional)</span>
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
+                  <InputField
+                    title="Phone number (optional)"
                     name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 lg:py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg"
                     placeholder="Enter your phone number"
+                    type="tel"
+                    initialValue={formData.phone}
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, phone: value }))
+                    }
                   />
                 </div>
 
                 {/* Subject */}
                 <div>
-                  <label
-                    htmlFor="subject"
-                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
-                  >
-                    Subject <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
+                  <InputField
+                    title="Subject"
                     name="subject"
-                    required
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg ${
-                      validationErrors.subject
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
                     placeholder="Enter message subject"
+                    type="text"
+                    initialValue={formData.subject}
+                    onChange={(value) =>
+                      setFormData((prev) => ({ ...prev, subject: value }))
+                    }
+                    required
                   />
                   {validationErrors.subject && (
                     <p className="mt-1 text-sm text-red-500">
@@ -540,9 +508,9 @@ export default function ContactUsPage() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-sm lg:text-lg font-medium text-gray-900 mb-2"
+                    className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1"
                   >
-                    Message <span className="text-red-500">*</span>
+                    Message <span className="text-red-500 ml-1">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -551,11 +519,7 @@ export default function ContactUsPage() {
                     rows={6}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-2 lg:py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm lg:text-lg resize-vertical ${
-                      validationErrors.message
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
+                    className="w-full rounded-sm border border-primaryTextLight bg-transparent px-5 py-3 text-[16px] lg:text-[14px] text-primaryText outline-none transition focus:border-primary focus:ring-1 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-gray-100 resize-vertical"
                     placeholder="Enter your message"
                   />
                   {validationErrors.message && (
@@ -566,34 +530,36 @@ export default function ContactUsPage() {
                 </div>
 
                 {/* Privacy Consent */}
-                <div className="flex items-start">
-                  <input
-                    type="checkbox"
-                    id="privacyConsent"
-                    name="privacyConsent"
-                    required
-                    checked={formData.privacyConsent}
-                    onChange={handleInputChange}
-                    className="mt-1 mr-3 w-4 h-4 text-primary border-gray-200 rounded focus:ring-primary"
-                  />
-                  <label
-                    htmlFor="privacyConsent"
-                    className="text-sm lg:text-lg text-gray-700"
-                  >
-                    I consent to the processing of my personal data in
-                    accordance with the privacy policy.{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
+                <div className="w-full space-y-3">
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      id="privacyConsent"
+                      name="privacyConsent"
+                      required
+                      checked={formData.privacyConsent}
+                      onChange={handleInputChange}
+                      className="mt-3 w-4 h-4 rounded border-primaryTextLight bg-transparent text-primary focus:ring-1 focus:ring-primary/20 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="privacyConsent"
+                      className="text-[14px] lg:text-[16px] text-primaryText leading-relaxed flex-1 pt-2"
+                    >
+                      I consent to the processing of my personal data in
+                      accordance with the privacy policy.
+                      <span className="text-red-500 ml-1">*</span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* Submit Button */}
-                <button
+                <Button
                   type="submit"
                   disabled={isSubmitting || isLoading}
-                  className="w-full bg-primary text-white font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-opacity-90 transition-colors text-lg shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="font-bold w-full lg:w-full"
                 >
                   {isSubmitting || isLoading ? "Sending..." : "Send Message"}
-                </button>
+                </Button>
               </div>
             </form>
           </div>
@@ -661,7 +627,7 @@ export default function ContactUsPage() {
 
       {/* CTA Section */}
       <section className="bg-primary py-10 lg:py-20 px-4">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center flex flex-col items-center">
           <h2 className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-4">
             Need Quick Answers?
           </h2>
@@ -669,12 +635,13 @@ export default function ContactUsPage() {
             Visit our Frequently Asked Questions page for common queries and
             guidance.
           </p>
-          <button
+          <Button
+            className="font-bold w-48"
+            variant="secondary"
             onClick={() => router.push("/faq")}
-            className="bg-white text-primary font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-blue-50 transition-colors text-lg shadow-lg cursor-pointer"
           >
             Visit FAQ Page
-          </button>
+          </Button>
         </div>
       </section>
     </main>

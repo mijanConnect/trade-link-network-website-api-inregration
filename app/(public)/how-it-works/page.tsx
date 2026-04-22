@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Button from "@/app/components/ui/Button";
 
 export default function HowItWorksPage() {
   const router = useRouter();
@@ -79,17 +80,17 @@ export default function HowItWorksPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className=" py-8 lg:py-16 px-4">
+      <section className=" py-8 lg:py-16 px-4 bg-primary">
         <div className="container mx-auto text-center">
           <h1
-            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            className="text-2xl lg:text-5xl font-bold text-white mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             HOW IT WORKS
           </h1>
           <p
-            className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6"
+            className="text-md lg:text-2xl font-semibold text-white mb-2 lg:mb-6"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
@@ -97,7 +98,7 @@ export default function HowItWorksPage() {
             Simple. Fast. Stress-Free.
           </p>
           <p
-            className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto"
+            className="text-sm lg:text-lg text-white max-w-2xl mx-auto"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
@@ -109,9 +110,9 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Steps Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
+      <section className="py-8 lg:py-24 px-4">
         <div className="container mx-auto">
-          <div className="space-y-6 lg:space-y-12">
+          <div className="space-y-6 lg:space-y-8">
             {steps.map((step) => (
               <div
                 key={step.number}
@@ -120,17 +121,17 @@ export default function HowItWorksPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={step.number * 100}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-lg hover:scale-101 transition-all duration-300 ease-out">
                   {/* Step Number Circle */}
-                  <div className="lg:col-span-1 flex justify-center lg:justify-start">
-                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl lg:text-3xl shadow-lg">
+                  <div className="lg:col-span-1 h-full flex justify-center lg:justify-start">
+                    <div className="w-full bg-primary rounded-t-sm lg:rounded-l-sm flex items-start p-4 lg:pt-4 justify-center text-white font-bold text-2xl lg:text-5xl shadow-lg">
                       {String(step.number).padStart(2, "0")}
                     </div>
                   </div>
 
                   {/* Step Content */}
-                  <div className="lg:col-span-11">
-                    <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+                  <div className="lg:col-span-11 p-4 lg:p-6">
+                    <div className="">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                         {step.title}
                       </h3>
@@ -181,7 +182,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* SEO Content Section */}
-      <section className="pb-12 lg:pb-28 px-4 bg-white">
+      <section className="p-12 lg:p-28 px-4 bg-white">
         <div className="container mx-auto">
           <div className="">
             <h2
@@ -192,7 +193,7 @@ export default function HowItWorksPage() {
               How Trade Link Network Helps <br /> Homeowners Find Trusted
               Tradespeople
             </h2>
-            <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg max-w-4xl mx-auto">
+            <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg mx-auto">
               <p
                 className="leading-relaxed"
                 data-aos="fade-up"
@@ -242,11 +243,11 @@ export default function HowItWorksPage() {
             Discover what makes our service the preferred choice
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mx-auto">
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg p-4 lg:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+                className="bg-white p-4 lg:p-6 rounded-sm shadow-sm hover:shadow-md transition-shadow duration-300 ease-out"
                 data-aos="fade-up"
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 100}
@@ -254,7 +255,7 @@ export default function HowItWorksPage() {
                 <div className="flex items-start">
                   <div className="shrink-0">
                     <svg
-                      className="w-6 h-6 text-green-500 mt-1"
+                      className="w-6 h-6 text-primary mt-1"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -279,7 +280,7 @@ export default function HowItWorksPage() {
 
       {/* CTA Section */}
       <section className="bg-primary py-10 lg:py-20 px-4">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center flex flex-col items-center">
           <h2
             className="text-2xl lg:text-4xl font-bold text-white mb-2 lg:mb-4"
             data-aos="fade-up"
@@ -296,15 +297,16 @@ export default function HowItWorksPage() {
             Post your job today and connect with trusted professionals in your
             area.
           </p>
-          <button
-            className="bg-white text-primary font-bold px-4 py-2 lg:px-8 lg:py-4 rounded-md hover:bg-blue-50 transition-colors text-lg shadow-lg cursor-pointer"
+          <Button
+            className="font-bold w-48"
+            variant="secondary"
             onClick={handleScrollToCategory}
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
           >
             Post a Job Now
-          </button>
+          </Button>
         </div>
       </section>
     </main>

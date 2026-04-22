@@ -170,29 +170,25 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("accessToken");
-        setIsLoggedIn(!!token);
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", handleStorageChange);
-      return () => window.removeEventListener("storage", handleStorageChange);
-    }
-  }, []);
-
+  // Initialize on mount to prevent hydration mismatch
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("accessToken");
       setIsLoggedIn(!!token);
+      setIsHydrated(true);
+
+      const handleStorageChange = () => {
+        const token = localStorage.getItem("accessToken");
+        setIsLoggedIn(!!token);
+      };
+
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
     }
   }, []);
 
@@ -266,7 +262,7 @@ export default function Navbar() {
     }
   }, [pathname]);
 
-  if (typeof window === "undefined") {
+  if (!isHydrated) {
     return null;
   }
 

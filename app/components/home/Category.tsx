@@ -5,6 +5,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
 import CategoryList from "./CategoryList";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Category = {
   id: string;
@@ -34,7 +35,23 @@ export default function Category() {
   }, []);
 
   if (isLoading) {
-    return <p className="text-center py-10">Loading categories..</p>;
+    return (
+      <div className="container mx-auto px-4 lg:px-0" id="browse-category">
+        <div className="py-10 lg:py-[140px]">
+          <h1 className="text-[22px] md:text-[40px] font-semibold text-primaryText mb-6 lg:mb-15 text-center">
+            What do you need help with?
+          </h1>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <Skeleton className="h-32 w-full rounded-lg" />
+                <Skeleton className="h-5 w-3/4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (isError) {

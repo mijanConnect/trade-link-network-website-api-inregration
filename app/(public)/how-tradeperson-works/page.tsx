@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import Button from "@/app/components/ui/Button";
 
 export default function HowTradepersonWorkPage() {
   useEffect(() => {
@@ -348,7 +349,7 @@ export default function HowTradepersonWorkPage() {
 
       {/* CTA Section */}
       <section className="bg-primary py-8 lg:py-16 px-4">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto text-center flex flex-col items-center">
           <h2
             className="text-3xl lg:text-4xl font-bold text-white mb-4"
             data-aos="fade-up"
@@ -365,14 +366,15 @@ export default function HowTradepersonWorkPage() {
             Join today and start receiving new job opportunities.
           </p>
           <Link href="/professional-register">
-            <button
-              className="bg-white text-primary font-bold px-10 py-4 rounded-lg hover:bg-gray-50 transition-colors text-lg shadow-lg inline-flex items-center gap-2 cursor-pointer"
+            <Button
+              className="font-bold w-48"
+              variant="secondary"
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
               data-aos-delay="200"
             >
               Sign Up
-            </button>
+            </Button>
           </Link>
         </div>
       </section>
