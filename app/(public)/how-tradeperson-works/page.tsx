@@ -93,17 +93,17 @@ export default function HowTradepersonWorkPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-8 lg:py-16 px-4">
+      <section className="py-8 lg:py-16 px-4 bg-primary">
         <div className="container mx-auto text-center">
           <h1
-            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-4 lg:mb-6"
+            className="text-2xl lg:text-5xl font-bold text-white mb-4 lg:mb-6"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             Grow Your Business With <br /> Quality Job Leads
           </h1>
           <p
-            className="text-md lg:text-lg text-gray-700 max-w-3xl mx-auto mb-2"
+            className="text-md lg:text-lg text-white max-w-3xl mx-auto mb-2"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
@@ -113,7 +113,7 @@ export default function HowTradepersonWorkPage() {
             work. Just real opportunities delivered to you.
           </p>
           <p
-            className="text-md lg:text-lg text-gray-700 max-w-3xl mx-auto"
+            className="text-md lg:text-lg text-white max-w-3xl mx-auto"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
@@ -135,11 +135,11 @@ export default function HowTradepersonWorkPage() {
             Why Join Us?
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8 mx-auto ">
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="rounded-md p-4 lg:p-8 border hover:shadow-md transition-shadow"
+                className="p-4 lg:p-6 bg-white border rounded-sm hover:scale-102 transition-all duration-300 ease-out"
                 data-aos="fade-up"
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 100}
@@ -170,17 +170,17 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-8 lg:py-16 px-4">
+      <section className="py-8 lg:py-24 px-4 max-w-5xl mx-auto">
         <div className="container mx-auto">
           <h2
-            className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
+            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             How It Works for Tradespeople
           </h2>
           <p
-            className="text-center text-gray-600 mb-12 text-lg"
+            className="text-center text-gray-600 mb-12 text-md lg:text-lg"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
@@ -197,17 +197,17 @@ export default function HowTradepersonWorkPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={step.number * 100}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-lg hover:scale-103 transition-all duration-300 ease-out">
                   {/* Step Number Circle */}
-                  <div className="lg:col-span-2 flex justify-center lg:justify-start">
-                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl lg:text-3xl shadow-lg">
+                  <div className="lg:col-span-2 h-full flex justify-center lg:justify-start">
+                    <div className="w-full bg-primary rounded-t-sm lg:rounded-l-sm flex items-start p-4 lg:pt-4 justify-center text-white font-bold text-2xl lg:text-5xl shadow-lg">
                       {String(step.number).padStart(2, "0")}
                     </div>
                   </div>
 
                   {/* Step Content */}
                   <div className="lg:col-span-10">
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+                    <div className="px-4 py-4 lg:py-6 lg:px-0">
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">
                         {step.title}
                       </h3>
@@ -224,7 +224,7 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* SEO Content Section */}
-      <section className="py-8 lg:py-16 px-4 bg-gray-50">
+      <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
           <div className="">
             <h2
@@ -235,7 +235,7 @@ export default function HowTradepersonWorkPage() {
               How Trade Link Network Helps <br /> Tradespeople Find More Local
               Work
             </h2>
-            <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg max-w-4xl mx-auto">
+            <div className="space-y-6 lg:space-y-8 text-gray-700 text-md lg:text-lg mx-auto">
               <p
                 className="leading-relaxed"
                 data-aos="fade-up"
@@ -263,8 +263,8 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Who Can Join Section */}
-      <section className="py-8 lg:py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-4xl">
+      <section className="py-8 lg:py-24 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-5xl">
           <h2
             className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
             data-aos="fade-up"
@@ -282,7 +282,7 @@ export default function HowTradepersonWorkPage() {
           </p>
 
           <div
-            className="bg-linear-to-br from-gray-50 to-gray-100 rounded-md p-8 lg:p-12 border"
+            className="bg-white rounded-md p-8 lg:p-12 border"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
@@ -300,8 +300,8 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Requirements Section */}
-      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-8 lg:py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
+      <section className="bg-white py-8 lg:py-24 px-4">
+        <div className="container mx-auto max-w-5xl">
           <h2
             className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
             data-aos="fade-up"
@@ -322,23 +322,23 @@ export default function HowTradepersonWorkPage() {
             {requirements.map((requirement, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg p-6 border flex items-start gap-4 hover:shadow-sm transition-shadow"
+                className="p-4 lg:p-6 bg-white border rounded-sm flex items-start gap-4 hover:scale-102 transition-all duration-300 ease-out"
                 data-aos="fade-up"
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 100}
               >
                 <svg
-                  className="w-6 h-6 text-primary shrink-0 mt-0.5"
+                  className="w-6 h-6 text-primary shrink-0 mt-1"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                     clipRule="evenodd"
                   />
                 </svg>
-                <p className="text-gray-800 text-lg font-medium">
+                <p className="text-gray-800 text-lg font-medium pt-0.5">
                   {requirement}
                 </p>
               </div>
@@ -367,7 +367,7 @@ export default function HowTradepersonWorkPage() {
           </p>
           <Link href="/professional-register">
             <Button
-              className="font-bold w-48"
+              className="font-bold w-32"
               variant="secondary"
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
