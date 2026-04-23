@@ -8,7 +8,7 @@ export default function PageLoader() {
   if (!isLoading) return null;
 
   return (
-    <div className="fixed inset-0 bg-white z-[9999] flex items-center justify-center">
+    <div className="fixed inset-0 bg-white z-9999 flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         {/* Animated Logo/Spinner */}
         <div className="relative w-16 h-16">
@@ -21,7 +21,6 @@ export default function PageLoader() {
           <h2 className="text-xl font-semibold text-primaryText mb-2">
             Trade Link Network
           </h2>
-          <p className="text-sm text-gray-500">Loading...</p>
         </div>
       </div>
     </div>

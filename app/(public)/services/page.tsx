@@ -69,7 +69,6 @@ export const metadata: Metadata = {
 
 export default async function ServicesPage() {
   const categories = await fetchCategories();
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}

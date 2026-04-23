@@ -217,8 +217,6 @@ export const myJobsApi = baseApi.injectEndpoints({
       invalidatesTags: ["HiredJobs"],
     }),
 
-
-
     // ---------------------------------------
     // Refund Job Post
     // ---------------------------------------

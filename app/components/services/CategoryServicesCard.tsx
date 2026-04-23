@@ -23,7 +23,6 @@ type CategoryServicesCardProps = {
 
 export default function CategoryServicesCard({
   category,
-  index,
 }: CategoryServicesCardProps) {
   const { data: servicesData, isLoading } = useGetCategoriesServicesQuery(
     category?._id || skipToken,
@@ -39,11 +38,7 @@ export default function CategoryServicesCard({
       .replace(/\s+/g, "-");
 
   return (
-    <div
-      data-aos="fade-up"
-      data-aos-delay={index * 50}
-      className="group bg-white rounded-sm p-5 lg:p-6 w-full transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0.05)] border hover:border-primary hover:shadow-md"
-    >
+    <div className="group bg-white rounded-sm p-5 lg:p-6 w-full transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0.05)] border hover:border-primary hover:shadow-md">
       <div className="flex items-start justify-between gap-3 mb-5">
         <h3 className="font-semibold text-primaryText text-lg leading-snug">
           {category?.title || category?.name || "Category"}
