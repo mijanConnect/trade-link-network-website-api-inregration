@@ -32,7 +32,7 @@ function WhyUseCard({
 }) {
   return (
     <div
-      className="flex flex-col items-center bg-white py-8 md:py-12 px-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+      className="flex flex-col items-center bg-white py-8 md:py-12 px-4 rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow"
       data-aos="zoom-in-up"
       data-aos-delay={index * 100}
     >
@@ -57,7 +57,7 @@ export default function WhyUse({ title, subtitle, items, icons }: WhyUseProps) {
   }, []);
 
   return (
-    <div className="py-6 md:py-10 lg:py-[130px]">
+    <div className="py-6 md:py-10 lg:py-24">
       <div className="container mx-auto px-4 lg:px-0">
         <div className="mb-4 md:mb-6 lg:mb-20 text-center">
           <h1

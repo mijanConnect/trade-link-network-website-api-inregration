@@ -49,7 +49,7 @@ export default function CategoryList({
               href={"/post-service/" + category.slug}
               className="group block h-full"
             >
-              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow duration-300 ease-out h-full flex flex-col">
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.15)] hover:shadow-md transition-shadow duration-300 ease-out h-full flex flex-col">
                 <div className="relative w-full h-[100px] sm:h-[265px] overflow-hidden rounded-t-sm bg-gray-100">
                   {imageErrors[category._id] ? (
                     <div className="absolute inset-0 flex items-center justify-center text-gray-400">

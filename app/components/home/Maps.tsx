@@ -18,7 +18,7 @@ export default function Maps() {
 
   return (
     <>
-      <div className="bg-white py-8 lg:py-32 px-4">
+      <div className="bg-white py-8 lg:py-24 px-4">
         <div className="container mx-auto">
           <h1
             className="text-[18px] lg:text-3xl text-center font-bold mb-4 lg:mb-12 max-w-3xl mx-auto"
@@ -39,7 +39,7 @@ export default function Maps() {
               alt="Map of the UK showing our coverage"
               width={400}
               height={300}
-              className="h-auto rounded-lg shadow-md max-w-full"
+              className="h-auto rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] max-w-full"
               unoptimized
             />
           </div>

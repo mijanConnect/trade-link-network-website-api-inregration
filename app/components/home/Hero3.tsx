@@ -51,7 +51,7 @@ export default function Hero3() {
           </p>
           <div data-aos="fade-up" data-aos-delay="500">
             <Button
-              className="mt-6 lg:mt-12"
+              className="mt-6 lg:mt-12 font-semibold w-38"
               variant="primary"
               onClick={handleScrollToCategory}
             >
