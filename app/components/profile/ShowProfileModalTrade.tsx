@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getImageUrl } from "../ui/ImageURL";
+import { UserCircle } from "lucide-react";
 
 interface ShowProfileModalProps {
   isLoggedIn: boolean;
@@ -23,22 +24,12 @@ export default function ShowProfileModalTrade({
     <div className="relative">
       <button
         onClick={() => setShowProfileModal(!showProfileModal)}
-        className="rounded-sm overflow-hidden border border-primary hover:bg-primary/5 transition-colors flex items-center justify-center px-4 py-2 gap-2 cursor-pointer"
+        className="rounded-sm overflow-hidden border border-primary hover:bg-gray-50 transition-colors flex items-center justify-center px-4 py-2 gap-2 cursor-pointer"
       >
+        <div className="flex items-center gap-1">
+          <UserCircle size={20} className="text-primary" />
+        </div>
         <p className="text-[16px] text-primaryText">My Account</p>
-
-        <svg
-          className="h-6 w-6 hamburger-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2"
-          style={{
-            transform: showProfileModal ? "rotate(90deg)" : "rotate(0deg)",
-            transition: "transform 0.2s ease",
-          }}
-        >
           {showProfileModal ? (
             <path
               strokeLinecap="round"
@@ -52,7 +43,6 @@ export default function ShowProfileModalTrade({
               d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
             />
           )}
-        </svg>
       </button>
 
       {showProfileModal && (

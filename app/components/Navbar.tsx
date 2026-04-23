@@ -440,7 +440,6 @@ export default function Navbar() {
               <Button
                 onClick={() => router.push("/register")}
                 variant="primary"
-                size="sm"
                 className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
               >
                 Join as Tradeperson
@@ -454,7 +453,7 @@ export default function Navbar() {
               />
             )}
 
-            <button
+            <Button
               type="button"
               className="lg:hidden inline-flex items-center justify-center rounded-md text-primary hover:bg-blue-200 transition-colors p-2"
               aria-label="Toggle navigation"
@@ -486,7 +485,7 @@ export default function Navbar() {
                   />
                 )}
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
 
