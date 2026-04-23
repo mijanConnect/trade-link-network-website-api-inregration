@@ -236,17 +236,17 @@ export default function ContactUsPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-8 lg:py-20 px-4">
+      <section className="py-8 lg:py-20 px-4 bg-primary">
         <div className="container mx-auto text-center">
           <h1
-            className="text-2xl lg:text-5xl font-bold text-gray-900 mb-2 lg:mb-4"
+            className="text-2xl lg:text-5xl font-bold text-white mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
             CONTACT TRADE LINK NETWORK
           </h1>
           <p
-            className="text-md lg:text-2xl font-semibold text-primary mb-2 lg:mb-6"
+            className="text-md lg:text-2xl font-semibold text-white mb-2 lg:mb-4"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
@@ -254,7 +254,7 @@ export default function ContactUsPage() {
             We&apos;re here to help.
           </p>
           <p
-            className="text-sm lg:text-lg text-gray-700 max-w-2xl mx-auto"
+            className="text-sm lg:text-lg text-white max-w-xl mx-auto"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
@@ -266,8 +266,8 @@ export default function ContactUsPage() {
       </section>
 
       {/* Email Contact Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
-        <div className="container mx-auto">
+      <section className="py-8 lg:py-24 px-4">
+        <div className="container mx-auto max-w-5xl">
           <h2
             className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
             data-aos="fade-up"
@@ -293,17 +293,17 @@ export default function ContactUsPage() {
                 data-aos-anchor-placement="top-bottom"
                 data-aos-delay={index * 100}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-lg hover:scale-103 transition-all duration-300 ease-out">
                   {/* Step Number Circle */}
-                  <div className="lg:col-span-1 flex justify-center lg:justify-start">
-                    <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-primary flex items-center justify-center text-white font-bold text-2xl lg:text-3xl shadow-lg">
+                  <div className="lg:col-span-2 h-full flex justify-center lg:justify-start">
+                    <div className="w-full bg-primary rounded-t-sm lg:rounded-l-sm flex items-start p-4 lg:pt-4 justify-center text-white font-bold text-2xl lg:text-5xl shadow-lg">
                       {String(index + 1).padStart(2, "0")}
                     </div>
                   </div>
 
                   {/* Contact Content */}
-                  <div className="lg:col-span-11">
-                    <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+                  <div className="lg:col-span-10">
+                    <div className="py-4 lg:py-6 px-4 lg:px-0">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                         {contact.title}
                       </h3>
@@ -335,12 +335,12 @@ export default function ContactUsPage() {
       </section>
 
       {/* Phone & Company Info Section */}
-      <section className="py-8 lg:py-24 px-4 bg-gary-50">
+      <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8  mx-auto">
             {/* Phone Support */}
             <div
-              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow p-4 lg:p-8"
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
               data-aos-delay="0"
@@ -359,7 +359,7 @@ export default function ContactUsPage() {
 
             {/* Company Information */}
             <div
-              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow p-4 lg:p-8"
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
               data-aos-delay="100"
@@ -380,7 +380,7 @@ export default function ContactUsPage() {
             </div>
 
             <div
-              className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8"
+              className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow p-4 lg:p-8"
               data-aos="fade-up"
               data-aos-anchor-placement="top-bottom"
               data-aos-delay="200"
@@ -402,7 +402,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
+      <section className="py-8 lg:py-24 px-4">
         <div className="container mx-auto">
           <h2
             className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4"
@@ -428,7 +428,7 @@ export default function ContactUsPage() {
           >
             <form
               onSubmit={handleSubmit}
-              className="bg-white rounded-md border border-gray-200 shadow-sm p-4 lg:p-8"
+              className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-12"
             >
               <div className="space-y-4 lg:space-y-6">
                 <div>
@@ -530,7 +530,7 @@ export default function ContactUsPage() {
                 </div>
 
                 {/* Privacy Consent */}
-                <div className="w-full space-y-3">
+                <div className="w-full space-y-3 -mt-6 mb-5 lg:mb-10">
                   <div className="flex items-start gap-3">
                     <input
                       type="checkbox"
@@ -567,7 +567,7 @@ export default function ContactUsPage() {
       </section>
 
       {/* Why Contact Section */}
-      <section className="bg-linear-to-br from-gray-50 to-gray-100 py-10 lg:py-24 px-4">
+      <section className="py-8 lg:py-24 px-4 bg-white">
         <div className="container mx-auto">
           <h2 className="text-2xl lg:text-4xl font-bold text-center text-gray-900 mb-2 lg:mb-4">
             Why Contact Trade Link Network?
@@ -576,16 +576,16 @@ export default function ContactUsPage() {
             Discover what makes our service the preferred choice
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mx-auto">
             {whyContactPoints.map((point, index) => (
               <div
                 key={index}
-                className="bg-white rounded-lg p-4 lg:p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-200"
+                className="bg-white rounded-sm p-4 lg:p-6 shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start">
                   <div className="shrink-0">
                     <svg
-                      className="w-6 h-6 text-green-500 mt-1"
+                      className="w-6 h-6 text-primary mt-1"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -609,10 +609,10 @@ export default function ContactUsPage() {
       </section>
 
       {/* Privacy Section */}
-      <section className="py-8 lg:py-24 px-4 bg-white">
+      <section className="py-8 lg:py-24 px-4">
         <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4 lg:p-8">
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-md transition-shadow p-4 lg:p-8">
               <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                 Your Privacy
               </h3>

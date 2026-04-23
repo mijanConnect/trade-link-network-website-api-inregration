@@ -110,7 +110,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Steps Section */}
-      <section className="py-8 lg:py-24 px-4">
+      <section className="py-8 lg:py-24 px-4 max-w-5xl mx-auto">
         <div className="container mx-auto">
           <div className="space-y-6 lg:space-y-8">
             {steps.map((step) => (
@@ -123,15 +123,15 @@ export default function HowItWorksPage() {
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] hover:shadow-lg hover:scale-101 transition-all duration-300 ease-out">
                   {/* Step Number Circle */}
-                  <div className="lg:col-span-1 h-full flex justify-center lg:justify-start">
+                  <div className="lg:col-span-2 h-full flex justify-center lg:justify-start">
                     <div className="w-full bg-primary rounded-t-sm lg:rounded-l-sm flex items-start p-4 lg:pt-4 justify-center text-white font-bold text-2xl lg:text-5xl shadow-lg">
                       {String(step.number).padStart(2, "0")}
                     </div>
                   </div>
 
                   {/* Step Content */}
-                  <div className="lg:col-span-11 p-4 lg:p-6">
-                    <div className="">
+                  <div className="lg:col-span-10">
+                    <div className="py-4 lg:py-6 px-4 lg:px-0">
                       <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 lg:mb-3">
                         {step.title}
                       </h3>

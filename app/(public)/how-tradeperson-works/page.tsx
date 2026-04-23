@@ -207,7 +207,7 @@ export default function HowTradepersonWorkPage() {
 
                   {/* Step Content */}
                   <div className="lg:col-span-10">
-                    <div className="px-4 py-4 lg:py-6 lg:px-0">
+                    <div className="py-4 lg:py-6 px-4 lg:px-0">
                       <h3 className="text-2xl font-bold text-gray-900 mb-3">
                         {step.title}
                       </h3>
