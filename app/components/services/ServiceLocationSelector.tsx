@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Lock } from "lucide-react";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import {
   useGetRegionsQuery,
@@ -23,8 +24,9 @@ export default function ServiceLocationSelector({
   const [selectedTown, setSelectedTown] = useState("");
 
   // Fetch regions (always enabled)
-  const { data: regionsData, isLoading: isLoadingRegions } =
-    useGetRegionsQuery({});
+  const { data: regionsData, isLoading: isLoadingRegions } = useGetRegionsQuery(
+    {},
+  );
   const regions = useMemo(() => regionsData?.data ?? [], [regionsData?.data]);
 
   // Fetch counties based on selected region
@@ -33,7 +35,10 @@ export default function ServiceLocationSelector({
       { regionId: selectedRegion },
       { skip: !selectedRegion },
     );
-  const counties = useMemo(() => countiesData?.data ?? [], [countiesData?.data]);
+  const counties = useMemo(
+    () => countiesData?.data ?? [],
+    [countiesData?.data],
+  );
 
   // Fetch cities based on selected county
   const { data: citiesData, isLoading: isLoadingCities } =
@@ -71,13 +76,11 @@ export default function ServiceLocationSelector({
   );
 
   const selectedLocation = town ?? city ?? county ?? region;
-  const selectedLocationSlug = selectedLocation
-    ? selectedLocation.slug
-    : "";
+  const selectedLocationSlug = selectedLocation ? selectedLocation.slug : "";
   const canContinue = Boolean(region);
 
   return (
-    <div className="bg-white border border-primary rounded-xl p-5 lg:p-6">
+    <div className="bg-white rounded-sm p-5 lg:p-10 shadow-[0_0_10px_rgba(0,0,0,0.05)]">
       <h2 className="text-xl lg:text-2xl font-semibold text-primaryText mb-6">
         Select Location Step by Step
       </h2>
@@ -156,7 +159,7 @@ export default function ServiceLocationSelector({
         />
       </div>
 
-      <div className="mt-6 rounded-lg border border-primary/20 bg-primary/10 p-4">
+      <div className="mt-6 rounded-lg border border-primary bg-gray-100 p-4">
         <p className="text-sm text-primaryTextLight">
           <span className="font-semibold">Selected:</span>{" "}
           {[region?.name, county?.name, city?.name, town?.name]
@@ -165,19 +168,20 @@ export default function ServiceLocationSelector({
         </p>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+      <div className="mt-6 lg:mt-10 flex flex-wrap items-center gap-3">
         <Link
           href={
             canContinue
               ? `/services/${serviceSlug}/${selectedLocationSlug}`
               : "#"
           }
-          className={`inline-flex h-13 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors ${
+          className={`inline-flex h-13 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors w-full ${
             canContinue
-              ? "bg-primary text-white hover:opacity-90"
-              : "bg-gray-200 text-gray-500 pointer-events-none"
+              ? "bg-primary text-white hover:bg-[#122a4a]"
+              : "bg-primary/70 text-white pointer-events-none"
           }`}
         >
+          {!canContinue && <Lock size={18} />}
           Continue with this location
         </Link>
       </div>

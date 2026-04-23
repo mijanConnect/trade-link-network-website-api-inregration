@@ -88,7 +88,7 @@ export default function ServiceLocationDynamicContent({
   if (isLoading && !data) {
     return (
       <div className="space-y-8">
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-8">
           <p className="text-primaryTextLight">Loading service details...</p>
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function ServiceLocationDynamicContent({
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
         <h2 className="text-2xl font-bold text-primaryText mb-6">
           Frequently Asked Questions
         </h2>
@@ -111,7 +111,7 @@ export default function ServiceLocationDynamicContent({
         isError={isError && !data}
       />
 
-      <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
         <h2 className="text-2xl font-bold text-primaryText mb-6">
           Helpful Guides
         </h2>

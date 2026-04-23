@@ -154,7 +154,7 @@ export default async function ServiceLocationPage({ params }: Props) {
     process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk";
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen">
       {/* Structured Data - JSON-LD */}
       <script
         type="application/ld+json"
@@ -213,20 +213,20 @@ export default async function ServiceLocationPage({ params }: Props) {
       />
 
       {/* Hero Section */}
-      <div className="bg-gray-50">
+      <div className="bg-primary">
         <div className="container mx-auto px-4 py-8 lg:py-24">
-          <h1 className="text-2xl lg:text-5xl font-bold mb-4 text-center text-black">
+          <h1 className="text-2xl lg:text-5xl font-bold mb-4 text-center text-white">
             {dynamicData?.seo?.h1 ||
               `${pageData.serviceName} Services in ${pageData.locationName}`}
           </h1>
-          <p className="text-md lg:text-lg opacity-90 max-w-4xl text-center text-primary mx-auto">
+          <p className="text-md lg:text-lg opacity-90 max-w-4xl text-center text-white mx-auto">
             {pageData.intro}
           </p>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="container bg-gray-100 mx-auto px-4 py-8 lg:py-16">
+      <div className="container mx-auto px-4 py-8 lg:py-16">
         {/* Breadcrumb Navigation */}
         <div className="mb-6">
           <Breadcrumb
@@ -241,7 +241,7 @@ export default async function ServiceLocationPage({ params }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-8">
           {/* Left Column - Info */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
                 Trusted {pageData.serviceName} in {pageData.locationName}
               </h2>
@@ -250,7 +250,7 @@ export default async function ServiceLocationPage({ params }: Props) {
               </p>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8 border-l-4 border-primary">
+            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8 border-l-4 border-primary">
               <h2 className="text-2xl font-bold text-primaryText mb-3">
                 Need {pageData.serviceName} Support Right Now?
               </h2>
@@ -264,7 +264,7 @@ export default async function ServiceLocationPage({ params }: Props) {
             </div>
 
             {dynamicData?.service?.description && (
-              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <h2 className="text-2xl font-bold text-primaryText mb-4">
                   {pageData.serviceName} Description
                 </h2>
@@ -276,7 +276,7 @@ export default async function ServiceLocationPage({ params }: Props) {
 
             {dynamicData?.service?.detailedDescription &&
             dynamicData.service.detailedDescription.length > 0 ? (
-              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <h2 className="text-2xl font-bold text-primaryText mb-4">
                   Detailed Service Information
                 </h2>
@@ -292,7 +292,7 @@ export default async function ServiceLocationPage({ params }: Props) {
                 </ul>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <h2 className="text-2xl font-bold text-primaryText mb-4">
                   Core {pageData.serviceName} Service Description
                 </h2>
@@ -303,7 +303,7 @@ export default async function ServiceLocationPage({ params }: Props) {
             )}
 
             {!dynamicData?.service?.description && (
-              <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <h2 className="text-2xl font-bold text-primaryText mb-4">
                   Detailed Service Information Fallback
                 </h2>
@@ -318,7 +318,7 @@ export default async function ServiceLocationPage({ params }: Props) {
               </div>
             )}
 
-            <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
                 Local Notes for {pageData.locationName}
               </h2>
@@ -335,7 +335,7 @@ export default async function ServiceLocationPage({ params }: Props) {
 
           {/* Final call-to-action section */}
           <div>
-            <div className="bg-blue-50 rounded-lg shadow-md p-4 lg:p-8 sticky top-4">
+            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 sticky top-4">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
                 Ready to Get Started?
               </h2>

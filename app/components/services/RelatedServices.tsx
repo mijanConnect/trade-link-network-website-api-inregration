@@ -23,7 +23,7 @@ export default function RelatedServices({
   isError,
 }: RelatedServicesProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 lg:p-8 mb-8">
+    <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
       <h2 className="text-2xl font-bold text-primaryText mb-4">
         Related Services in {locationName}
       </h2>
@@ -36,7 +36,7 @@ export default function RelatedServices({
           <Link
             key={relatedService.key}
             href={`/services/${relatedService.slug}/${locationSlug}`}
-            className="group rounded-lg border border-gray-200 p-4 lg:p-5 transition-all duration-200 hover:border-primary hover:shadow-sm hover:bg-gray-50 block"
+            className="group rounded-sm border border-gray-200 p-4 lg:p-5 transition-all duration-200 hover:border-primary hover:shadow-sm hover:bg-gray-50 block"
           >
             <div className="flex items-center justify-between gap-4">
               <div>

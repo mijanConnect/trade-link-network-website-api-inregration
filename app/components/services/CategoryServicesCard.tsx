@@ -42,7 +42,7 @@ export default function CategoryServicesCard({
     <div
       data-aos="fade-up"
       data-aos-delay={index * 50}
-      className="group bg-white rounded-xl border border-gray-200 p-5 lg:p-6 w-full transition-all duration-300 hover:border-primary hover:shadow-md"
+      className="group bg-white rounded-sm p-5 lg:p-6 w-full transition-all duration-300 shadow-[0_0_10px_rgba(0,0,0,0.05)] border hover:border-primary hover:shadow-md"
     >
       <div className="flex items-start justify-between gap-3 mb-5">
         <h3 className="font-semibold text-primaryText text-lg leading-snug">
@@ -55,10 +55,18 @@ export default function CategoryServicesCard({
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-          <div className="h-9 bg-gray-100 rounded-md animate-pulse" />
-          <div className="h-9 bg-gray-100 rounded-md animate-pulse" />
-          <div className="h-9 bg-gray-100 rounded-md animate-pulse" />
-          <div className="h-9 bg-gray-100 rounded-md animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
+          <div className="h-9 bg-gray-100 rounded-sm animate-pulse" />
         </div>
       ) : services.length > 0 ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
@@ -66,7 +74,7 @@ export default function CategoryServicesCard({
             <li key={service._id}>
               <Link
                 href={`/services/${service?.slug || toSlug(service?.name || "service")}`}
-                className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 hover:border-primary hover:bg-primary/10 hover:text-primary transition-all duration-200"
+                className="flex items-center justify-between rounded-sm px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-100 hover:border-primary hover:bg-gray-100 hover:text-primary transition-all duration-200"
               >
                 <span>{service?.name || "Service"}</span>
                 <svg

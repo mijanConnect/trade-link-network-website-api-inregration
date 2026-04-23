@@ -71,14 +71,14 @@ export default async function ServicesPage() {
   const categories = await fetchCategories();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="bg-gray-100">
+      <div className="bg-primary">
         <div className="container mx-auto px-4 py-8 lg:py-24 text-center">
-          <h1 className="text-2xl lg:text-5xl font-bold mb-4 text-black">
+          <h1 className="text-2xl lg:text-5xl font-bold mb-4 text-white">
             Professional Services Near You
           </h1>
-          <p className="text-md lg:text-xl opacity-90 max-w-2xl mx-auto text-primary">
+          <p className="text-md lg:text-xl opacity-90 max-w-2xl mx-auto text-white">
             Find trusted, verified trade professionals for all your service
             needs. Get instant quotes and compare professionals in your area.
           </p>
