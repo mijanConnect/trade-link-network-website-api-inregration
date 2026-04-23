@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import { useUserDataSendAdminMutation } from "@/store/slice/contactUsSlice";
 import Button from "@/app/components/ui/Button";
 import InputField from "@/app/components/ui/InputField";

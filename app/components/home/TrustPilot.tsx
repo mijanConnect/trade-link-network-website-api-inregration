@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import AOS from "aos";
-import "aos/dist/aos.css";
 
 declare global {
   interface Window {

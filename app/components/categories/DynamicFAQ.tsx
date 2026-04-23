@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import {
   useGetCategoriesQuery,
   useGetCategoriesFaqsQuery,

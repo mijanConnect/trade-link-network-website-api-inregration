@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import { StepFour4, StepOne1, StepThree3, StepTwo2 } from "../Svg";
 import Button from "./Button";
 import { useRouter } from "next/navigation";

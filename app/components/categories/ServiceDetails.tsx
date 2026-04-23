@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "../ui/Button";
 import {
   useGetCategoriesQuery,

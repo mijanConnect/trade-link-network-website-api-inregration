@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import { useGetCategoriesQuery } from "@/store/slice/categoriesSlice";
 import CategoryList from "./CategoryList";
 import { Skeleton } from "@/components/ui/skeleton";

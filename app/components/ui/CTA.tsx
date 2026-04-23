@@ -3,7 +3,6 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "./Button";
 
 export default function CTA() {

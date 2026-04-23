@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "@/app/components/ui/Button";
 
 export default function HowItWorksPage() {
