@@ -305,7 +305,7 @@ export default async function ServiceLocationPage({ params }: Props) {
             {!dynamicData?.service?.description && (
               <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <h2 className="text-2xl font-bold text-primaryText mb-4">
-                  Detailed Service Information Fallback
+                  Detailed Service Information
                 </h2>
                 <ul className="space-y-3 text-primaryTextLight">
                   {pageData.detailedInfo.map((item: string) => (

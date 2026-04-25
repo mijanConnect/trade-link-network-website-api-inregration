@@ -7,8 +7,8 @@ import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import {
   useGetRegionsQuery,
   useGetCountiesByRegionQuery,
-  useGetCitiesByCountyQuery,
-  useGetTownsByCityQuery,
+  useGetTownsByCountyQuery,
+  type LocationItem,
 } from "@/store/slice/locationSlice";
 
 type ServiceLocationSelectorProps = {
@@ -20,7 +20,6 @@ export default function ServiceLocationSelector({
 }: ServiceLocationSelectorProps) {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
   const [selectedTown, setSelectedTown] = useState("");
 
   // Fetch regions (always enabled)
@@ -40,19 +39,12 @@ export default function ServiceLocationSelector({
     [countiesData?.data],
   );
 
-  // Fetch cities based on selected county
-  const { data: citiesData, isLoading: isLoadingCities } =
-    useGetCitiesByCountyQuery(
+  // Fetch towns based on selected county
+  const { data: townsData, isLoading: isLoadingTowns } =
+    useGetTownsByCountyQuery(
       { countyId: selectedCounty },
       { skip: !selectedCounty },
     );
-  const cities = useMemo(() => citiesData?.data ?? [], [citiesData?.data]);
-
-  // Fetch towns based on selected city
-  const { data: townsData, isLoading: isLoadingTowns } = useGetTownsByCityQuery(
-    { cityId: selectedCity },
-    { skip: !selectedCity },
-  );
   const towns = useMemo(() => townsData?.data ?? [], [townsData?.data]);
 
   const region = useMemo(
@@ -61,21 +53,16 @@ export default function ServiceLocationSelector({
   );
 
   const county = useMemo(
-    () => counties.find((item) => item._id === selectedCounty),
+    () => counties.find((item: LocationItem) => item._id === selectedCounty),
     [counties, selectedCounty],
   );
 
-  const city = useMemo(
-    () => cities.find((item) => item._id === selectedCity),
-    [cities, selectedCity],
-  );
-
   const town = useMemo(
-    () => towns.find((item) => item._id === selectedTown),
+    () => towns.find((item: LocationItem) => item._id === selectedTown),
     [towns, selectedTown],
   );
 
-  const selectedLocation = town ?? city ?? county ?? region;
+  const selectedLocation = town ?? county ?? region;
   const selectedLocationSlug = selectedLocation ? selectedLocation.slug : "";
   const canContinue = Boolean(region);
 
@@ -85,7 +72,7 @@ export default function ServiceLocationSelector({
         Select Location Step by Step
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <CustomSelect
           label="Region"
           placeholder="Select region"
@@ -101,7 +88,6 @@ export default function ServiceLocationSelector({
           onChange={(value) => {
             setSelectedRegion(value);
             setSelectedCounty("");
-            setSelectedCity("");
             setSelectedTown("");
           }}
         />
@@ -120,25 +106,6 @@ export default function ServiceLocationSelector({
           }))}
           onChange={(value) => {
             setSelectedCounty(value);
-            setSelectedCity("");
-            setSelectedTown("");
-          }}
-        />
-
-        <CustomSelect
-          label="City (optional)"
-          placeholder="Select city"
-          searchPlaceholder="Search cities..."
-          searchable
-          value={selectedCity || null}
-          disabled={!county || isLoadingCities}
-          dropdownLayout="overlay"
-          options={cities.map((item) => ({
-            value: item._id,
-            label: item.name,
-          }))}
-          onChange={(value) => {
-            setSelectedCity(value);
             setSelectedTown("");
           }}
         />
@@ -149,9 +116,9 @@ export default function ServiceLocationSelector({
           searchPlaceholder="Search towns..."
           searchable
           value={selectedTown || null}
-          disabled={!city || isLoadingTowns}
+          disabled={!county || isLoadingTowns}
           dropdownLayout="overlay"
-          options={towns.map((item) => ({
+          options={towns.map((item: LocationItem) => ({
             value: item._id,
             label: item.name,
           }))}
@@ -162,9 +129,9 @@ export default function ServiceLocationSelector({
       <div className="mt-6 rounded-lg border border-primary bg-gray-100 p-4">
         <p className="text-sm text-primaryTextLight">
           <span className="font-semibold">Selected:</span>{" "}
-          {[region?.name, county?.name, city?.name, town?.name]
+          {[region?.name, county?.name, town?.name]
             .filter(Boolean)
-            .join(" / ") || "Please select region, county, city and town"}
+            .join(" / ") || "Please select region"}
         </p>
       </div>
 
