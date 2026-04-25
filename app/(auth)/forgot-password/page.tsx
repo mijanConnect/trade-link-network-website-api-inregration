@@ -1,5 +1,4 @@
 import ForgotPasswordComponent from "@/app/components/auth/ForgotPassword";
-import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

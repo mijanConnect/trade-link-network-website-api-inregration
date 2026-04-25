@@ -15,7 +15,6 @@ export const metadata = getMetadata("home");
 export default function Home() {
   return (
     <>
-      {/* <Hero /> */}
       <Hero3 />
       <Category />
       <WorksFlow />
