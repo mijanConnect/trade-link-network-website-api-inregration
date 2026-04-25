@@ -357,14 +357,14 @@ export default function HowTradepersonWorkPage() {
             Ready to Get Started?
           </h2>
           <p
-            className="text-xl text-green-100 mb-8 max-w-2xl mx-auto"
+            className="text-xl text-white mb-8 max-w-2xl mx-auto"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
             data-aos-delay="100"
           >
             Join today and start receiving new job opportunities.
           </p>
-          <Link href="/professional-register">
+          <Link href="/register">
             <Button
               className="font-bold w-32"
               variant="secondary"
