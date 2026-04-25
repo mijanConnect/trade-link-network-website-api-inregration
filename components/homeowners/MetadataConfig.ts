@@ -5,43 +5,43 @@ export const pageMetadata: Record<string, Metadata> = {
     title: "About Us | TradeLink Network",
     description:
       "Learn about TradeLink Network and our mission to connect trade professionals with clients.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "code-of-conduct": {
     title: "Code of Conduct | TradeLink Network",
     description:
       "Read TradeLink Network's Code of Conduct to understand our commitment to fostering a respectful and inclusive community for all users.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "compliance-policy": {
     title: "Compliance Policy | TradeLink Network",
     description:
       "Read TradeLink Network's compliance policy to understand our commitment to ethical business practices and regulatory adherence.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "privacy-policy": {
     title: "Privacy Policy | TradeLink Network",
     description:
       "Review TradeLink Network's Privacy Policy to understand how we collect, use, and protect your personal information.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "terms-conditions": {
     title: "Terms and Conditions | TradeLink Network",
     description:
       "Read TradeLink Network's Terms and Conditions to understand the rules and restrictions governing your use of our platform.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "cookies-policy": {
     title: "Cookies Policy | TradeLink Network",
     description:
       "Learn about how TradeLink Network uses cookies and other tracking technologies to enhance your experience.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "review-policy": {
     title: "Review Policy | TradeLink Network",
     description:
       "Understand TradeLink Network's Review Policy to learn how we ensure authentic and helpful customer reviews.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "contact-us": {
     title: "Contact Us | TradeLink Network",
@@ -107,12 +107,21 @@ export const pageMetadata: Record<string, Metadata> = {
     title: "Trade Professional Profile | TradeLink Network",
     description:
       "View the detailed profile of a trade professional on TradeLink Network.",
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: false },
   },
   home: {
     title: "Trade Link Network | Find Trusted Trade Professionals",
     description:
       "Connect with vetted and trusted trade professionals across the UK. Post your job for free and get instant quotes.",
+    keywords: [
+      "trade professionals",
+      "trusted trades",
+      "verified trades",
+      "local services",
+      "homeowners uk",
+      "service categories",
+      "compare services",
+    ],
     robots: { index: true, follow: true },
     openGraph: {
       title: "Trade Link Network | Find Trusted Trade Professionals",

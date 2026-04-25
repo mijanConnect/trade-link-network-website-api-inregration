@@ -50,7 +50,7 @@ async function fetchCategories(): Promise<Category[]> {
 }
 
 export const metadata: Metadata = {
-  title: "Professional Services | TradeLink Network",
+  title: "Services | TradeLink Network",
   description:
     "Find trusted, verified trade professionals for all your service needs. Get instant quotes and compare professionals in your area.",
   keywords: [
@@ -58,9 +58,15 @@ export const metadata: Metadata = {
     "trade professionals",
     "verified trades",
     "local services",
+    "services",
+    "uk services",
+    "homeowners services",
+    "service categories",
+    "trusted professionals",
+    "compare services",
   ],
   openGraph: {
-    title: "Professional Services | TradeLink Network",
+    title: "Services | TradeLink Network",
     description:
       "Find trusted, verified trade professionals for all your service needs.",
     type: "website",
