@@ -19,7 +19,7 @@ export default function StepsHome() {
   }, []);
 
   return (
-    <>
+    <section>
       <div className="pt-6 md:pt-10 lg:pt-24" id="steps">
         <div className="container mx-auto px-4 lg:px-0">
           <h1
@@ -137,6 +137,6 @@ export default function StepsHome() {
           </Button>
         </div>
       </div>
-    </>
+    </section>
   );
 }

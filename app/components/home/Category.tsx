@@ -64,7 +64,7 @@ export default function Category() {
   const categories = data || [];
 
   return (
-    <>
+    <section>
       <div className="container mx-auto px-4 lg:px-0" id="browse-category">
         <div className="py-8 lg:py-24">
           <h1
@@ -79,6 +79,6 @@ export default function Category() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

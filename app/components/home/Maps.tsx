@@ -16,7 +16,7 @@ export default function Maps() {
   }, []);
 
   return (
-    <>
+    <section>
       <div className="bg-white py-8 lg:py-24 px-4">
         <div className="container mx-auto">
           <h1
@@ -44,6 +44,6 @@ export default function Maps() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

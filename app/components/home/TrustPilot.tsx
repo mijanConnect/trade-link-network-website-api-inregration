@@ -42,7 +42,7 @@ export default function TrustPilot() {
   }, []);
 
   return (
-    <>
+    <section>
       <Script
         src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
         onLoad={handleScriptLoad}
@@ -89,6 +89,6 @@ export default function TrustPilot() {
           </div>
         </div>
       </section>
-    </>
+    </section>
   );
 }

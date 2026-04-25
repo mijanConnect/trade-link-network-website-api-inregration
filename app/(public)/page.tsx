@@ -14,19 +14,19 @@ export const metadata = getMetadata("home");
 
 export default function Home() {
   return (
-      <>
-        {/* <Hero /> */}
-        <Hero3 />
-        <Category />
-        <WorksFlow />
-        <UseUs />
-        <Maps />
-        <StepsHome />
-        <FAQ />
-        <TrustPilot />
-        <div className="pt-8 lg:pt-20">
-          <CTA />
-        </div>
-      </>
+    <>
+      {/* <Hero /> */}
+      <Hero3 />
+      <Category />
+      <WorksFlow />
+      <UseUs />
+      <Maps />
+      <StepsHome />
+      <FAQ />
+      <TrustPilot />
+      <section className="pt-8 lg:pt-20">
+        <CTA />
+      </section>
+    </>
   );
 }

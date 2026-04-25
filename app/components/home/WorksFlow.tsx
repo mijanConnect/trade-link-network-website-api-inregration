@@ -30,7 +30,7 @@ export default function WorksFlow() {
   }, []);
 
   return (
-    <>
+    <section>
       <div className="py-6 md:py-10 lg:py-24 bg-white" id="works-flow">
         <div className="container mx-auto px-4 lg:px-0">
           <h1
@@ -97,6 +97,6 @@ export default function WorksFlow() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

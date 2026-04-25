@@ -23,7 +23,7 @@ export default function Hero3() {
   }, []);
 
   return (
-    <>
+    <section>
       <div
         data-aos="fade-down"
         className="w-full h-[50vh] lg:h-[92vh] bg-[url('/assets/hero-image3.webp')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -59,6 +59,6 @@ export default function Hero3() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

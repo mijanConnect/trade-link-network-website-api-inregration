@@ -163,7 +163,7 @@ export default async function ServiceLocationPage({ params }: Props) {
     process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk";
 
   return (
-    <div className="min-h-screen">
+    <section className="min-h-screen">
       {/* Structured Data - JSON-LD */}
       <script
         type="application/ld+json"
@@ -378,6 +378,6 @@ export default async function ServiceLocationPage({ params }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
