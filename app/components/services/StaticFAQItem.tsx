@@ -27,6 +27,51 @@ export const staticFaqs = [
     answer:
       "TradeLink Network focuses on quality by encouraging profile completeness, customer feedback, and transparent service history.",
   },
+  {
+    question: "Is it free to post a job?",
+    answer:
+      "Yes, posting a job on TradeLink Network is typically free. You can describe your requirements and receive quotes without any upfront cost.",
+  },
+  {
+    question: "What details should I include in my job post?",
+    answer:
+      "Include clear information such as the type of work, size or scope, timeline, budget (if known), and any specific requirements. This helps professionals provide accurate and relevant quotes.",
+  },
+  {
+    question: "How do I choose the right professional?",
+    answer:
+      "Compare multiple quotes, check reviews, review past work, and communicate directly with professionals to ensure they understand your needs before making a decision.",
+  },
+  {
+    question: "Can I communicate with professionals before hiring?",
+    answer:
+      "Yes, you can message professionals directly to discuss your project, ask questions, and clarify details before confirming your choice.",
+  },
+  {
+    question: "What if I don’t receive enough responses?",
+    answer:
+      "You can update your job description with more details, adjust your timeline, or repost to attract more professionals.",
+  },
+  {
+    question: "Are quotes fixed or can they change?",
+    answer:
+      "Some quotes are fixed, while others may change depending on additional requirements discovered during the project. Always confirm details before starting.",
+  },
+  {
+    question: "How do payments work?",
+    answer:
+      "Payment terms are agreed directly between you and the professional. It’s important to confirm the schedule, method, and any deposits in advance.",
+  },
+  {
+    question: "Can I leave a review after the work is done?",
+    answer:
+      "Yes, leaving a review helps other users make informed decisions and supports quality service providers on the platform.",
+  },
+  {
+    question: "What if there is an issue during the project?",
+    answer:
+      "You should communicate directly with the professional to resolve any issues. Clear agreements made before starting can help prevent misunderstandings.",
+  },
 ];
 
 function FAQItem({ question, answer }: FAQItemProps) {
