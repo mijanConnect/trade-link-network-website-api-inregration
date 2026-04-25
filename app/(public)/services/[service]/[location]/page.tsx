@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import Button from "@/app/components/ui/Button";
 import Breadcrumb from "@/app/components/services/Breadcrumb";
@@ -150,6 +151,12 @@ export default async function ServiceLocationPage({ params }: Props) {
   const { service, location } = await params;
   const pageData = createStaticPageData(service, location);
   const dynamicData = await fetchDynamicServiceLocationSeo(service, location);
+
+  // Show not-found page if service/location combination doesn't exist
+  if (!dynamicData) {
+    notFound();
+  }
+
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://www.tradelinknetwork.co.uk";
 

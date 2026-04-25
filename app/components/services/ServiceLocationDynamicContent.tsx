@@ -63,7 +63,9 @@ export default function ServiceLocationDynamicContent({
     : fallbackGuides;
 
   const relatedServices = useMemo(() => {
-    const apiRelated = data?.content.relatedServices ?? [];
+    const apiRelated = (data?.content.relatedServices ?? []).filter(
+      (item) => item.name !== "Not sure yet – need advice",
+    );
 
     if (apiRelated.length > 0) {
       return apiRelated.map((item) => ({

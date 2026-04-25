@@ -28,7 +28,9 @@ export default function CategoryServicesCard({
     category?._id || skipToken,
   );
 
-  const services = (servicesData || []) as CategoryService[];
+  const services = ((servicesData || []) as CategoryService[]).filter(
+    (service) => service.name !== "Not sure yet – need advice",
+  );
 
   const toSlug = (value: string) =>
     value
