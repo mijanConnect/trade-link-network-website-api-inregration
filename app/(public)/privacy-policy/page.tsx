@@ -1,9 +1,34 @@
-"use client";
+// ISR: Revalidate every 86400 seconds (24 hours)
+export const revalidate = 86400;
 
-import { useGetDisclaimerQuery } from "@/store/slice/termsSlice";
+async function fetchDisclaimer(disclaimerKey: string) {
+  const apiBaseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL;
 
-export default function Page() {
-  const { data, isLoading, error } = useGetDisclaimerQuery("privacy-policy");
+  if (!apiBaseUrl) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${apiBaseUrl}/disclaimers/${disclaimerKey}`, {
+      next: {
+        revalidate: 86400,
+      },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const result = await response.json();
+    return result?.data ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export default async function Page() {
+  const data = await fetchDisclaimer("privacy-policy");
 
   return (
     <>
@@ -13,23 +38,15 @@ export default function Page() {
             Privacy Policy
           </h2>
 
-          {isLoading && (
-            <div className="flex justify-center items-center py-10">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          )}
-
-          {error && (
-            <div className="text-red-600 text-center py-10">
-              Failed to load review policy. Please try again later.
-            </div>
-          )}
-
-          {data?.content && (
+          {data?.content ? (
             <div
               className="text-primaryText text-[14px] lg:text-[18px]"
               dangerouslySetInnerHTML={{ __html: data.content }}
             />
+          ) : (
+            <div className="text-gray-600 text-center py-10">
+              Privacy policy content not available.
+            </div>
           )}
         </div>
       </div>
