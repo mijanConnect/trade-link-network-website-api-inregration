@@ -14,7 +14,6 @@ export const metadata = getMetadata("home");
 
 export default function Home() {
   return (
-    <main>
       <>
         {/* <Hero /> */}
         <Hero3 />
@@ -29,6 +28,5 @@ export default function Home() {
           <CTA />
         </div>
       </>
-    </main>
   );
 }

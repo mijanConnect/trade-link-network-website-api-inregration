@@ -233,7 +233,7 @@ export default function ContactUsPage() {
   };
 
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen">
       {/* Hero Section */}
       <section className="py-8 lg:py-20 px-4 bg-primary">
         <div className="container mx-auto text-center">
@@ -643,6 +643,6 @@ export default function ContactUsPage() {
           </Button>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
