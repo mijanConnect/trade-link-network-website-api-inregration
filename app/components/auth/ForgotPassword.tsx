@@ -19,9 +19,7 @@ export default function ForgotPasswordPage() {
       setError("Please enter your email");
       return;
     }
-
     setError("");
-
     try {
       await forgotPassword({ email }).unwrap();
       if (typeof window !== "undefined") {
@@ -57,7 +55,6 @@ export default function ForgotPasswordPage() {
             setError("");
           }}
         />
-
         <Button
           fullWidth
           variant="primary"

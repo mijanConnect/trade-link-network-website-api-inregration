@@ -37,13 +37,11 @@ export default function LoginPage() {
     }
     try {
       const response = await login({ email, password }).unwrap();
-
       // Save token to localStorage if present in response
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
         toast.success("Login successful!");
       }
-
       // Extract role from JWT token
       const token = response?.data?.accessToken;
       const role = token ? getRoleFromToken(token) : null;
@@ -54,7 +52,6 @@ export default function LoginPage() {
         router.push("/");
       }
     } catch (err) {
-      // Handle error if login fails
       const error = err as Record<string, unknown>;
       console.error("Full error:", error);
       console.error("Error data:", error?.data);
@@ -122,8 +119,8 @@ export default function LoginPage() {
           fullWidth
           variant="primary"
           size="md"
-          onClick={handleLogin} // Handle login on button click
-          loading={isLoading} // Show loading spinner while logging in
+          onClick={handleLogin}
+          loading={isLoading}
         >
           {isLoading ? "Logging in..." : "Login"}{" "}
           {/* Button text changes based on loading state */}
