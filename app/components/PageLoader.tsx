@@ -13,7 +13,7 @@ export default function PageLoader() {
         {/* Animated Logo/Spinner */}
         <div className="relative w-16 h-16">
           <div className="absolute inset-0 rounded-full border-4 border-gray-200" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-r-primary animate-spin" />
+          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-r-primary animate-spin" style={{ animationDuration: '0.5s' }} />
         </div>
 
         {/* Loading Text */}
