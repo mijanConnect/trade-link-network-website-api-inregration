@@ -99,13 +99,6 @@ export default function ServiceLocationDynamicContent({
 
   return (
     <>
-      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
-        <h2 className="text-2xl font-bold text-primaryText mb-6">
-          Frequently Asked Questions
-        </h2>
-        <StaticFAQItem items={faqItems} />
-      </div>
-
       <RelatedServices
         services={relatedServices}
         locationSlug={locationSlug}
@@ -130,6 +123,13 @@ export default function ServiceLocationDynamicContent({
             </article>
           ))}
         </div>
+      </div>
+
+      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+        <h2 className="text-2xl font-bold text-primaryText mb-6">
+          Frequently Asked Questions
+        </h2>
+        <StaticFAQItem items={faqItems} />
       </div>
     </>
   );
