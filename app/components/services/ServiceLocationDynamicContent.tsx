@@ -5,6 +5,7 @@ import StaticFAQItem, {
   staticFaqs,
 } from "@/app/components/services/StaticFAQItem";
 import RelatedServices from "@/app/components/services/RelatedServices";
+import RelatedLocations from "@/app/components/services/RelatedLocations";
 import { useGetDynamicServiceLocationQuery } from "@/store/slice/servicesSlice";
 
 type ServiceLocationDynamicContentProps = {
@@ -37,6 +38,15 @@ const fallbackRelatedServiceOptions = [
   { slug: "painting", label: "Painting" },
   { slug: "roofing", label: "Roofing" },
   { slug: "heating-cooling", label: "Heating & Cooling" },
+];
+
+const fallbackRelatedLocationOptions = [
+  { slug: "london", label: "London" },
+  { slug: "manchester", label: "Manchester" },
+  { slug: "birmingham", label: "Birmingham" },
+  { slug: "leeds", label: "Leeds" },
+  { slug: "bristol", label: "Bristol" },
+  { slug: "edinburgh", label: "Edinburgh" },
 ];
 
 const toDisplayText = (value: string) =>
@@ -87,6 +97,30 @@ export default function ServiceLocationDynamicContent({
       }));
   }, [data, locationName, serviceSlug]);
 
+  const relatedLocations = useMemo(() => {
+    const serviceName = data?.service.name ?? toDisplayText(serviceSlug);
+    const apiRelated = data?.content.relatedLocations ?? [];
+
+    if (apiRelated.length > 0) {
+      return apiRelated.map((item) => ({
+        key: item._id,
+        label: item.name,
+        slug: item.slug,
+        description: `Find ${serviceName.toLowerCase()} support in ${item.name}.`,
+      }));
+    }
+
+    return fallbackRelatedLocationOptions
+      .filter((item) => item.slug !== locationSlug)
+      .slice(0, 4)
+      .map((item) => ({
+        key: item.slug,
+        label: item.label,
+        slug: item.slug,
+        description: `Find ${serviceName.toLowerCase()} support in ${item.label}.`,
+      }));
+  }, [data, serviceSlug, locationSlug]);
+
   if (isLoading && !data) {
     return (
       <div className="space-y-8">
@@ -103,6 +137,13 @@ export default function ServiceLocationDynamicContent({
         services={relatedServices}
         locationSlug={locationSlug}
         locationName={locationName}
+        isError={isError && !data}
+      />
+
+      <RelatedLocations
+        locations={relatedLocations}
+        serviceSlug={serviceSlug}
+        serviceName={data?.service.name ?? toDisplayText(serviceSlug)}
         isError={isError && !data}
       />
 

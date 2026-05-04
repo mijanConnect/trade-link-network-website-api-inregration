@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
 import TextareaField from "@/app/components/ui/TextareaField";
@@ -43,13 +43,10 @@ function RegisterForm() {
   // Fetch categories
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     useGetCategoriesQuery({});
-  const categories = useMemo(
-    () => {
-      if (Array.isArray(categoriesData)) return categoriesData;
-      return [];
-    },
-    [categoriesData],
-  );
+  const categories = useMemo(() => {
+    if (Array.isArray(categoriesData)) return categoriesData;
+    return [];
+  }, [categoriesData]);
 
   // ============ Signup Fields ============
   const [name, setName] = useState("");
@@ -69,8 +66,9 @@ function RegisterForm() {
   const [address, setAddress] = useState("");
   const [website, setWebsite] = useState("");
   const [about, setAbout] = useState("");
-  const [documentType, setDocumentType] =
-    useState<ProfessionalDocumentType | "">("");
+  const [documentType, setDocumentType] = useState<
+    ProfessionalDocumentType | ""
+  >("");
 
   // ============ Services & Categories ============
   const [professionCategory, setProfessionCategory] = useState<string>("");
@@ -100,13 +98,10 @@ function RegisterForm() {
     useGetCategoriesServicesQuery(
       professionCategory ? professionCategory : skipToken,
     );
-  const availableServices = useMemo(
-    () => {
-      if (Array.isArray(servicesData)) return servicesData;
-      return [];
-    },
-    [servicesData],
-  );
+  const availableServices = useMemo(() => {
+    if (Array.isArray(servicesData)) return servicesData;
+    return [];
+  }, [servicesData]);
 
   // Create profession options from categories
   const professionOptions = categories.map((cat) => ({
@@ -505,9 +500,7 @@ function RegisterForm() {
               required
             />
             {errors.postcode && (
-              <p className="text-red-500 text-[14px] mt-1">
-                {errors.postcode}
-              </p>
+              <p className="text-red-500 text-[14px] mt-1">{errors.postcode}</p>
             )}
           </div>
 
@@ -764,12 +757,7 @@ function RegisterForm() {
 
       {/* ============ SUBMIT BUTTON ============ */}
       <div className="mt-8">
-        <Button
-          fullWidth
-          variant="primary"
-          size="md"
-          onClick={handleRegister}
-        >
+        <Button fullWidth variant="primary" size="md" onClick={handleRegister}>
           Complete Registration
         </Button>
       </div>

@@ -6,6 +6,12 @@ export type DynamicServiceLocationRelatedService = {
   slug: string;
 };
 
+export type DynamicServiceLocationRelatedLocation = {
+  _id: string;
+  name: string;
+  slug: string;
+};
+
 export type DynamicServiceLocationFaq = {
   question: string;
   answer: string;
@@ -42,6 +48,7 @@ export type DynamicServiceLocationResponse = {
   content: {
     localNotes: string;
     relatedServices: DynamicServiceLocationRelatedService[];
+    relatedLocations: DynamicServiceLocationRelatedLocation[];
   };
 };
 
