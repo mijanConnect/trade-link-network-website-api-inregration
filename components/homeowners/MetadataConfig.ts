@@ -74,9 +74,9 @@ export const pageMetadata: Record<string, Metadata> = {
     robots: { index: true, follow: true },
   },
   categories: {
-    title: "Services | TradeLink Network",
+    title: "Categories | TradeLink Network",
     description:
-      "Explore all the services available on TradeLink Network, from plumbing to electrical work and more.",
+      "Explore all the categories available on TradeLink Network, from plumbing to electrical work and more.",
     robots: { index: true, follow: true },
   },
   areas: {
