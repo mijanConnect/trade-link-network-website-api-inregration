@@ -92,7 +92,7 @@ export default function VerifyRegisterOTPPage() {
           }
         }
 
-        router.push("/professional-register");
+        router.push("/trade-person/leads");
         return;
       }
 

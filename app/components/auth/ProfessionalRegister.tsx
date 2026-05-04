@@ -275,7 +275,7 @@ function AboutForm() {
         <h2 className="mb-2 text-[18px]  text-primaryText">
           Add your business photos
         </h2>
-        <label className="flex h-[256px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
+        <label className="flex h-64 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-white hover:bg-slate-50">
           {businessImagePreview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img

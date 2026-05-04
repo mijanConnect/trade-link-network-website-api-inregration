@@ -438,7 +438,7 @@ export default function Navbar() {
 
             {!isLoggedIn && (
               <Button
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/register-professional")}
                 variant="primary"
                 className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
               >

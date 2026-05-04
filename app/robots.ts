@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           // Auth pages - should not be indexed
           "/login",
-          "/register",
+          "/register-professional",
           "/forgot-password",
           "/verify-otp",
           "/update-password",
@@ -58,7 +58,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: ["/"],
         disallow: [
           "/login",
-          "/register",
+          "/register-professional",
           "/forgot-password",
           "/verify-otp",
           "/update-password",

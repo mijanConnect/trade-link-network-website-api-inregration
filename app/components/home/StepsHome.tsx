@@ -131,7 +131,7 @@ export default function StepsHome() {
             data-aos="fade-up"
             data-aos-delay="500"
             className="mt-6 lg:mt-15 mb-10 lg:mb-20"
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register-professional")}
           >
             Join as a Tradeperson
           </Button>

@@ -364,7 +364,7 @@ export default function HowTradepersonWorkPage() {
           >
             Join today and start receiving new job opportunities.
           </p>
-          <Link href="/register">
+          <Link href="/register-professional">
             <Button
               className="font-bold w-32"
               variant="secondary"

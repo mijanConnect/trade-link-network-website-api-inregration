@@ -198,7 +198,7 @@ export default function Footer() {
                     Are you a tradesperson?
                   </h4>
                 </div>
-                <Link href="/register" className="inline-block mt-4">
+                <Link href="/register-professional" className="inline-block mt-4">
                   <Button className="px-10! font-semibold! inline-block">
                     Sign Up
                   </Button>

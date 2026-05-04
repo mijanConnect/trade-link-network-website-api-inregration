@@ -130,7 +130,7 @@ export default function LoginPage() {
         <p className="text-[15px]">
           Sign Up as{" "}
           <span
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register-professional")}
             className="font-semibold text-primary cursor-pointer hover:underline"
           >
             Tradeperson
