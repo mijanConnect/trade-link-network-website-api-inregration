@@ -21,8 +21,37 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import { toast } from "sonner";
 import AuthLogo from "./AuthLogo";
+import { config } from "@/lib/config";
+
+// Helper function to decode JWT and extract role
+const getRoleFromToken = (token: string): string | null => {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+
+    const decoded = JSON.parse(atob(parts[1]));
+    return decoded?.role || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
 
 export default function ProfessionalRefister() {
+  // Redirect already logged-in users
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const role = getRoleFromToken(token);
+      if (role === "PROFESSIONAL") {
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
+      } else if (role === "CUSTOMER") {
+        // CUSTOMER role users redirected to home
+        window.location.href = "/";
+      }
+    }
+  }, []);
+
   return (
     <div className="bg-background shadow-sm p-4 lg:p-8 rounded-lg w-full max-w-5xl border border-gray-200 mt-12 mb-12 mx-auto">
       <div className="border-b border-stroke mb-2">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
@@ -9,6 +9,7 @@ import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
 import { useLoginMutation } from "@/store/slice/authSlice";
 import { toast } from "sonner";
+import { config } from "@/lib/config";
 
 // Helper function to decode JWT and extract role
 const getRoleFromToken = (token: string): string | null => {
@@ -30,6 +31,19 @@ export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
   const router = useRouter();
 
+  // Redirect already logged-in users
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const role = getRoleFromToken(token);
+      if (role === "PROFESSIONAL") {
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
+      } else if (role === "CUSTOMER") {
+        router.push("/");
+      }
+    }
+  }, [router]);
+
   const handleLogin = async () => {
     if (!email || !password) {
       toast.error("Please fill out both fields.");
@@ -47,7 +61,8 @@ export default function LoginPage() {
       const role = token ? getRoleFromToken(token) : null;
 
       if (role === "PROFESSIONAL") {
-        router.push("/trade-person");
+        // Redirect PROFESSIONAL users to external trade-person URL
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
       } else {
         router.push("/");
       }
