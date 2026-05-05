@@ -2,6 +2,10 @@ import UpdatePasswordPage from "@/app/components/auth/UpdatePassword";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+  alternates: {
+    canonical: "https://www.tradelinknetwork.co.uk/update-password",
+  },
   title: "Update Password - Trade Link Network",
   description:
     "Update your Trade Link Network account password. Secure your account with a new password.",

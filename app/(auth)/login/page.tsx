@@ -2,6 +2,10 @@ import LoginPage from "@/app/components/auth/Login";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+  alternates: {
+    canonical: "https://www.tradelinknetwork.co.uk/login",
+  },
   title: "Login - Trade Link Network",
   description:
     "Sign in to your Trade Link Network account. Access your profile, leads, and services.",

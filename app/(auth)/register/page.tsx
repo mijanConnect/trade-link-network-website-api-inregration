@@ -2,6 +2,10 @@ import RegisterPage from "@/app/components/auth/Register";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+  alternates: {
+    canonical: "https://www.tradelinknetwork.co.uk/register",
+  },
   title: "Professional Register - Trade Link Network",
   description:
     "Create a new Trade Link Network account. Join thousands of homeowners and trade professionals connecting across the UK.",

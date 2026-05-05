@@ -3,6 +3,13 @@
 import { Suspense } from "react";
 import JobsContainer from "@/app/components/my-jobs/JobsContainer";
 
+// Note: This is a client component, so metadata won't apply here
+// Move metadata to a layout.tsx if needed for server-side rendering
+// export const metadata: Metadata = {
+//   metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+//   canonical: "https://www.tradelinknetwork.co.uk/my-jobs",
+// };
+
 export default function Page() {
   return (
     <>

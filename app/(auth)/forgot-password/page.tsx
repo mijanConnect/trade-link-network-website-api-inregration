@@ -2,6 +2,10 @@ import ForgotPasswordComponent from "@/app/components/auth/ForgotPassword";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+  alternates: {
+    canonical: "https://www.tradelinknetwork.co.uk/forgot-password",
+  },
   title: "Forgot Password - Trade Link Network",
   description:
     "Reset your Trade Link Network password. Enter your email to receive password reset instructions.",

@@ -1,5 +1,29 @@
 import { Metadata } from "next";
 
+// Mapping of page keys to their canonical URLs
+const pageCanonicalUrls: Record<string, string> = {
+  home: "https://www.tradelinknetwork.co.uk/",
+  "about-us": "https://www.tradelinknetwork.co.uk/about-us",
+  "code-of-conduct": "https://www.tradelinknetwork.co.uk/code-of-conduct",
+  "compliance-policy": "https://www.tradelinknetwork.co.uk/compliance-policy",
+  "privacy-policy": "https://www.tradelinknetwork.co.uk/privacy-policy",
+  "terms-conditions": "https://www.tradelinknetwork.co.uk/terms-conditions",
+  "cookies-policy": "https://www.tradelinknetwork.co.uk/cookies-policy",
+  "review-policy": "https://www.tradelinknetwork.co.uk/review-policy",
+  "contact-us": "https://www.tradelinknetwork.co.uk/contact-us",
+  "how-it-works": "https://www.tradelinknetwork.co.uk/how-it-works",
+  "how-tradeperson-works":
+    "https://www.tradelinknetwork.co.uk/how-tradeperson-works",
+  faq: "https://www.tradelinknetwork.co.uk/faq",
+  services: "https://www.tradelinknetwork.co.uk/services",
+  categories: "https://www.tradelinknetwork.co.uk/categories",
+  areas: "https://www.tradelinknetwork.co.uk/areas",
+  "post-service": "https://www.tradelinknetwork.co.uk/post-service",
+  "my-jobs": "https://www.tradelinknetwork.co.uk/my-jobs",
+  profile: "https://www.tradelinknetwork.co.uk/profile",
+  "provider-profile": "https://www.tradelinknetwork.co.uk/provider-profile",
+};
+
 export const pageMetadata: Record<string, Metadata> = {
   "about-us": {
     title: "About Us | TradeLink Network",
@@ -142,5 +166,18 @@ export const pageMetadata: Record<string, Metadata> = {
 };
 
 export const getMetadata = (page: string): Metadata => {
-  return pageMetadata[page] || {};
+  const metadata = pageMetadata[page] || {};
+  const canonical = pageCanonicalUrls[page];
+
+  if (canonical) {
+    return {
+      ...metadata,
+      metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+      alternates: {
+        canonical: canonical,
+      },
+    };
+  }
+
+  return metadata;
 };

@@ -2,6 +2,10 @@ import ProfessionalRegisterConsolidated from "@/app/components/auth/Professional
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+  alternates: {
+    canonical: "https://www.tradelinknetwork.co.uk/register-professional",
+  },
   title: "Professional Register - Trade Link Network",
   description:
     "Create a new Trade Link Network professional account. Register with all your business information in one step.",
