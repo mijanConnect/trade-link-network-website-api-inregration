@@ -153,7 +153,7 @@ export function CustomSelect({
 
       {dropdownLayout === "overlay" ? (
         isOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-1">
+          <div className="absolute left-0 right-0 top-full z-15 mt-1">
             {overlayOptionsList}
           </div>
         )

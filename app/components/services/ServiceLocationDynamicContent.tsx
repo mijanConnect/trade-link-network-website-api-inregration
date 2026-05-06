@@ -67,6 +67,13 @@ export default function ServiceLocationDynamicContent({
 
   const locationName = data?.location.name ?? toDisplayText(locationSlug);
 
+  const activeControl = data?.activeControl ?? {
+    isRelatedLocationActive: true,
+    isRelatedServiceActive: true,
+    isLocalNotesActive: true,
+    isFaqActive: true,
+  };
+
   const faqItems = data?.service.faqs?.length ? data.service.faqs : staticFaqs;
   const guideItems = data?.service.guides?.length
     ? data.service.guides
@@ -133,45 +140,53 @@ export default function ServiceLocationDynamicContent({
 
   return (
     <>
-      <RelatedServices
-        services={relatedServices}
-        locationSlug={locationSlug}
-        locationName={locationName}
-        isError={isError && !data}
-      />
+      {activeControl.isRelatedServiceActive && (
+        <RelatedServices
+          services={relatedServices}
+          locationSlug={locationSlug}
+          locationName={locationName}
+          isError={isError && !data}
+        />
+      )}
 
-      <RelatedLocations
-        locations={relatedLocations}
-        serviceSlug={serviceSlug}
-        serviceName={data?.service.name ?? toDisplayText(serviceSlug)}
-        isError={isError && !data}
-      />
+      {activeControl.isRelatedLocationActive && (
+        <RelatedLocations
+          locations={relatedLocations}
+          serviceSlug={serviceSlug}
+          serviceName={data?.service.name ?? toDisplayText(serviceSlug)}
+          isError={isError && !data}
+        />
+      )}
 
-      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
-        <h2 className="text-2xl font-bold text-primaryText mb-6">
-          Helpful Guides
-        </h2>
-        <div className="space-y-5">
-          {guideItems.map((guide) => (
-            <article
-              key={guide.title}
-              className="border-b pb-4 last:border-b-0"
-            >
-              <h3 className="text-lg font-semibold text-primaryText mb-2">
-                {guide.title}
-              </h3>
-              <p className="text-primaryTextLight">{guide.content}</p>
-            </article>
-          ))}
+      {activeControl.isLocalNotesActive && (
+        <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+          <h2 className="text-2xl font-bold text-primaryText mb-6">
+            Helpful Guides
+          </h2>
+          <div className="space-y-5">
+            {guideItems.map((guide) => (
+              <article
+                key={guide.title}
+                className="border-b pb-4 last:border-b-0"
+              >
+                <h3 className="text-lg font-semibold text-primaryText mb-2">
+                  {guide.title}
+                </h3>
+                <p className="text-primaryTextLight">{guide.content}</p>
+              </article>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
-        <h2 className="text-2xl font-bold text-primaryText mb-6">
-          Frequently Asked Questions
-        </h2>
-        <StaticFAQItem items={faqItems} />
-      </div>
+      {activeControl.isFaqActive && (
+        <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+          <h2 className="text-2xl font-bold text-primaryText mb-6">
+            Frequently Asked Questions
+          </h2>
+          <StaticFAQItem items={faqItems} />
+        </div>
+      )}
     </>
   );
 }

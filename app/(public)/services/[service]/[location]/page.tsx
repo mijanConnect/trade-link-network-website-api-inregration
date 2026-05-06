@@ -327,14 +327,16 @@ export default async function ServiceLocationPage({ params }: Props) {
               </div>
             )}
 
-            <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
-              <h2 className="text-2xl font-bold text-primaryText mb-4">
-                Local Notes for {pageData.locationName}
-              </h2>
-              <p className="text-primaryTextLight whitespace-pre-line">
-                {dynamicData?.content?.localNotes || pageData.localNotes}
-              </p>
-            </div>
+            {dynamicData?.activeControl?.isLocalNotesActive !== false && (
+              <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <h2 className="text-2xl font-bold text-primaryText mb-4">
+                  Local Notes for {pageData.locationName}
+                </h2>
+                <p className="text-primaryTextLight whitespace-pre-line">
+                  {dynamicData?.content?.localNotes || pageData.localNotes}
+                </p>
+              </div>
+            )}
 
             <ServiceLocationDynamicContent
               serviceSlug={service}
