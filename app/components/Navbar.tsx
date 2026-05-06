@@ -177,19 +177,17 @@ export default function Navbar() {
 
   // Initialize on mount to prevent hydration mismatch
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+    setIsHydrated(true);
+
+    const handleStorageChange = () => {
       const token = localStorage.getItem("accessToken");
       setIsLoggedIn(!!token);
-      setIsHydrated(true);
+    };
 
-      const handleStorageChange = () => {
-        const token = localStorage.getItem("accessToken");
-        setIsLoggedIn(!!token);
-      };
-
-      window.addEventListener("storage", handleStorageChange);
-      return () => window.removeEventListener("storage", handleStorageChange);
-    }
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleClose = () => {

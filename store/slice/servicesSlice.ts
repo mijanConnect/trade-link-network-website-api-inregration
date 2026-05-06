@@ -50,6 +50,12 @@ export type DynamicServiceLocationResponse = {
     relatedServices: DynamicServiceLocationRelatedService[];
     relatedLocations: DynamicServiceLocationRelatedLocation[];
   };
+  activeControl?: {
+    isRelatedLocationActive?: boolean;
+    isRelatedServiceActive?: boolean;
+    isLocalNotesActive?: boolean;
+    isFaqActive?: boolean;
+  };
 };
 
 export const servicesApi = baseApi.injectEndpoints({
