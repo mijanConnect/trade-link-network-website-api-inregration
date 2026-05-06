@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import PopularServices from "./PopularServices";
 import { locations } from "./Location";
 import Button from "../ui/Button";

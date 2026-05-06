@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.css";
+import "aos/dist/aos.css";
 import type { ReactNode } from "react";
 import { Poppins } from "next/font/google";
 import Providers from "./providers";

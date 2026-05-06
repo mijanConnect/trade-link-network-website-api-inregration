@@ -31,13 +31,13 @@ export default async function ServiceLocationsPage({ params }: Props) {
   const serviceName = toTitleCase(service);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gray-100 text-white">
+    <div className="min-h-screen">
+      <div className="bg-primary text-white">
         <div className="container mx-auto px-4 py-8 lg:py-18 text-center">
-          <h1 className="text-2xl lg:text-5xl font-bold mb-3 text-black">
+          <h1 className="text-2xl lg:text-5xl font-bold mb-3 text-white">
             {serviceName} Services
           </h1>
-          <p className="text-base lg:text-lg opacity-90 max-w-3xl text-primary text-center mx-auto">
+          <p className="text-base lg:text-lg opacity-90 max-w-3xl text-white text-center mx-auto">
             Select your location to view trusted professionals for{" "}
             {serviceName.toLowerCase()} services.
           </p>

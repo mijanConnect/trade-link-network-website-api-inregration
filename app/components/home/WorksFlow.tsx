@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
+
 import { StepOne, StepThree, StepTwo } from "../Svg";
 
 export default function WorksFlow() {
@@ -30,8 +30,8 @@ export default function WorksFlow() {
   }, []);
 
   return (
-    <>
-      <div className="bg-white py-6 md:py-10 lg:py-[130px]" id="works-flow">
+    <section>
+      <div className="py-6 md:py-10 lg:py-24 bg-white" id="works-flow">
         <div className="container mx-auto px-4 lg:px-0">
           <h1
             className="text-[20px] md:text-[40px] font-semibold text-primaryText mb-4 md:mb-6 lg:mb-20 text-center"
@@ -97,6 +97,6 @@ export default function WorksFlow() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

@@ -1,6 +1,7 @@
 import { baseApi } from "../baseApi";
 
 export const categoriesApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     // ---------------------------------------
     // GET CATEGORIES

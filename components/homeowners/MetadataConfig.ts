@@ -1,47 +1,71 @@
 import { Metadata } from "next";
 
+// Mapping of page keys to their canonical URLs
+const pageCanonicalUrls: Record<string, string> = {
+  home: "https://www.tradelinknetwork.co.uk/",
+  "about-us": "https://www.tradelinknetwork.co.uk/about-us",
+  "code-of-conduct": "https://www.tradelinknetwork.co.uk/code-of-conduct",
+  "compliance-policy": "https://www.tradelinknetwork.co.uk/compliance-policy",
+  "privacy-policy": "https://www.tradelinknetwork.co.uk/privacy-policy",
+  "terms-conditions": "https://www.tradelinknetwork.co.uk/terms-conditions",
+  "cookies-policy": "https://www.tradelinknetwork.co.uk/cookies-policy",
+  "review-policy": "https://www.tradelinknetwork.co.uk/review-policy",
+  "contact-us": "https://www.tradelinknetwork.co.uk/contact-us",
+  "how-it-works": "https://www.tradelinknetwork.co.uk/how-it-works",
+  "how-tradeperson-works":
+    "https://www.tradelinknetwork.co.uk/how-tradeperson-works",
+  faq: "https://www.tradelinknetwork.co.uk/faq",
+  services: "https://www.tradelinknetwork.co.uk/services",
+  categories: "https://www.tradelinknetwork.co.uk/categories",
+  areas: "https://www.tradelinknetwork.co.uk/areas",
+  "post-service": "https://www.tradelinknetwork.co.uk/post-service",
+  "my-jobs": "https://www.tradelinknetwork.co.uk/my-jobs",
+  profile: "https://www.tradelinknetwork.co.uk/profile",
+  "provider-profile": "https://www.tradelinknetwork.co.uk/provider-profile",
+};
+
 export const pageMetadata: Record<string, Metadata> = {
   "about-us": {
     title: "About Us | TradeLink Network",
     description:
       "Learn about TradeLink Network and our mission to connect trade professionals with clients.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "code-of-conduct": {
     title: "Code of Conduct | TradeLink Network",
     description:
       "Read TradeLink Network's Code of Conduct to understand our commitment to fostering a respectful and inclusive community for all users.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "compliance-policy": {
     title: "Compliance Policy | TradeLink Network",
     description:
       "Read TradeLink Network's compliance policy to understand our commitment to ethical business practices and regulatory adherence.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "privacy-policy": {
     title: "Privacy Policy | TradeLink Network",
     description:
       "Review TradeLink Network's Privacy Policy to understand how we collect, use, and protect your personal information.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "terms-conditions": {
     title: "Terms and Conditions | TradeLink Network",
     description:
       "Read TradeLink Network's Terms and Conditions to understand the rules and restrictions governing your use of our platform.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "cookies-policy": {
     title: "Cookies Policy | TradeLink Network",
     description:
       "Learn about how TradeLink Network uses cookies and other tracking technologies to enhance your experience.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "review-policy": {
     title: "Review Policy | TradeLink Network",
     description:
       "Understand TradeLink Network's Review Policy to learn how we ensure authentic and helpful customer reviews.",
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   },
   "contact-us": {
     title: "Contact Us | TradeLink Network",
@@ -74,9 +98,9 @@ export const pageMetadata: Record<string, Metadata> = {
     robots: { index: true, follow: true },
   },
   categories: {
-    title: "Services | TradeLink Network",
+    title: "Categories | TradeLink Network",
     description:
-      "Explore all the services available on TradeLink Network, from plumbing to electrical work and more.",
+      "Explore all the categories available on TradeLink Network, from plumbing to electrical work and more.",
     robots: { index: true, follow: true },
   },
   areas: {
@@ -107,12 +131,21 @@ export const pageMetadata: Record<string, Metadata> = {
     title: "Trade Professional Profile | TradeLink Network",
     description:
       "View the detailed profile of a trade professional on TradeLink Network.",
-    robots: { index: true, follow: true },
+    robots: { index: false, follow: false },
   },
   home: {
     title: "Trade Link Network | Find Trusted Trade Professionals",
     description:
       "Connect with vetted and trusted trade professionals across the UK. Post your job for free and get instant quotes.",
+    keywords: [
+      "trade professionals",
+      "trusted trades",
+      "verified trades",
+      "local services",
+      "homeowners uk",
+      "service categories",
+      "compare services",
+    ],
     robots: { index: true, follow: true },
     openGraph: {
       title: "Trade Link Network | Find Trusted Trade Professionals",
@@ -133,5 +166,18 @@ export const pageMetadata: Record<string, Metadata> = {
 };
 
 export const getMetadata = (page: string): Metadata => {
-  return pageMetadata[page] || {};
+  const metadata = pageMetadata[page] || {};
+  const canonical = pageCanonicalUrls[page];
+
+  if (canonical) {
+    return {
+      ...metadata,
+      metadataBase: new URL("https://www.tradelinknetwork.co.uk"),
+      alternates: {
+        canonical: canonical,
+      },
+    };
+  }
+
+  return metadata;
 };

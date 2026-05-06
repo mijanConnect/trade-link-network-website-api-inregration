@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
 import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
 import { useForgotPasswordMutation } from "@/store/slice/authSlice";
+import { config } from "@/lib/config";
+
+// Helper function to decode JWT and extract role
+const getRoleFromToken = (token: string): string | null => {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+
+    const decoded = JSON.parse(atob(parts[1]));
+    return decoded?.role || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -14,14 +29,25 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState("");
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
+  // Redirect already logged-in users
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const role = getRoleFromToken(token);
+      if (role === "PROFESSIONAL") {
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
+      } else if (role === "CUSTOMER") {
+        router.push("/");
+      }
+    }
+  }, [router]);
+
   const handleSendOTP = async () => {
     if (!email) {
       setError("Please enter your email");
       return;
     }
-
     setError("");
-
     try {
       await forgotPassword({ email }).unwrap();
       if (typeof window !== "undefined") {
@@ -57,7 +83,6 @@ export default function ForgotPasswordPage() {
             setError("");
           }}
         />
-
         <Button
           fullWidth
           variant="primary"

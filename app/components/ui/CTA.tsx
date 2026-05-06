@@ -3,7 +3,6 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "./Button";
 
 export default function CTA() {
@@ -28,7 +27,7 @@ export default function CTA() {
   return (
     <>
       <div
-        className="container mx-auto px-4 lg:px-0 mb-10 lg:mb-[140px] mt-4 lg:mt-10"
+        className="container mx-auto px-4 lg:px-0 mb-8 lg:mb-[140px] mt-0 lg:mt-10"
         data-aos="fade-up"
       >
         <div className="relative overflow-hidden rounded-md bg-[url('/assets/cta-image.png')] bg-cover bg-center bg-no-repeat">

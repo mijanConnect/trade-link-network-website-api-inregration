@@ -2,49 +2,49 @@
 
 import Link from "next/link";
 
-type RelatedService = {
+type RelatedLocation = {
   key: string;
   label: string;
   slug: string;
   description: string;
 };
 
-type RelatedServicesProps = {
-  services: RelatedService[];
-  locationSlug: string;
-  locationName: string;
+type RelatedLocationsProps = {
+  locations: RelatedLocation[];
+  serviceSlug: string;
+  serviceName: string;
   isError?: boolean;
 };
 
-export default function RelatedServices({
-  services,
-  locationSlug,
-  locationName,
+export default function RelatedLocations({
+  locations,
+  serviceSlug,
+  serviceName,
   isError,
-}: RelatedServicesProps) {
+}: RelatedLocationsProps) {
   return (
     <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
       <h2 className="text-2xl font-bold text-primaryText mb-4">
-        Related Services in {locationName}
+        {serviceName} in Other Locations
       </h2>
       <p className="text-primaryTextLight mb-6">
-        Explore other services available in {locationName} that may be useful
-        for your project.
+        Looking for {serviceName.toLowerCase()} services in a different area?
+        Explore {serviceName.toLowerCase()} professionals in nearby locations.
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {services.map((relatedService) => (
+        {locations.map((relatedLocation) => (
           <Link
-            key={relatedService.key}
-            href={`/services/${relatedService.slug}/${locationSlug}`}
+            key={relatedLocation.key}
+            href={`/services/${serviceSlug}/${relatedLocation.slug}`}
             className="group rounded-sm border border-gray-200 p-4 lg:p-5 transition-all duration-200 hover:border-primary hover:shadow-sm hover:bg-gray-50 block"
           >
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-semibold text-primaryText group-hover:text-primary">
-                  {relatedService.label}
+                  {relatedLocation.label}
                 </h3>
                 <p className="mt-1 text-sm text-primaryTextLight">
-                  {relatedService.description}
+                  {relatedLocation.description}
                 </p>
               </div>
               <span className="text-primary text-xl transition-transform duration-200 group-hover:translate-x-1">
@@ -56,7 +56,7 @@ export default function RelatedServices({
       </div>
       {isError ? (
         <p className="mt-4 text-sm text-red-600">
-          Unable to load related services right now.
+          Unable to load related locations right now.
         </p>
       ) : null}
     </div>

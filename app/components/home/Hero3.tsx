@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "../ui/Button";
 
 export default function Hero3() {
@@ -24,7 +23,7 @@ export default function Hero3() {
   }, []);
 
   return (
-    <>
+    <section>
       <div
         data-aos="fade-down"
         className="w-full h-[50vh] lg:h-[92vh] bg-[url('/assets/hero-image3.webp')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -51,7 +50,7 @@ export default function Hero3() {
           </p>
           <div data-aos="fade-up" data-aos-delay="500">
             <Button
-              className="mt-6 lg:mt-12"
+              className="mt-6 lg:mt-12 font-semibold w-38"
               variant="primary"
               onClick={handleScrollToCategory}
             >
@@ -60,6 +59,6 @@ export default function Hero3() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }
