@@ -15,19 +15,24 @@ type ServiceLocationDynamicContentProps = {
 
 const fallbackGuides = [
   {
-    title: "How to prepare before requesting this service",
+    title: "How to prepare before posting your job",
     content:
-      "List your priorities, timeline, and expected budget. Clear details help professionals provide accurate quotes and realistic schedules.",
+      "List your project priorities, preferred timeline, estimated budget, and any important details about the work required. Adding measurements, photos, material preferences, and access information can help professionals provide more accurate quotes and realistic timescales through the platform.",
   },
   {
-    title: "Questions to ask before hiring",
+    title: "Questions to ask before choosing a professional",
     content:
-      "Ask about previous similar work, estimated completion time, materials included, and post-service support.",
+      "Ask about previous similar projects, estimated completion times, materials included, guarantees, insurance coverage, and whether preparation or waste removal is included within the quote. Comparing multiple responses can help you make a more informed decision.",
   },
   {
     title: "How to compare quotes effectively",
     content:
-      "Do not choose only by lowest price. Compare scope of work, quality promises, and communication clarity.",
+      "Do not choose based on price alone. Compare the scope of work, materials proposed, preparation included, estimated timelines, communication quality, reviews, and overall value offered by each professional responding to your job request.",
+  },
+  {
+    title: "What can affect quote prices?",
+    content:
+      "Quote prices can vary depending on project size, property access, material choices, groundwork requirements, drainage conditions, labour needs, and installation complexity. Additional preparation work or specialist materials may also affect final pricing and project timelines.",
   },
 ];
 
@@ -161,7 +166,7 @@ export default function ServiceLocationDynamicContent({
       {activeControl.isLocalNotesActive && (
         <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
           <h2 className="text-2xl font-bold text-primaryText mb-6">
-            Helpful Guides
+            Helpful local guides
           </h2>
           <div className="space-y-5">
             {guideItems.map((guide) => (
