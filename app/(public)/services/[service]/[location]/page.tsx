@@ -31,7 +31,7 @@ function createStaticPageData(service: string, location: string) {
     locationName,
     title: `${serviceName} in ${locationName} | TradeLink Network`,
     description: `Find trusted ${serviceName.toLowerCase()} professionals in ${locationName}. Post your job, compare quotes, and hire with confidence.`,
-    intro: `Looking for reliable ${serviceName.toLowerCase()} services in ${locationName}? TradeLink Network helps you connect with local professionals who match your project needs.`,
+    intro: `Compare quotes from trusted vetted local ${serviceName.toLowerCase()} specialists serving ${locationName}. Post your job and connect with trusted professionals for your project.`,
     coreDescription: `${serviceName} services on TradeLink Network are built to deliver reliable, high-quality solutions backed by skilled professionals and strong local expertise. Whether you require urgent assistance or are planning a project in advance, the platform makes it easy to connect with trusted specialists in ${locationName} who understand the specific requirements of your area. From initial consultation and assessment to completion, professionals focus on delivering efficient, safe, and long-lasting results using industry best practices and quality materials. With a commitment to transparency, timely service, and customer satisfaction, TradeLink Network ensures you can confidently find the right experts to handle your ${serviceName} needs with precision and care.`,
     detailedInfo: [
       "Provide a clear and detailed description of your requirements, including the scope of work, specific issues, and any expectations, so professionals can offer accurate quotes and tailored solutions.",
@@ -252,20 +252,20 @@ export default async function ServiceLocationPage({ params }: Props) {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
-                Trusted {pageData.serviceName} in {pageData.locationName}
+                Trusted {pageData.serviceName} Professionals in{" "}
+                {pageData.locationName}
               </h2>
-              <p className="text-primaryTextLight">
-                {dynamicData?.seo?.metaDescription || pageData.intro}
-              </p>
+              <p className="text-primaryTextLight">{pageData.intro}</p>
             </div>
 
             <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8 border-l-4 border-primary">
               <h2 className="text-2xl font-bold text-primaryText mb-3">
-                Need {pageData.serviceName} Support Right Now?
+                Need {pageData.serviceName} Quotes in {pageData.locationName}?
               </h2>
               <p className="text-primaryTextLight mb-6">
-                Share your requirements and receive responses from professionals
-                serving {pageData.locationName}.
+                Tell us about your project and receive quotes from local{" "}
+                {pageData.serviceName} professionals. Compare services, reviews,
+                and pricing in one place.
               </p>
               <Link href="/categories">
                 <Button>Post Your Job Request</Button>

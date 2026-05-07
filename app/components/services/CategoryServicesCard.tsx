@@ -29,8 +29,10 @@ export default function CategoryServicesCard({
   );
 
   const services = ((servicesData || []) as CategoryService[]).filter(
-    (service) => service.name !== "Not sure yet – need advice",
+    (service) => !service.name?.trim().toLowerCase().startsWith("not sure"),
   );
+
+  console.log(services)
 
   const toSlug = (value: string) =>
     value
