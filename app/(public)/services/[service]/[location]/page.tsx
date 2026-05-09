@@ -345,7 +345,8 @@ export default async function ServiceLocationPage({ params }: Props) {
           </div>
 
           {/* Final call-to-action section */}
-          <div>
+          <div className="space-y-6">
+            {/* Homeowner CTA */}
             <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 sticky top-4">
               <h2 className="text-2xl font-bold text-primaryText mb-4">
                 Ready to Get Started?
@@ -357,6 +358,42 @@ export default async function ServiceLocationPage({ params }: Props) {
               </p>
               <Link href="/categories">
                 <Button className="w-full mb-4">Post a Job Now</Button>
+              </Link>
+
+              <h2 className="text-2xl font-bold text-primaryText mb-4 mt-8">
+                Are You a Local {pageData.serviceName} Professional?
+              </h2>
+              <p className="text-primaryTextLight mb-6">
+                Join Trade Link Network and connect with homeowners searching
+                for trusted {pageData.serviceName.toLowerCase()} services in{" "}
+                {pageData.locationName}.
+              </p>
+
+              <div className="bg-blue-50 rounded-md p-4 mb-6 border-l-4 border-primary">
+                <h3 className="font-semibold text-primaryText mb-3 text-sm">
+                  Benefits:
+                </h3>
+                <ul className="space-y-2 text-sm text-primaryTextLight">
+                  <li className="flex items-start">
+                    <span className="text-primary font-bold mr-2">•</span>
+                    <span>Receive local job opportunities</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary font-bold mr-2">•</span>
+                    <span>Grow your business visibility</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary font-bold mr-2">•</span>
+                    <span>Choose suitable leads</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-primary font-bold mr-2">•</span>
+                    <span>Build trust through reviews</span>
+                  </li>
+                </ul>
+              </div>
+              <Link href="/professional-register">
+                <Button className="w-full">Join as a Tradesperson</Button>
               </Link>
 
               <div className="mt-8 pt-8 border-t">
