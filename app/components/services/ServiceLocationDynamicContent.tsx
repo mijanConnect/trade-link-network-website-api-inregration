@@ -100,7 +100,7 @@ export default function ServiceLocationDynamicContent({
 
     return fallbackRelatedServiceOptions
       .filter((item) => item.slug !== serviceSlug)
-      .slice(0, 4)
+      .slice(0, 0)
       .map((item) => ({
         key: item.slug,
         label: item.label,
@@ -124,7 +124,7 @@ export default function ServiceLocationDynamicContent({
 
     return fallbackRelatedLocationOptions
       .filter((item) => item.slug !== locationSlug)
-      .slice(0, 4)
+      .slice(0, 0)
       .map((item) => ({
         key: item.slug,
         label: item.label,

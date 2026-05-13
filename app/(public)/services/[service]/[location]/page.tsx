@@ -31,7 +31,7 @@ function createStaticPageData(service: string, location: string) {
     locationName,
     title: `${serviceName} in ${locationName} | TradeLink Network`,
     description: `Find trusted ${serviceName.toLowerCase()} professionals in ${locationName}. Post your job, compare quotes, and hire with confidence.`,
-    intro: `Compare quotes from trusted vetted local ${serviceName.toLowerCase()} specialists serving ${locationName}. Post your job and connect with trusted professionals for your project.`,
+    intro: `Compare quotes from trusted local ${serviceName.toLowerCase()} specialists serving ${locationName}. Post your job and connect with trusted professionals for your project.`,
     coreDescription: `${serviceName} services on TradeLink Network are built to deliver reliable, high-quality solutions backed by skilled professionals and strong local expertise. Whether you require urgent assistance or are planning a project in advance, the platform makes it easy to connect with trusted specialists in ${locationName} who understand the specific requirements of your area. From initial consultation and assessment to completion, professionals focus on delivering efficient, safe, and long-lasting results using industry best practices and quality materials. With a commitment to transparency, timely service, and customer satisfaction, TradeLink Network ensures you can confidently find the right experts to handle your ${serviceName} needs with precision and care.`,
     detailedInfo: [
       "Provide a clear and detailed description of your requirements, including the scope of work, specific issues, and any expectations, so professionals can offer accurate quotes and tailored solutions.",
