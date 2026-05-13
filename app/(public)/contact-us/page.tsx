@@ -350,10 +350,7 @@ export default function ContactUsPage() {
               <p className="text-gray-700 text-sm lg:text-md lg:text-lg mb-2">
                 <span className="font-semibold">Phone number: </span>
                 0330 160 2233
-              </p>
-              <p className="text-gray-600 italic text-sm lg:text-md lg:text-lg">
-                (Email is currently the fastest way to contact us.)
-              </p>
+              </p> 
             </div>
 
             {/* Company Information */}
