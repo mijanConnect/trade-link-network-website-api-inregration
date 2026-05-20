@@ -42,7 +42,7 @@ export default function ProblemLandingPage() {
   );
 
   return (
-    <section className="min-h-screen bg-gray-50">
+    <section className="min-h-screen">
       <div className="bg-primary text-white">
         <div className="container mx-auto px-4 py-16 lg:py-24">
           <p className="mb-3 text-sm uppercase tracking-[0.25em] text-slate-300">
