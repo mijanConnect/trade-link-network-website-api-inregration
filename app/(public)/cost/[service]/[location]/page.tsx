@@ -21,6 +21,7 @@ type CostGuideContent = {
   averageCost?: string;
   whatAffectsPrice?: string;
   typicalProjectExamples?: string;
+  typicalCostRange?: string;
   tipsBeforeHiring?: string;
 };
 
@@ -94,17 +95,16 @@ export default async function CostServiceLocationPage({ params }: Props) {
   }
 
   return (
-    <section className="min-h-screen bg-gray-50">
-      <div className="bg-primary text-white">
+    <section className="min-h-screen">
+      <div className="bg-primary text-white shadow-[0_12px_40px_rgba(15,23,42,0.15)]">
         <div className="container mx-auto px-4 py-16 lg:py-24">
-          <p className="text-sm uppercase tracking-[0.25em] text-slate-400">
+          <p className="text-sm uppercase tracking-[0.25em] text-slate-300/80">
             Cost guide details
           </p>
-          <h1 className="mt-3 text-3xl font-bold lg:text-6xl">
-            {`${guideData.title} in ${locationName}` ||
-              `${serviceName} in ${locationName}`}
+          <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-tight lg:text-6xl">
+            {guideData.title || `${serviceName} Cost in ${locationName}`}
           </h1>
-          <p className="mt-4 max-w-3xl text-base text-slate-300 lg:text-lg">
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
             {content?.introduction ||
               `View cost details for ${serviceName} in ${locationName}.`}
           </p>
@@ -112,8 +112,11 @@ export default async function CostServiceLocationPage({ params }: Props) {
       </div>
 
       <div className="container mx-auto px-4 py-10 lg:py-16">
-        <div className="mb-8 flex items-center gap-2 text-sm text-slate-500">
-          <Link href="/cost" className="hover:text-slate-900 hover:underline">
+        <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+          <Link
+            href="/cost"
+            className="transition hover:text-slate-900 hover:underline"
+          >
             Cost
           </Link>
           <span>/</span>
@@ -122,56 +125,122 @@ export default async function CostServiceLocationPage({ params }: Props) {
           <span>{locationName}</span>
         </div>
 
-        <div className="">
-          <div className="">
-            <article id="cost-details" className="scroll-mt-24">
-              {/* <div className="mb-6 rounded-md border border-primary/20 bg-gray-100 p-4">
-                <p className="text-[14px] font-medium text-primaryText">
-                  Cost guide for{" "}
-                  <span className="font-bold">{locationName}</span>
-                </p>
-              </div> */}
-
-              <section className="mb-8 mt-8">
-                <h3 className="mb-3 text-[20px] font-semibold text-primaryText">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_380px]">
+          <main className="min-w-0">
+            <article id="cost-details" className="space-y-6 scroll-mt-24">
+              <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <div className="text-2xl font-bold text-primaryText mb-4">
                   Average Cost
-                </h3>
-                <p className="text-primaryTextLight">
-                  {content?.averageCost ||
-                    "No average cost information available."}
+                </div>
+                <p className="space-y-3 text-primaryTextLight">
+                  {content?.averageCost ? (
+                    content.averageCost
+                  ) : (
+                    <span className="text-sm italic text-gray-400">
+                      No average cost information available.
+                    </span>
+                  )}
                 </p>
               </section>
 
-              <section className="mb-8 mt-6">
-                <h3 className="mb-3 text-[20px] font-semibold text-primaryText">
+              <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <div className="text-2xl font-bold text-primaryText mb-4">
                   What Affects the Price
-                </h3>
-                <p className="text-primaryTextLight">
-                  {content?.whatAffectsPrice ||
-                    "No pricing factors information available."}
+                </div>
+                <p className="space-y-3 text-primaryTextLight">
+                  {content?.whatAffectsPrice ? (
+                    content.whatAffectsPrice
+                  ) : (
+                    <span className="text-sm italic text-gray-400">
+                      No information available.
+                    </span>
+                  )}
                 </p>
               </section>
 
-              <section className="mb-8 mt-6">
-                <h3 className="mb-3 text-[20px] font-semibold text-primaryText">
+              <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <div className="text-2xl font-bold text-primaryText mb-4">
+                  Typical Cost Range
+                </div>
+                <p className="space-y-3 text-primaryTextLight">
+                  {content?.typicalCostRange ? (
+                    content.typicalCostRange
+                  ) : (
+                    <span className="text-sm italic text-gray-400">
+                      No typical cost range information available.
+                    </span>
+                  )}
+                </p>
+              </section>
+
+              <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <div className="text-2xl font-bold text-primaryText mb-4">
                   Typical Project Examples
-                </h3>
-                <p className="text-primaryTextLight">
-                  {content?.typicalProjectExamples ||
-                    "No project examples available."}
+                </div>
+                <p className="space-y-3 text-primaryTextLight">
+                  {content?.typicalProjectExamples ? (
+                    content.typicalProjectExamples
+                  ) : (
+                    <span className="text-sm italic text-gray-400">
+                      No project examples available.
+                    </span>
+                  )}
                 </p>
               </section>
 
-              <section className="mb-10 mt-6">
-                <h3 className="mb-3 text-[20px] font-semibold text-primaryText">
-                  Tips Before Hiring
-                </h3>
-                <p className="text-primaryTextLight">
-                  {content?.tipsBeforeHiring || "No hiring tips available."}
+              <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
+                <div className="text-2xl font-bold text-primaryText mb-4">
+                  Tips Before Hiring a Contractor
+                </div>
+                <p className="space-y-3 text-primaryTextLight">
+                  {content?.tipsBeforeHiring ? (
+                    content.tipsBeforeHiring
+                  ) : (
+                    <span className="text-sm italic text-gray-400">
+                      No hiring tips available.
+                    </span>
+                  )}
                 </p>
               </section>
             </article>
-          </div>
+          </main>
+
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+            <div className="space-y-6 rounded-sm bg-white p-4 shadow-[0_0_10px_rgba(0,0,0,0.05)] lg:p-8">
+              <h2 className="mb-4 text-2xl font-bold text-primaryText">
+                Ready to Get Started?
+              </h2>
+              <p className="mb-6 text-primaryTextLight">
+                Post your {serviceName.toLowerCase()} job in {locationName} on
+                Trade Link Network to compare local contractor quotes.
+              </p>
+
+              <Link
+                href="/categories"
+                className="inline-flex w-full items-center justify-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                Post a Job Now
+              </Link>
+
+              <div className="mt-4 border-t pt-8">
+                <h3 className="mb-4 font-semibold text-primaryText">
+                  Need Help?
+                </h3>
+                <Link
+                  href="/contact-us"
+                  className="mb-2 block text-primary hover:underline"
+                >
+                  Contact
+                </Link>
+                <Link
+                  href="/faq"
+                  className="block text-primary hover:underline"
+                >
+                  View FAQ
+                </Link>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
