@@ -37,6 +37,7 @@ type ProblemGuidePage = {
   type: string;
   serviceId?: GuideRef | string;
   locationId?: GuideRef | string;
+  faqs?: FAQItem[];
   content?: ProblemGuideContent;
   metaTitle?: string;
   metaDescription?: string;
@@ -53,32 +54,6 @@ type FAQItem = {
   question: string;
   answer: string;
 };
-
-const buildFaqItems = (
-  serviceName: string,
-  locationName: string,
-): FAQItem[] => [
-  {
-    question: `How do I know if I need a ${serviceName.toLowerCase()} professional?`,
-    answer: `If the issue is recurring, getting worse, or affecting safety or function, it is usually worth speaking with a ${serviceName.toLowerCase()} professional in ${locationName}.`,
-  },
-  {
-    question: `What should I include when posting a job for ${serviceName.toLowerCase()} help?`,
-    answer: `Share the problem details, how long it has been happening, any visible symptoms, photos if possible, and your preferred timeline. Clear information helps professionals respond accurately.`,
-  },
-  {
-    question: `Can I compare more than one quote?`,
-    answer: `Yes. Posting a job lets you review multiple responses and compare experience, cost, and availability before choosing.`,
-  },
-  {
-    question: `Is it free to post a job?`,
-    answer: `Posting a job is typically free, so you can request help and compare professionals without committing straight away.`,
-  },
-  {
-    question: `What if I am not sure what the problem is?`,
-    answer: `That is fine. Describe the symptoms as clearly as you can, and a professional can help diagnose the issue and suggest the next step.`,
-  },
-];
 
 async function fetchProblemGuide(service: string, location: string) {
   const apiBaseUrl =
@@ -149,7 +124,7 @@ export default async function ProblemServiceLocationPage({ params }: Props) {
 
   const pageTitle =
     guideData.title || `${serviceName} Problem in ${locationName}`;
-  const faqItems = buildFaqItems(serviceName, locationName);
+  const faqItems = guideData.faqs ?? [];
 
   return (
     <section className="min-h-screen">
@@ -264,7 +239,13 @@ export default async function ProblemServiceLocationPage({ params }: Props) {
                 <h2 className="text-2xl font-bold text-primaryText mb-6">
                   Frequently Asked Questions
                 </h2>
-                <StaticFAQItem items={faqItems} />
+                {faqItems.length ? (
+                  <StaticFAQItem items={faqItems} />
+                ) : (
+                  <p className="text-sm italic text-gray-400">
+                    No frequently asked questions available.
+                  </p>
+                )}
               </div>
             </article>
           </main>
