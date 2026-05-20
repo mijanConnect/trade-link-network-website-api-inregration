@@ -98,7 +98,7 @@ export default async function CostServiceLocationPage({ params }: Props) {
       <div className="bg-primary text-white">
         <div className="container mx-auto px-4 py-16 lg:py-24">
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">
-            Cost details
+            Cost guide details
           </p>
           <h1 className="mt-3 text-3xl font-bold lg:text-6xl">
             {`${guideData.title} in ${locationName}` ||
@@ -125,12 +125,12 @@ export default async function CostServiceLocationPage({ params }: Props) {
         <div className="">
           <div className="">
             <article id="cost-details" className="scroll-mt-24">
-              <div className="mb-6 rounded-md border border-primary/20 bg-gray-100 p-4">
+              {/* <div className="mb-6 rounded-md border border-primary/20 bg-gray-100 p-4">
                 <p className="text-[14px] font-medium text-primaryText">
                   Cost guide for{" "}
                   <span className="font-bold">{locationName}</span>
                 </p>
-              </div>
+              </div> */}
 
               <section className="mb-8 mt-8">
                 <h3 className="mb-3 text-[20px] font-semibold text-primaryText">

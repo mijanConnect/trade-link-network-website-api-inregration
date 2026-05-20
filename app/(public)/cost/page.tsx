@@ -126,7 +126,7 @@ export default function CostLandingPage() {
                   : "bg-primary/70 text-white pointer-events-none"
               }`}
             >
-              Go
+              View Cost Guide
             </Button>
           </div>
         </div>
