@@ -9,7 +9,7 @@ import {
   useGetGuideDropdownServicesQuery,
 } from "@/store/slice/costSlice";
 
-const GUIDE_TYPE = "problem";
+const GUIDE_TYPE = "cost";
 
 export default function CostLandingPage() {
   const router = useRouter();
@@ -29,14 +29,15 @@ export default function CostLandingPage() {
   const canContinue = Boolean(selectedServiceSlug && selectedLocationSlug);
 
   const selectedServiceLabel = useMemo(
-    () => serviceOptions.find((item) => item._id === selectedServiceId)?.name ?? "",
+    () =>
+      serviceOptions.find((item) => item._id === selectedServiceId)?.name ?? "",
     [serviceOptions, selectedServiceId],
   );
 
   const selectedLocationLabel = useMemo(
     () =>
-      locationOptions.find((item) => item.slug === selectedLocationSlug)?.name ??
-      "",
+      locationOptions.find((item) => item.slug === selectedLocationSlug)
+        ?.name ?? "",
     [locationOptions, selectedLocationSlug],
   );
 
@@ -118,7 +119,9 @@ export default function CostLandingPage() {
               disabled={!canContinue}
               onClick={() => {
                 if (!canContinue) return;
-                router.push(`/cost/${selectedServiceSlug}/${selectedLocationSlug}`);
+                router.push(
+                  `/cost/${selectedServiceSlug}/${selectedLocationSlug}`,
+                );
               }}
               className={`inline-flex h-13 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors w-full ${
                 canContinue
