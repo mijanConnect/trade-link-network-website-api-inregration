@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import AOS from "aos";
 
-
 type FAQItemType = {
   id: number;
   question: string;
@@ -14,6 +13,8 @@ type FAQSectionType = {
   title: string;
   items: FAQItemType[];
 };
+
+// This is a static FAQ page. The content is hardcoded for simplicity, but it could be fetched from an API or CMS in a real application.
 
 const faqSections: FAQSectionType[] = [
   {
