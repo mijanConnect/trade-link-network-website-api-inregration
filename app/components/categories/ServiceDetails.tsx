@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import AOS from "aos";
 import Button from "../ui/Button";
@@ -46,8 +47,13 @@ export default function ServiceDetails() {
     categoryId || skipToken,
   );
 
-  const services =
-    (servicesData as { _id: string; name: string }[] | undefined) || [];
+  const services = (
+    (servicesData as
+      | { _id: string; name: string; slug: string }[]
+      | undefined) || []
+  ).filter(
+    (service) => !service.name?.trim().toLowerCase().startsWith("not sure"),
+  );
 
   return (
     <>
@@ -99,7 +105,14 @@ export default function ServiceDetails() {
             <ul className="list-disc list-inside text-[14px] lg:text-[18px] text-primaryTextLight space-y-4 lg:space-y-5">
               {services.length > 0 ? (
                 services.map((service) => (
-                  <li key={service._id}>{service.name}</li>
+                  <li key={service._id}>
+                    <Link
+                      href={`/post-service/${selectedCategory.slug}?service=${service.slug}`}
+                      className="hover:underline"
+                    >
+                      {service.name}
+                    </Link>
+                  </li>
                 ))
               ) : (
                 <li>No services available.</li>

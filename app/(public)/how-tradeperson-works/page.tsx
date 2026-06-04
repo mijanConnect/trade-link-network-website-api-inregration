@@ -262,38 +262,52 @@ export default function HowTradepersonWorkPage() {
       </section>
 
       {/* Who Can Join Section */}
-      <section className="py-8 lg:py-24 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <h2
-            className="text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-4"
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            Who Can Join?
-          </h2>
-          <p
-            className="text-center text-gray-600 mb-12 text-lg"
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-            data-aos-delay="100"
-          >
-            We welcome qualified and reliable professionals, including:
-          </p>
+      <section className="py-12 lg:py-28 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
+          {/* Header */}
+          <div className="text-center mb-14">
+            <h2
+              className="text-3xl lg:text-5xl font-bold text-gray-900"
+              data-aos="fade-up"
+            >
+              Who Can Join?
+            </h2>
 
+            <p
+              className="mt-4 text-gray-600 text-lg lg:text-xl max-w-2xl mx-auto"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              We welcome qualified and reliable professionals, including:
+            </p>
+          </div>
+
+          {/* Grid */}
           <div
-            className="bg-white rounded-md p-8 lg:p-12 border"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7"
             data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
             data-aos-delay="200"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {professions.map((profession, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-primary rounded-full shrink-0"></div>
-                  <p className="text-gray-800 font-medium">{profession}</p>
+            {professions.map((profession, index) => (
+              <div
+                key={index}
+                className="group relative bg-white hover:bg-white border border-gray-200 hover:border-primary/30 rounded-sm p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              >
+                {/* Badge */}
+                <div className="absolute top-4 right-4 w-3 h-3 bg-primary/20 group-hover:bg-primary rounded-full transition-all"></div>
+
+                {/* Content */}
+                <div className="flex items-center gap-3">
+                  <div className="mt-1 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+                    <span className="w-2 h-2 bg-primary rounded-full group-hover:bg-white"></span>
+                  </div>
+
+                  <p className="text-gray-800 pt-2 font-medium text-base lg:text-lg leading-snug group-hover:text-primary transition-colors">
+                    {profession}
+                  </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

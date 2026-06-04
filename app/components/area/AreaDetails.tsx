@@ -77,7 +77,7 @@ export default function AreaDetails({ areaId }: { areaId: string }) {
           >
             We work with homeowners and tradespeople across the{" "}
             {selectedLocation?.name || "your area"}, including major centres
-            such as Nottingham, Leicester, Derby and Northampton, as well as
+            such as {areas.map((area) => area.name).join(", ")} as well as
             surrounding towns and rural areas.
           </p>
 
