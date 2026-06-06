@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import AOS from "aos";
+import DOMPurify from "dompurify";
 import Button from "../ui/Button";
 import {
   useGetCategoriesQuery,
@@ -118,13 +119,16 @@ export default function ServiceDetails() {
                 <li>No services available.</li>
               )}
             </ul>
-            <p
+            <div
               data-aos="fade-up"
               data-aos-delay="100"
               className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10"
-            >
-              {categoryDetailsData?.servicesDetailsDescription2}
-            </p>
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  categoryDetailsData?.servicesDetailsDescription2 || "",
+                ),
+              }}
+            />
           </div>
         </div>
       </div>
