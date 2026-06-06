@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import DOMPurify from "isomorphic-dompurify";
 
 type Props = {
   params: Promise<{
@@ -104,10 +105,20 @@ export default async function CostServiceLocationPage({ params }: Props) {
           <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-tight lg:text-6xl">
             {guideData.title || `${serviceName} Cost in ${locationName}`}
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
-            {content?.introduction ||
-              `View cost details for ${serviceName} in ${locationName}.`}
-          </p>
+          <div className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
+            {content?.introduction ? (
+              <div
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(content.introduction),
+                }}
+              />
+            ) : (
+              <p>
+                View cost details for {serviceName} in {locationName}.
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -132,75 +143,97 @@ export default async function CostServiceLocationPage({ params }: Props) {
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Average Cost
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.averageCost ? (
-                    content.averageCost
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.averageCost),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No average cost information available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   What Affects the Price
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.whatAffectsPrice ? (
-                    content.whatAffectsPrice
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.whatAffectsPrice),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No information available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Typical Cost Range
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.typicalCostRange ? (
-                    content.typicalCostRange
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.typicalCostRange),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No typical cost range information available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Typical Project Examples
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.typicalProjectExamples ? (
-                    content.typicalProjectExamples
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          content.typicalProjectExamples,
+                        ),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No project examples available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Tips Before Hiring a Contractor
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.tipsBeforeHiring ? (
-                    content.tipsBeforeHiring
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.tipsBeforeHiring),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No hiring tips available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
             </article>
           </main>

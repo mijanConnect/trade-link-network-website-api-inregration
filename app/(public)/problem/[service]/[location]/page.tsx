@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import StaticFAQItem from "@/app/components/services/StaticFAQItem";
+import DOMPurify from "isomorphic-dompurify";
 
 type Props = {
   params: Promise<{
@@ -136,10 +137,20 @@ export default async function ProblemServiceLocationPage({ params }: Props) {
           <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-tight lg:text-6xl">
             {pageTitle}
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
-            {content?.introduction ||
-              `View problem details for ${serviceName} in ${locationName}.`}
-          </p>
+          <div className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
+            {content?.introduction ? (
+              <div
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(content.introduction),
+                }}
+              />
+            ) : (
+              <p>
+                View problem details for {serviceName} in {locationName}.
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -164,75 +175,99 @@ export default async function ProblemServiceLocationPage({ params }: Props) {
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Introduction
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="text-primaryTextLight">
                   {content?.introduction ? (
-                    content.introduction
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.introduction),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No introduction available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Common Causes
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.commonCauses ? (
-                    content.commonCauses
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.commonCauses),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No common causes information available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Warning Signs
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.warningSigns ? (
-                    content.warningSigns
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(content.warningSigns),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No warning signs available.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   Possible Repair Solutions
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.possibleRepairSolutions ? (
-                    content.possibleRepairSolutions
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          content.possibleRepairSolutions,
+                        ),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No repair solutions listed.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <section className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
                 <div className="text-2xl font-bold text-primaryText mb-4">
                   When to Call a Professional
                 </div>
-                <p className="space-y-3 text-primaryTextLight">
+                <div className="space-y-3 text-primaryTextLight">
                   {content?.whenToCallProfessional ? (
-                    content.whenToCallProfessional
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(
+                          content.whenToCallProfessional,
+                        ),
+                      }}
+                    />
                   ) : (
                     <span className="text-sm italic text-gray-400">
                       No guidance on when to call a professional.
                     </span>
                   )}
-                </p>
+                </div>
               </section>
 
               <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8">
