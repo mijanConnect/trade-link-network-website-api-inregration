@@ -255,7 +255,10 @@ export default async function ServiceLocationPage({ params }: Props) {
                 Trusted {pageData.serviceName} Professionals in{" "}
                 {pageData.locationName}
               </h2>
-              <p className="text-primaryTextLight">{pageData.intro}</p>
+              <p className="text-primaryTextLight">
+                {dynamicData?.seo?.h1Description ||
+                  `Discover trusted ${pageData.serviceName.toLowerCase()} professionals in ${pageData.locationName}. Post your job, compare quotes, and hire with confidence on TradeLink Network.`}
+              </p>
             </div>
 
             <div className="bg-white rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.05)] p-4 lg:p-8 mb-8 border-l-4 border-primary">

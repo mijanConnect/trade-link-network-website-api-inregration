@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 worksFor: {
                   "@type": "LocalBusiness",
                   name: "Essex Landscaping & Paving",
-                  url: "https://www.essexlandscapingandpaving.co.uk",
+                  url: "https://www.essexlandscapingandpaving.com",
                 },
               },
             }),
