@@ -14,10 +14,21 @@ import {
   useUpdateUserProfileMutation,
 } from "@/store/slice/authSlice";
 
+type FormState = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
+type UpdateProfilePayload = FormState & {
+  profileImage?: File;
+};
+
 export default function RightSide() {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [formChanges, setFormChanges] = useState({
+
+  const [formChanges, setFormChanges] = useState<FormState>({
     name: "",
     email: "",
     phone: "",
@@ -36,8 +47,8 @@ export default function RightSide() {
     [profileData, formChanges],
   );
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormChanges((prev: { name: string; email: string; phone: string }) => ({
+  const handleInputChange = (field: keyof FormState, value: string) => {
+    setFormChanges((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -45,42 +56,31 @@ export default function RightSide() {
 
   const handleSaveChanges = async () => {
     try {
-      // Prepare payload with current display values (actual values from input fields)
-      const payload: any = {
-        name: displayValues.name,
-        email: displayValues.email,
-        phone: displayValues.phone,
+      const payload: UpdateProfilePayload = {
+        name: formChanges.name || profileData?.name || "",
+        email: formChanges.email || profileData?.email || "",
+        phone: formChanges.phone || profileData?.phone || "",
       };
 
-      // Add profileImage if selected
       if (selectedImage) {
         payload.profileImage = selectedImage;
       }
 
-      // Validate required fields
-      if (!payload.name || !payload.email) {
-        toast.error("Name and Email are required");
+      if (!payload.name || !payload.email || !payload.phone) {
+        toast.error("Name, Email, and Phone are required");
         return;
       }
 
-      console.log("Sending payload:", payload);
+      console.log("FINAL PAYLOAD:", payload);
 
-      // Call the API
       await updateUserProfile(payload).unwrap();
 
-      // Clear form changes after successful save
-      setFormChanges({
-        name: "",
-        email: "",
-        phone: "",
-      });
-
-      // Clear selected image after successful save
+      setFormChanges({ name: "", email: "", phone: "" });
       setSelectedImage(null);
 
       toast.success("Changes saved successfully!");
     } catch (error: any) {
-      console.error("Profile update error:", error);
+      console.error(error);
       toast.error(error?.data?.message || "Failed to save changes");
     }
   };
@@ -89,6 +89,7 @@ export default function RightSide() {
     <>
       <div>
         <ProfileImage onImageSelect={setSelectedImage} />
+
         <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[600px]">
           <InputField
             title="Name"
@@ -105,10 +106,11 @@ export default function RightSide() {
               countryCallingCodeEditable={false}
               countries={["GB"]}
               defaultCountry="GB"
-              value={displayValues.phone}
-              onChange={(value) => handleInputChange("phone", value || "")}
+              value={displayValues.phone || ""}
+              onChange={(value) => handleInputChange("phone", value ?? "")}
               placeholder="Enter your phone number"
-              className="phone-input-no-focus"
+              className="phone-input-no-focus disabled:cursor-not-allowed [&_input]:disabled:cursor-not-allowed"
+              disabled
               style={{
                 height: 58,
                 border: "1px solid #1f2933",
@@ -126,8 +128,10 @@ export default function RightSide() {
             placeholder="Enter email address"
             initialValue={displayValues.email}
             onChange={(value) => handleInputChange("email", value)}
+            disabled
           />
         </div>
+
         <Button
           className="mt-6 lg:mt-8 w-full"
           onClick={handleSaveChanges}
@@ -144,6 +148,7 @@ export default function RightSide() {
           >
             {showChangePassword ? "Hide Password" : "Change Password"}
           </Button>
+
           {showChangePassword && <ChangePassword />}
         </div>
       </div>
