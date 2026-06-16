@@ -138,18 +138,8 @@ export default async function ProblemServiceLocationPage({ params }: Props) {
             {pageTitle}
           </h1>
           <div className="mt-4 max-w-3xl text-base leading-7 text-slate-200/90 lg:text-lg">
-            {content?.introduction ? (
-              <div
-                className="prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(content.introduction),
-                }}
-              />
-            ) : (
-              <p>
-                View problem details for {serviceName} in {locationName}.
-              </p>
-            )}
+            {guideData.metaDescription ||
+              `Learn about common causes, warning signs, and repair solutions for ${serviceName} issues in ${locationName}. Get expert advice on when to call a professional.`}
           </div>
         </div>
       </div>
