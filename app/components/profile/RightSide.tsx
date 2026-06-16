@@ -18,6 +18,7 @@ type FormState = {
   name: string;
   email: string;
   phone: string;
+  address: string;
 };
 
 type UpdateProfilePayload = FormState & {
@@ -32,6 +33,7 @@ export default function RightSide() {
     name: "",
     email: "",
     phone: "",
+    address: "",
   });
 
   const { data: profileData } = useProfileQuery({});
@@ -43,6 +45,7 @@ export default function RightSide() {
       name: formChanges.name || profileData?.name || "",
       email: formChanges.email || profileData?.email || "",
       phone: formChanges.phone || profileData?.phone || "",
+      address: formChanges.address || profileData?.address || "",
     }),
     [profileData, formChanges],
   );
@@ -60,6 +63,7 @@ export default function RightSide() {
         name: formChanges.name || profileData?.name || "",
         email: formChanges.email || profileData?.email || "",
         phone: formChanges.phone || profileData?.phone || "",
+        address: formChanges.address || profileData?.address || "",
       };
 
       if (selectedImage) {
@@ -75,7 +79,7 @@ export default function RightSide() {
 
       await updateUserProfile(payload).unwrap();
 
-      setFormChanges({ name: "", email: "", phone: "" });
+      setFormChanges({ name: "", email: "", phone: "", address: "" });
       setSelectedImage(null);
 
       toast.success("Changes saved successfully!");
@@ -129,6 +133,15 @@ export default function RightSide() {
             initialValue={displayValues.email}
             onChange={(value) => handleInputChange("email", value)}
             disabled
+          />
+
+          {/* ADDRESS FIELD ADDED */}
+          <InputField
+            title="Address"
+            type="text"
+            placeholder="Enter address"
+            initialValue={displayValues.address}
+            onChange={(value) => handleInputChange("address", value)}
           />
         </div>
 
