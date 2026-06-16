@@ -39,15 +39,15 @@ export default function RightSide() {
   const { data: profileData } = useProfileQuery({});
   const [updateUserProfile, { isLoading }] = useUpdateUserProfileMutation();
 
-  // Compute display values - use changes if edited, otherwise use profile data
+  // ✅ FIXED: address comes from customer object
   const displayValues = useMemo(
     () => ({
       name: formChanges.name || profileData?.name || "",
       email: formChanges.email || profileData?.email || "",
       phone: formChanges.phone || profileData?.phone || "",
-      address: formChanges.address || profileData?.address || "",
+      address: formChanges.address || profileData?.customer?.address || "",
     }),
-    [profileData, formChanges],
+    [profileData, formChanges]
   );
 
   const handleInputChange = (field: keyof FormState, value: string) => {
@@ -63,7 +63,7 @@ export default function RightSide() {
         name: formChanges.name || profileData?.name || "",
         email: formChanges.email || profileData?.email || "",
         phone: formChanges.phone || profileData?.phone || "",
-        address: formChanges.address || profileData?.address || "",
+        address: formChanges.address || profileData?.customer?.address || "",
       };
 
       if (selectedImage) {
@@ -75,11 +75,15 @@ export default function RightSide() {
         return;
       }
 
-      console.log("FINAL PAYLOAD:", payload);
-
       await updateUserProfile(payload).unwrap();
 
-      setFormChanges({ name: "", email: "", phone: "", address: "" });
+      setFormChanges({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+      });
+
       setSelectedImage(null);
 
       toast.success("Changes saved successfully!");
@@ -90,81 +94,78 @@ export default function RightSide() {
   };
 
   return (
-    <>
-      <div>
-        <ProfileImage onImageSelect={setSelectedImage} />
+    <div>
+      <ProfileImage onImageSelect={setSelectedImage} />
 
-        <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[600px]">
-          <InputField
-            title="Name"
-            type="text"
-            placeholder="Enter name"
-            initialValue={displayValues.name}
-            onChange={(value) => handleInputChange("name", value)}
-          />
-
-          <div>
-            <p className="mb-2">Phone Number</p>
-            <PhoneInput
-              international
-              countryCallingCodeEditable={false}
-              countries={["GB"]}
-              defaultCountry="GB"
-              value={displayValues.phone || ""}
-              onChange={(value) => handleInputChange("phone", value ?? "")}
-              placeholder="Enter your phone number"
-              className="phone-input-no-focus disabled:cursor-not-allowed [&_input]:disabled:cursor-not-allowed"
-              disabled
-              style={{
-                height: 58,
-                border: "1px solid #1f2933",
-                borderRadius: "6px",
-                paddingLeft: "12px",
-                fontSize: "16px",
-                fontFamily: "inherit",
-              }}
-            />
-          </div>
-
-          <InputField
-            title="Email Address"
-            type="email"
-            placeholder="Enter email address"
-            initialValue={displayValues.email}
-            onChange={(value) => handleInputChange("email", value)}
-            disabled
-          />
-
-          {/* ADDRESS FIELD ADDED */}
-          <InputField
-            title="Address"
-            type="text"
-            placeholder="Enter address"
-            initialValue={displayValues.address}
-            onChange={(value) => handleInputChange("address", value)}
-          />
-        </div>
-
-        <Button
-          className="mt-6 lg:mt-8 w-full"
-          onClick={handleSaveChanges}
-          disabled={isLoading}
-        >
-          {isLoading ? "Saving..." : "Save Changes"}
-        </Button>
+      <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[600px]">
+        <InputField
+          title="Name"
+          type="text"
+          placeholder="Enter name"
+          initialValue={displayValues.name}
+          onChange={(value) => handleInputChange("name", value)}
+        />
 
         <div>
-          <Button
-            variant="outline"
-            className="mt-6 lg:mt-8 w-[200px]"
-            onClick={() => setShowChangePassword(!showChangePassword)}
-          >
-            {showChangePassword ? "Hide Password" : "Change Password"}
-          </Button>
-
-          {showChangePassword && <ChangePassword />}
+          <p className="mb-2">Phone Number</p>
+          <PhoneInput
+            international
+            countryCallingCodeEditable={false}
+            countries={["GB"]}
+            defaultCountry="GB"
+            value={displayValues.phone || ""}
+            onChange={(value) => handleInputChange("phone", value ?? "")}
+            placeholder="Enter your phone number"
+            className="phone-input-no-focus disabled:cursor-not-allowed [&_input]:disabled:cursor-not-allowed"
+            disabled
+            style={{
+              height: 58,
+              border: "1px solid #1f2933",
+              borderRadius: "6px",
+              paddingLeft: "12px",
+              fontSize: "16px",
+              fontFamily: "inherit",
+            }}
+          />
         </div>
+
+        <InputField
+          title="Email Address"
+          type="email"
+          placeholder="Enter email address"
+          initialValue={displayValues.email}
+          onChange={(value) => handleInputChange("email", value)}
+          disabled
+        />
+
+        <InputField
+          title="Address"
+          type="text"
+          placeholder="Enter address"
+          initialValue={displayValues.address}
+          onChange={(value) => handleInputChange("address", value)}
+        />
       </div>
-    </>
+
+      <Button
+        className="mt-6 lg:mt-8 w-full"
+        onClick={handleSaveChanges}
+        disabled={isLoading}
+      >
+        {isLoading ? "Saving..." : "Save Changes"}
+      </Button>
+
+      <div>
+        <Button
+          variant="outline"
+          className="mt-6 lg:mt-8 w-[200px]"
+          onClick={() => setShowChangePassword(!showChangePassword)}
+        >
+          {showChangePassword ? "Hide Password" : "Change Password"}
+        </Button>
+
+        {showChangePassword && <ChangePassword />}
+      </div>
+    </div>
   );
 }
