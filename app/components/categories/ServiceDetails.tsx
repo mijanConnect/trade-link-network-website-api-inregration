@@ -122,7 +122,7 @@ export default function ServiceDetails() {
             <div
               data-aos="fade-up"
               data-aos-delay="100"
-              className="text-[14px] lg:text-[18px] text-primaryTextLight mt-4 lg:mt-10 whitespace-pre-line list-disc list-inside"
+              className="service-content text-[14px] lg:text-[18px]  text-primaryTextLight mt-4 lg:mt-10"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(
                   categoryDetailsData?.servicesDetailsDescription2 || "",
