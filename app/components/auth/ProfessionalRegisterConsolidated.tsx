@@ -8,7 +8,6 @@ import Button from "@/app/components/ui/Button";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import { Upload } from "lucide-react";
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
 import {
   useGetCategoriesQuery,
   useGetCategoriesServicesQuery,
@@ -17,8 +16,8 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { toast } from "sonner";
 import { ProfessionalDocumentType } from "@/store/slice/myProfileSlice";
 import AuthLogo from "./AuthLogo";
-import AuthLoginDescription from "./AuthLoginDescription";
 import { config } from "@/lib/config";
+import PhoneInput, { Value } from "react-phone-number-input";
 
 // Helper function to decode JWT and extract role
 const getRoleFromToken = (token: string): string | null => {
@@ -112,6 +111,7 @@ function RegisterForm() {
     email?: string;
     password?: string;
     confirmPassword?: string;
+    phone?: string;
     businessName?: string;
     postcode?: string;
     serviceRadiusKm?: string;
@@ -254,6 +254,9 @@ function RegisterForm() {
     }
 
     // ============ Validate Professional Fields ============
+    if (!phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    }
     if (!businessName.trim()) {
       newErrors.businessName = "Business Name is required";
     }
@@ -325,8 +328,6 @@ function RegisterForm() {
           errorData.message || "Failed to register. Please try again.",
         );
       }
-
-      const data = await response.json();
 
       toast.success("Registration successful! Please verify your email.");
 
@@ -445,28 +446,40 @@ function RegisterForm() {
           Contact Information
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <p className="mb-2 font-medium text-primaryText">
-              Phone Number <span className="text-red-500">*</span>
-            </p>
+          <div className="flex flex-col gap-1">
+            <label className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+              Phone Number
+            </label>
             <PhoneInput
               international
               countryCallingCodeEditable={false}
               countries={["GB"]}
               defaultCountry="GB"
               value={phone}
-              onChange={(value) => setPhone(value || "")}
+              onChange={(value: Value) => {
+                setPhone(value ?? "");
+
+                if (errors.phone) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    phone: undefined,
+                  }));
+                }
+              }}
               placeholder="Enter your phone number"
-              className="phone-input-no-focus"
+              className="phone-input-no-focus w-full"
               style={{
                 height: 50,
-                border: "1px solid #1f2933",
+                border: errors.phone ? "1px solid red" : "1px solid #1f2933",
                 borderRadius: "6px",
                 paddingLeft: "12px",
                 fontSize: "16px",
                 fontFamily: "inherit",
               }}
             />
+            {errors.phone && (
+              <p className="text-red-500 text-[14px] mt-1">{errors.phone}</p>
+            )}
           </div>
 
           <div>
