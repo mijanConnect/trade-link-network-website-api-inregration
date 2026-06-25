@@ -106,7 +106,7 @@ export default function ShowProfileModalTrade({
                 Reviews
               </button>
 
-              <button
+              {/* <button
                 onClick={() => {
                   router.push("/");
                   setShowProfileModal(false);
@@ -114,7 +114,7 @@ export default function ShowProfileModalTrade({
                 className="w-full px-4 py-2 text-left hover:bg-gray-100 rounded-md transition-colors text-primaryText"
               >
                 Go to Home
-              </button>
+              </button> */}
 
               <button
                 onClick={() => {
