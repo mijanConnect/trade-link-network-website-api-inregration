@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import { useRouter } from "next/navigation";
 import Button from "../ui/Button";
 import { StepHome1, StepHome2, StepHome3, StepHome4, StepHome5 } from "../Svg";
@@ -20,11 +19,11 @@ export default function StepsHome() {
   }, []);
 
   return (
-    <>
-      <div className="pt-6 md:pt-10 lg:pt-[130px]" id="steps">
+    <section>
+      <div className="pt-6 md:pt-10 lg:pt-24" id="steps">
         <div className="container mx-auto px-4 lg:px-0">
           <h1
-            className="text-[20px] md:text-[40px] font-semibold text-primaryText mb-4 md:mb-8 lg:mb-1 text-center"
+            className="text-[20px] md:text-[40px] font-semibold text-primaryText mb-0 md:mb-8 lg:mb-1 text-center"
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
           >
@@ -54,10 +53,10 @@ export default function StepsHome() {
               data-aos-offset="200"
               data-aos-duration="500"
             >
-              <div className="p-4 md:p-16 lg:p-6 bg-[#c4d0e0] rounded-full inline-block">
+              <div className="p-4 md:p-16 lg:p-6 bg-white/20 backdrop-blur-md border border-white/90 rounded-full inline-block shadow-[0_0_20px_rgba(0,0,0,0.15)]">
                 <StepHome1 />
               </div>
-              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[20px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Receive real local job leads
               </h2>
               {/* <p className="text-[10px] px-4 md:text-base font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
@@ -72,10 +71,10 @@ export default function StepsHome() {
               data-aos-duration="500"
               data-aos-delay="200"
             >
-              <div className="p-4 md:p-16 lg:p-6 bg-[#c4d0e0] rounded-full inline-block">
+              <div className="p-4 md:p-16 lg:p-6 bg-white/20 backdrop-blur-md border border-white/90 rounded-full inline-block shadow-[0_0_20px_rgba(0,0,0,0.15)]">
                 <StepHome2 />
               </div>
-              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[20px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Choose the work that suits you
               </h2>
             </div>
@@ -87,10 +86,10 @@ export default function StepsHome() {
               data-aos-duration="500"
               data-aos-delay="400"
             >
-              <div className="p-4 md:p-16 lg:p-6 bg-[#c4d0e0] rounded-full inline-block">
+              <div className="p-4 md:p-16 lg:p-6 bg-white/20 backdrop-blur-md border border-white/90 rounded-full inline-block shadow-[0_0_20px_rgba(0,0,0,0.15)]">
                 <StepHome3 />
               </div>
-              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[20px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Build verified reviews
               </h2>
             </div>
@@ -102,10 +101,10 @@ export default function StepsHome() {
               data-aos-duration="500"
               data-aos-delay="400"
             >
-              <div className="p-4 md:p-16 lg:p-6 bg-[#c4d0e0] rounded-full inline-block">
+              <div className="p-4 md:p-16 lg:p-6 bg-white/20 backdrop-blur-md border border-white/90 rounded-full inline-block shadow-[0_0_20px_rgba(0,0,0,0.15)]">
                 <StepHome4 />
               </div>
-              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[20px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Set your service radius
               </h2>
             </div>
@@ -117,10 +116,10 @@ export default function StepsHome() {
               data-aos-duration="500"
               data-aos-delay="400"
             >
-              <div className="p-4 md:p-16 lg:p-6 bg-[#c4d0e0] rounded-full inline-block">
+              <div className="p-4 md:p-16 lg:p-6 bg-white/20 backdrop-blur-md border border-white/90 rounded-full inline-block shadow-[0_0_20px_rgba(0,0,0,0.15)]">
                 <StepHome5 />
               </div>
-              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
+              <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[20px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
                 Manage enquiries easily
               </h2>
             </div>
@@ -129,13 +128,15 @@ export default function StepsHome() {
 
         <div className="flex justify-center">
           <Button
+            data-aos="fade-up"
+            data-aos-delay="500"
             className="mt-6 lg:mt-15 mb-10 lg:mb-20"
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register-professional")}
           >
             Join as a Tradeperson
           </Button>
         </div>
       </div>
-    </>
+    </section>
   );
 }

@@ -45,7 +45,7 @@ export default function LeftPart() {
           <div className="flex gap-3 items-center">
             <MapPin className="w-5 h-5 text-primaryTextLight" />
             <p className="text-[16px] text-primaryText">
-              {profileData?.location || "N/A"}
+              {profileData?.customer?.address || "N/A"}
             </p>
           </div>
         </div>

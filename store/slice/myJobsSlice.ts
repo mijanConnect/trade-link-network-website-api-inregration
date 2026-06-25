@@ -1,6 +1,7 @@
 import { baseApi } from "../baseApi";
 
 export const myJobsApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     // ---------------------------------------
     // GET PENDING JOBS
@@ -216,8 +217,6 @@ export const myJobsApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["HiredJobs"],
     }),
-
-
 
     // ---------------------------------------
     // Refund Job Post

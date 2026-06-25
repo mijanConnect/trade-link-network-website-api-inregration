@@ -89,10 +89,11 @@ export default function VerifyRegisterOTPPage() {
 
           if (token) {
             localStorage.setItem("accessToken", token);
+            document.cookie = `accessToken=${token}; path=/; max-age=86400;`;
           }
         }
 
-        router.push("/professional-register");
+        router.push("/trade-person/leads");
         return;
       }
 

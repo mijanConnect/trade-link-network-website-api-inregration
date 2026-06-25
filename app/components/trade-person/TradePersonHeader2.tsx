@@ -116,7 +116,7 @@ export default function TradePersonHeader() {
                   >
                     Reviews
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/"
                     className={`block px-4 py-2 text-[13px] ${
                       isActive(pathname, "/")
@@ -126,7 +126,7 @@ export default function TradePersonHeader() {
                     onClick={() => setOpen(false)}
                   >
                     Go to Home
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/login"
                     className={`block px-4 py-2 text-[13px] ${

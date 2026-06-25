@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import ServiceList from "../ui/ServiceList";
 import { locations } from "./Location";
 

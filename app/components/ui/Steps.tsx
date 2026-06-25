@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import { StepFour4, StepOne1, StepThree3, StepTwo2 } from "../Svg";
 import Button from "./Button";
 import { useRouter } from "next/navigation";
@@ -68,7 +67,7 @@ export default function Steps() {
                 Step 1
               </p>
               <h2 className="text-[10px] px-4 md:text-[18px] lg:text-[22px] font-semibold mt-1 md:mt-4 text-center leading-4 md:leading-8.5 lg:leading-9.5">
-                Choose Outdoor & Landscaping and answer a few quick questions
+                Choose the service you need and tell us about your job
               </h2>
             </div>
             <div

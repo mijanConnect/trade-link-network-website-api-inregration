@@ -1,4 +1,3 @@
-
 import LeftPart from "./LeftPart";
 import RightSide from "./RightSide";
 

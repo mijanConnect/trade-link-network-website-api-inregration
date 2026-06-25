@@ -170,30 +170,24 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
+  // Initialize on mount to prevent hydration mismatch
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!token);
+    setIsHydrated(true);
+
     const handleStorageChange = () => {
-      if (typeof window !== "undefined") {
-        const token = localStorage.getItem("accessToken");
-        setIsLoggedIn(!!token);
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("storage", handleStorageChange);
-      return () => window.removeEventListener("storage", handleStorageChange);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
       const token = localStorage.getItem("accessToken");
       setIsLoggedIn(!!token);
-    }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleClose = () => {
@@ -266,7 +260,7 @@ export default function Navbar() {
     }
   }, [pathname]);
 
-  if (typeof window === "undefined") {
+  if (!isHydrated) {
     return null;
   }
 
@@ -442,9 +436,8 @@ export default function Navbar() {
 
             {!isLoggedIn && (
               <Button
-                onClick={() => router.push("/register")}
+                onClick={() => router.push("/register-professional")}
                 variant="primary"
-                size="sm"
                 className="font-semibold whitespace-nowrap text-[12px] sm:text-[14px] lg:text-[16px] px-2 sm:px-3 lg:px-4"
               >
                 Join as Tradeperson
@@ -460,12 +453,12 @@ export default function Navbar() {
 
             <button
               type="button"
-              className="lg:hidden inline-flex items-center justify-center rounded-md text-primary hover:bg-blue-200 transition-colors p-2"
+              className="lg:hidden inline-flex items-center justify-center rounded-md bg-primary text-white hover:bg-blue-200 transition-colors h-[42px] w-[42px]"
               aria-label="Toggle navigation"
               onClick={toggleMenu}
             >
               <svg
-                className="h-6 w-6 hamburger-icon"
+                className="h-7 w-7 hamburger-icon"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"

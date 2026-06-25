@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import AOS from "aos";
-import "aos/dist/aos.css";
 
 declare global {
   interface Window {
@@ -43,7 +42,7 @@ export default function TrustPilot() {
   }, []);
 
   return (
-    <>
+    <section>
       <Script
         src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
         onLoad={handleScriptLoad}
@@ -90,6 +89,6 @@ export default function TrustPilot() {
           </div>
         </div>
       </section>
-    </>
+    </section>
   );
 }

@@ -162,7 +162,7 @@ const locationSlice = baseApi.injectEndpoints({
         const params = new URLSearchParams();
         params.append("type", "region");
         params.append("page", String(args?.page || 1));
-        params.append("limit", String(args?.limit || 200));
+        params.append("limit", String(args?.limit || 10000));
 
         return {
           url: `/locations/active?${params.toString()}`,
@@ -182,7 +182,7 @@ const locationSlice = baseApi.injectEndpoints({
         const params = new URLSearchParams();
         params.append("parentId", args.regionId);
         params.append("page", String(args?.page || 1));
-        params.append("limit", String(args?.limit || 200));
+        params.append("limit", String(args?.limit || 10000));
 
         return {
           url: `/locations/active?${params.toString()}`,
@@ -202,7 +202,7 @@ const locationSlice = baseApi.injectEndpoints({
         const params = new URLSearchParams();
         params.append("parentId", args.countyId);
         params.append("page", String(args?.page || 1));
-        params.append("limit", String(args?.limit || 200));
+        params.append("limit", String(args?.limit || 10000));
 
         return {
           url: `/locations/active?${params.toString()}`,
@@ -222,7 +222,27 @@ const locationSlice = baseApi.injectEndpoints({
         const params = new URLSearchParams();
         params.append("parentId", args.cityId);
         params.append("page", String(args?.page || 1));
-        params.append("limit", String(args?.limit || 200));
+        params.append("limit", String(args?.limit || 10000));
+
+        return {
+          url: `/locations/active?${params.toString()}`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response: ActiveLocationsResponse) => response,
+      providesTags: () => [{ type: "Locations" as const, id: "towns" }],
+    }),
+
+    // GET towns by county parent ID
+    getTownsByCounty: builder.query<
+      ActiveLocationsResponse,
+      { countyId: string; page?: number; limit?: number }
+    >({
+      query: (args) => {
+        const params = new URLSearchParams();
+        params.append("parentId", args.countyId);
+        params.append("page", String(args?.page || 1));
+        params.append("limit", String(args?.limit || 10000));
 
         return {
           url: `/locations/active?${params.toString()}`,
@@ -272,6 +292,7 @@ export const {
   useGetCountiesByRegionQuery,
   useGetCitiesByCountyQuery,
   useGetTownsByCityQuery,
+  useGetTownsByCountyQuery,
   useGetLocationByIdQuery,
   useGetServiceLocationDataQuery,
 } = locationSlice;

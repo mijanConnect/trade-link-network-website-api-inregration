@@ -5,6 +5,7 @@ import { useCookieConsent } from "@/lib/hooks/useCookieConsent";
 import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
 import { X, ChevronDown } from "lucide-react";
 import { useGetDisclaimerQuery } from "@/store/slice/categoriesSlice";
+import Button from "./ui/Button";
 
 interface CookieExpiry {
   necessary: string;
@@ -120,7 +121,7 @@ export default function CookiePolicyPopup() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl w-2xl h-[650px] max-w-full max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white rounded-sm shadow-2xl w-2xl h-[650px] max-w-full max-h-[85vh] flex flex-col animate-in fade-in zoom-in-95 duration-300">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex-1">
@@ -142,7 +143,7 @@ export default function CookiePolicyPopup() {
         {!showCustomization ? (
           <div className="flex flex-col flex-1 overflow-hidden">
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+              <div className="bg-amber-50 border border-amber-200 rounded-sm p-3">
                 <p className="text-sm text-amber-900 font-semibold">
                   Your Explicit Consent Required
                 </p>
@@ -161,7 +162,7 @@ export default function CookiePolicyPopup() {
               {/* Cookie Types Info */}
               <div className="space-y-2 mt-6">
                 {/* Necessary - Always enabled */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -232,7 +233,7 @@ export default function CookiePolicyPopup() {
                 </div>
 
                 {/* Analytics */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -301,7 +302,7 @@ export default function CookiePolicyPopup() {
                 </div>
 
                 {/* Advertisement */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -374,22 +375,25 @@ export default function CookiePolicyPopup() {
             </div>
 
             {/* Buttons - Fixed at Bottom */}
-            <div className="flex-none border-t border-gray-200 p-6 space-y-3 bg-white rounded-lg">
+            <div className="flex-none border-t border-gray-200 p-6 space-y-3 bg-white rounded-sm">
               <div className="flex gap-3">
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleRejectAll}
                   disabled={isSaving || isLoadingServer}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSaving ? "Saving..." : "Reject All"}
-                </button>
-                <button
+                </Button>
+                <Button
+                  size="sm"
                   onClick={handleAcceptAll}
                   disabled={isSaving || isLoadingServer}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSaving ? "Saving..." : "Accept All"}
-                </button>
+                </Button>
               </div>
 
               {/* Customize & User Rights Link */}
@@ -397,7 +401,7 @@ export default function CookiePolicyPopup() {
                 <button
                   onClick={() => setShowCustomization(true)}
                   disabled={isSaving || isLoadingServer}
-                  className="w-full px-4 py-2 text-sm text-blue-600 font-medium hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-4 py-2 text-sm text-primary font-medium hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Customize Preferences
                 </button>
@@ -406,7 +410,7 @@ export default function CookiePolicyPopup() {
                   anytime.
                   <button
                     onClick={() => setShowPolicyModal(true)}
-                    className="text-blue-600 hover:text-blue-700 ml-1 underline"
+                    className="text-primary hover:text-blue-700 ml-1 underline"
                   >
                     Cookies Policy
                   </button>
@@ -420,7 +424,7 @@ export default function CookiePolicyPopup() {
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               <button
                 onClick={() => setShowCustomization(false)}
-                className="text-blue-600 text-sm font-medium hover:text-blue-700 flex items-center gap-1 mb-4"
+                className="text-primary text-sm font-medium hover:text-blue-700 flex items-center gap-1 mb-4"
               >
                 ← Back
               </button>
@@ -429,7 +433,7 @@ export default function CookiePolicyPopup() {
                 Customize Your Preferences
               </h3>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+              <div className="bg-amber-50 border border-amber-200 rounded-sm p-3">
                 <p className="text-xs text-amber-800">
                   <span className="font-semibold">UK GDPR Compliance:</span>{" "}
                   Your consent is voluntary and can be withdrawn anytime from
@@ -439,7 +443,7 @@ export default function CookiePolicyPopup() {
 
               <div className="space-y-2">
                 {/* Necessary - Always enabled */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -505,7 +509,7 @@ export default function CookiePolicyPopup() {
                 </div>
 
                 {/* Analytics Toggle */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -573,7 +577,7 @@ export default function CookiePolicyPopup() {
                 </div>
 
                 {/* Advertisement Toggle */}
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="border border-gray-200 rounded-sm overflow-hidden">
                   <button
                     onClick={() =>
                       setExpandedCookie(
@@ -646,13 +650,13 @@ export default function CookiePolicyPopup() {
 
             {/* Save Button - Fixed at Bottom */}
             <div className="flex-none border-t border-gray-200 p-6 bg-white">
-              <button
+              <Button
                 onClick={handleSaveCustom}
                 disabled={isSaving || isLoadingServer}
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSaving ? "Saving..." : "Save Preferences"}
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -661,7 +665,7 @@ export default function CookiePolicyPopup() {
       {/* Cookie Policy Modal */}
       {showPolicyModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl w-2xl max-w-full max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-300 overflow-hidden">
+          <div className="bg-white rounded-sm shadow-2xl w-2xl max-w-full max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-300 overflow-hidden">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 shrink-0">
               <div>
@@ -717,12 +721,12 @@ export default function CookiePolicyPopup() {
 
             {/* Modal Footer */}
             <div className="border-t border-gray-200 p-6 bg-gray-50 shrink-0">
-              <button
+              <Button
                 onClick={() => setShowPolicyModal(false)}
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                className="w-full px-4 py-2 transition-colors"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         </div>

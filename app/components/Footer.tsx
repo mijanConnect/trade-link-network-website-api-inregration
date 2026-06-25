@@ -6,7 +6,7 @@ import { LogoNav } from "./Svg";
 import ContactUs from "./ui/ContactUs";
 import { Facebook, Instagram } from "lucide-react";
 import { useCookiePolicy } from "@/lib/context/CookiePolicyContext";
-import { Button } from "@/components/ui/button";
+import Button from "./ui/Button";
 
 export default function Footer() {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -78,6 +78,22 @@ export default function Footer() {
                     className="hover:underline transition-all"
                   >
                     Area Covered
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/cost"
+                    className="hover:underline transition-all"
+                  >
+                    Cost Guide
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/problem"
+                    className="hover:underline transition-all"
+                  >
+                    Problem Guide
                   </Link>
                 </li>
               </ul>
@@ -198,7 +214,10 @@ export default function Footer() {
                     Are you a tradesperson?
                   </h4>
                 </div>
-                <Link href="/register" className="inline-block mt-4">
+                <Link
+                  href="/register-professional"
+                  className="inline-block mt-4"
+                >
                   <Button className="px-10! font-semibold! inline-block">
                     Sign Up
                   </Button>

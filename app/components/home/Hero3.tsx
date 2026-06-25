@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 import Button from "../ui/Button";
 
 export default function Hero3() {
@@ -24,7 +23,7 @@ export default function Hero3() {
   }, []);
 
   return (
-    <>
+    <section>
       <div
         data-aos="fade-down"
         className="w-full h-[50vh] lg:h-[92vh] bg-[url('/assets/hero-image3.webp')] bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -39,19 +38,22 @@ export default function Hero3() {
             data-aos="fade-up"
             data-aos-delay="300"
           >
-            Connect with trusted tradespeople <br /> across the UK — fast
+            {/* Connect with trusted tradespeople <br /> across the UK — fast */}
+            Connect with local tradespeople <br /> across the UK
           </h1>
           <p
             className="text-[18px] md:text-[24px] mt-4 lg:mt-10 text-white max-w-[600px]"
             data-aos="fade-up"
             data-aos-delay="400"
           >
-            Tell us what you need and we&apos;ll match you with verified
-            professionals near you
+            {/* Tell us what you need and we&apos;ll match you with verified
+            professionals near you */}
+            Tell us what you need and compare quotes from professionals in your
+            area.
           </p>
           <div data-aos="fade-up" data-aos-delay="500">
             <Button
-              className="mt-6 lg:mt-12"
+              className="mt-6 lg:mt-12 font-semibold w-38"
               variant="primary"
               onClick={handleScrollToCategory}
             >
@@ -60,6 +62,6 @@ export default function Hero3() {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 }

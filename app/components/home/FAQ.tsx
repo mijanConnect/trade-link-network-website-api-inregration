@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css";
 
 const faqItems = [
   {
@@ -143,9 +142,9 @@ export default function FAQ() {
   };
 
   return (
-    <div className="bg-white">
+    <section className="bg-white">
       <div className="container mx-auto px-4 lg:px-0">
-        <div className=" pt-10 pb-15 lg:pt-30 lg:pb-40">
+        <div className="pt-10 pb-15 lg:pt-30 lg:pb-40">
           <h2
             data-aos="fade-up"
             className="text-center text-[20px] md:text-[40px] font-semibold text-primaryText"
@@ -196,6 +195,6 @@ export default function FAQ() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

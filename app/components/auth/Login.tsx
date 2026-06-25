@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "@/app/components/ui/InputField";
 import Button from "@/app/components/ui/Button";
@@ -9,6 +9,7 @@ import AuthLogo from "./AuthLogo";
 import AuthLoginDescription from "./AuthLoginDescription";
 import { useLoginMutation } from "@/store/slice/authSlice";
 import { toast } from "sonner";
+import { config } from "@/lib/config";
 
 // Helper function to decode JWT and extract role
 const getRoleFromToken = (token: string): string | null => {
@@ -30,6 +31,19 @@ export default function LoginPage() {
   const [login, { isLoading }] = useLoginMutation();
   const router = useRouter();
 
+  // Redirect already logged-in users
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      const role = getRoleFromToken(token);
+      if (role === "PROFESSIONAL") {
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
+      } else if (role === "CUSTOMER") {
+        router.push("/");
+      }
+    }
+  }, [router]);
+
   const handleLogin = async () => {
     if (!email || !password) {
       toast.error("Please fill out both fields.");
@@ -37,24 +51,23 @@ export default function LoginPage() {
     }
     try {
       const response = await login({ email, password }).unwrap();
-
       // Save token to localStorage if present in response
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=86400;`;
         toast.success("Login successful!");
       }
-
       // Extract role from JWT token
       const token = response?.data?.accessToken;
       const role = token ? getRoleFromToken(token) : null;
 
       if (role === "PROFESSIONAL") {
-        router.push("/trade-person");
+        // Redirect PROFESSIONAL users to external trade-person URL
+        window.location.href = config.TRADE_PERSON_REDIRECT_URL;
       } else {
         router.push("/");
       }
     } catch (err) {
-      // Handle error if login fails
       const error = err as Record<string, unknown>;
       console.error("Full error:", error);
       console.error("Error data:", error?.data);
@@ -79,22 +92,6 @@ export default function LoginPage() {
         header="Welcome back"
         description="Login to your account below"
       />
-      {/* <div>
-        <Button
-          fullWidth
-          variant="outline"
-          size="md"
-          className="mb-8 border-gray-200!"
-        >
-          <Image
-            src="/assets/google.png"
-            alt="Login Image"
-            width={20}
-            height={20}
-          />
-          Continue with Google
-        </Button>
-      </div> */}
       <div className="w-full space-y-4">
         <InputField
           title="Email Address"
@@ -122,8 +119,8 @@ export default function LoginPage() {
           fullWidth
           variant="primary"
           size="md"
-          onClick={handleLogin} // Handle login on button click
-          loading={isLoading} // Show loading spinner while logging in
+          onClick={handleLogin}
+          loading={isLoading}
         >
           {isLoading ? "Logging in..." : "Login"}{" "}
           {/* Button text changes based on loading state */}
@@ -133,7 +130,7 @@ export default function LoginPage() {
         <p className="text-[15px]">
           Sign Up as{" "}
           <span
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/register-professional")}
             className="font-semibold text-primary cursor-pointer hover:underline"
           >
             Tradeperson

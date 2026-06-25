@@ -1,5 +1,6 @@
 import "./globals.css";
 import "@fortawesome/fontawesome-free/css/all.css";
+import "aos/dist/aos.css";
 import type { ReactNode } from "react";
 import { Poppins } from "next/font/google";
 import Providers from "./providers";
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 worksFor: {
                   "@type": "LocalBusiness",
                   name: "Essex Landscaping & Paving",
-                  url: "https://www.essexlandscapingandpaving.co.uk",
+                  url: "https://www.essexlandscapingandpaving.com",
                 },
               },
             }),

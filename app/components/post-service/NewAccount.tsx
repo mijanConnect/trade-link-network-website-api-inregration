@@ -93,6 +93,7 @@ export default function NewAccount({
 
       if (result.accessToken) {
         localStorage.setItem("accessToken", result.accessToken);
+        document.cookie = `accessToken=${result.accessToken}; path=/; max-age=86400;`;
         toast.success("Phone verified successfully! You are now logged in.");
         onAccountVerified?.();
       }

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Lock } from "lucide-react";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import {
   useGetRegionsQuery,
   useGetCountiesByRegionQuery,
-  useGetCitiesByCountyQuery,
-  useGetTownsByCityQuery,
+  useGetTownsByCountyQuery,
+  type LocationItem,
 } from "@/store/slice/locationSlice";
 
 type ServiceLocationSelectorProps = {
@@ -19,12 +20,12 @@ export default function ServiceLocationSelector({
 }: ServiceLocationSelectorProps) {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
   const [selectedTown, setSelectedTown] = useState("");
 
   // Fetch regions (always enabled)
-  const { data: regionsData, isLoading: isLoadingRegions } =
-    useGetRegionsQuery({});
+  const { data: regionsData, isLoading: isLoadingRegions } = useGetRegionsQuery(
+    {},
+  );
   const regions = useMemo(() => regionsData?.data ?? [], [regionsData?.data]);
 
   // Fetch counties based on selected region
@@ -33,21 +34,17 @@ export default function ServiceLocationSelector({
       { regionId: selectedRegion },
       { skip: !selectedRegion },
     );
-  const counties = useMemo(() => countiesData?.data ?? [], [countiesData?.data]);
+  const counties = useMemo(
+    () => countiesData?.data ?? [],
+    [countiesData?.data],
+  );
 
-  // Fetch cities based on selected county
-  const { data: citiesData, isLoading: isLoadingCities } =
-    useGetCitiesByCountyQuery(
+  // Fetch towns based on selected county
+  const { data: townsData, isLoading: isLoadingTowns } =
+    useGetTownsByCountyQuery(
       { countyId: selectedCounty },
       { skip: !selectedCounty },
     );
-  const cities = useMemo(() => citiesData?.data ?? [], [citiesData?.data]);
-
-  // Fetch towns based on selected city
-  const { data: townsData, isLoading: isLoadingTowns } = useGetTownsByCityQuery(
-    { cityId: selectedCity },
-    { skip: !selectedCity },
-  );
   const towns = useMemo(() => townsData?.data ?? [], [townsData?.data]);
 
   const region = useMemo(
@@ -56,33 +53,26 @@ export default function ServiceLocationSelector({
   );
 
   const county = useMemo(
-    () => counties.find((item) => item._id === selectedCounty),
+    () => counties.find((item: LocationItem) => item._id === selectedCounty),
     [counties, selectedCounty],
   );
 
-  const city = useMemo(
-    () => cities.find((item) => item._id === selectedCity),
-    [cities, selectedCity],
-  );
-
   const town = useMemo(
-    () => towns.find((item) => item._id === selectedTown),
+    () => towns.find((item: LocationItem) => item._id === selectedTown),
     [towns, selectedTown],
   );
 
-  const selectedLocation = town ?? city ?? county ?? region;
-  const selectedLocationSlug = selectedLocation
-    ? selectedLocation.slug
-    : "";
+  const selectedLocation = town ?? county ?? region;
+  const selectedLocationSlug = selectedLocation ? selectedLocation.slug : "";
   const canContinue = Boolean(region);
 
   return (
-    <div className="bg-white border border-primary rounded-xl p-5 lg:p-6">
+    <div className="bg-white rounded-sm p-5 lg:p-10 shadow-[0_0_10px_rgba(0,0,0,0.05)]">
       <h2 className="text-xl lg:text-2xl font-semibold text-primaryText mb-6">
         Select Location Step by Step
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <CustomSelect
           label="Region"
           placeholder="Select region"
@@ -98,7 +88,6 @@ export default function ServiceLocationSelector({
           onChange={(value) => {
             setSelectedRegion(value);
             setSelectedCounty("");
-            setSelectedCity("");
             setSelectedTown("");
           }}
         />
@@ -117,25 +106,6 @@ export default function ServiceLocationSelector({
           }))}
           onChange={(value) => {
             setSelectedCounty(value);
-            setSelectedCity("");
-            setSelectedTown("");
-          }}
-        />
-
-        <CustomSelect
-          label="City (optional)"
-          placeholder="Select city"
-          searchPlaceholder="Search cities..."
-          searchable
-          value={selectedCity || null}
-          disabled={!county || isLoadingCities}
-          dropdownLayout="overlay"
-          options={cities.map((item) => ({
-            value: item._id,
-            label: item.name,
-          }))}
-          onChange={(value) => {
-            setSelectedCity(value);
             setSelectedTown("");
           }}
         />
@@ -146,9 +116,9 @@ export default function ServiceLocationSelector({
           searchPlaceholder="Search towns..."
           searchable
           value={selectedTown || null}
-          disabled={!city || isLoadingTowns}
+          disabled={!county || isLoadingTowns}
           dropdownLayout="overlay"
-          options={towns.map((item) => ({
+          options={towns.map((item: LocationItem) => ({
             value: item._id,
             label: item.name,
           }))}
@@ -156,28 +126,29 @@ export default function ServiceLocationSelector({
         />
       </div>
 
-      <div className="mt-6 rounded-lg border border-primary/20 bg-primary/10 p-4">
+      <div className="mt-6 rounded-lg border border-primary bg-gray-100 p-4">
         <p className="text-sm text-primaryTextLight">
           <span className="font-semibold">Selected:</span>{" "}
-          {[region?.name, county?.name, city?.name, town?.name]
+          {[region?.name, county?.name, town?.name]
             .filter(Boolean)
-            .join(" / ") || "Please select region, county, city and town"}
+            .join(" / ") || "Please select region"}
         </p>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+      <div className="mt-6 lg:mt-10 flex flex-wrap items-center gap-3">
         <Link
           href={
             canContinue
               ? `/services/${serviceSlug}/${selectedLocationSlug}`
               : "#"
           }
-          className={`inline-flex h-13 items-center justify-center rounded-md px-5 text-sm font-semibold transition-colors ${
+          className={`inline-flex h-13 items-center justify-center gap-2 rounded-md px-5 text-sm font-semibold transition-colors w-full ${
             canContinue
-              ? "bg-primary text-white hover:opacity-90"
-              : "bg-gray-200 text-gray-500 pointer-events-none"
+              ? "bg-primary text-white hover:bg-[#122a4a]"
+              : "bg-primary/70 text-white pointer-events-none"
           }`}
         >
+          {!canContinue && <Lock size={18} />}
           Continue with this location
         </Link>
       </div>
