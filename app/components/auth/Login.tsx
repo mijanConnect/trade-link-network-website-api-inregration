@@ -54,6 +54,7 @@ export default function LoginPage() {
       // Save token to localStorage if present in response
       if (response?.data?.accessToken) {
         localStorage.setItem("accessToken", response.data.accessToken);
+        document.cookie = `accessToken=${response.data.accessToken}; path=/; max-age=86400;`;
         toast.success("Login successful!");
       }
       // Extract role from JWT token
@@ -91,22 +92,6 @@ export default function LoginPage() {
         header="Welcome back"
         description="Login to your account below"
       />
-      {/* <div>
-        <Button
-          fullWidth
-          variant="outline"
-          size="md"
-          className="mb-8 border-gray-200!"
-        >
-          <Image
-            src="/assets/google.png"
-            alt="Login Image"
-            width={20}
-            height={20}
-          />
-          Continue with Google
-        </Button>
-      </div> */}
       <div className="w-full space-y-4">
         <InputField
           title="Email Address"

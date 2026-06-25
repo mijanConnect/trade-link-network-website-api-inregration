@@ -568,7 +568,7 @@ function RegisterForm() {
           </div>
 
           <div>
-            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-1">
+            <div className="block text-[14px] lg:text-[16px] font-medium text-primaryText mb-2">
               Profession Category <span className="text-red-500">*</span>
             </div>
             <CustomSelect

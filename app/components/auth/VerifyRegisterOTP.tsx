@@ -89,6 +89,7 @@ export default function VerifyRegisterOTPPage() {
 
           if (token) {
             localStorage.setItem("accessToken", token);
+            document.cookie = `accessToken=${token}; path=/; max-age=86400;`;
           }
         }
 
