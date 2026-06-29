@@ -17,7 +17,6 @@ const protectedRoutes = [
   "/trade-person",
   "/profile",
   "/my-jobs",
-  "/post-service",
 ];
 
 // Define auth routes (only accessible if NOT logged in)
