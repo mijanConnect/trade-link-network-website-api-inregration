@@ -260,6 +260,73 @@ export const authApi = baseApi.injectEndpoints({
       transformResponse: (response) => response?.data ?? response,
       providesTags: ["Profile"],
     }),
+    // ---------------------------------------
+    // REQUEST EMAIL CHANGE
+    // ---------------------------------------
+    requestEmailChange: builder.mutation({
+      query: (data) => ({
+        url: "/email-change/request",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // ---------------------------------------
+    // VERIFY EMAIL CHANGE OTP
+    // ---------------------------------------
+    verifyEmailChangeOtp: builder.mutation({
+      query: (data) => ({
+        url: "/email-change/verify-otp",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
+
+    // ---------------------------------------
+    // RESEND EMAIL CHANGE OTP
+    // ---------------------------------------
+    resendEmailChangeOtp: builder.mutation({
+      query: (data) => ({
+        url: "/email-change/resend-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // ---------------------------------------
+    // REQUEST PHONE CHANGE
+    // ---------------------------------------
+    requestPhoneChange: builder.mutation({
+      query: (data) => ({
+        url: "/phone-change/request",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // ---------------------------------------
+    // VERIFY PHONE CHANGE OTP
+    // ---------------------------------------
+    verifyPhoneChangeOtp: builder.mutation({
+      query: (data) => ({
+        url: "/phone-change/verify-otp",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
+
+    // ---------------------------------------
+    // RESEND PHONE CHANGE OTP
+    // ---------------------------------------
+    resendPhoneChangeOtp: builder.mutation({
+      query: (data) => ({
+        url: "/phone-change/resend-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -281,4 +348,10 @@ export const {
   useUpdateConsentsMutation,
   useGetConsentsQuery,
   useGetCookiePolicyQuery,
+  useRequestEmailChangeMutation,
+  useVerifyEmailChangeOtpMutation,
+  useResendEmailChangeOtpMutation,
+  useRequestPhoneChangeMutation,
+  useVerifyPhoneChangeOtpMutation,
+  useResendPhoneChangeOtpMutation,
 } = authApi;

@@ -5,6 +5,8 @@ import Button from "../ui/Button";
 import ProfileImage from "./ProfileImage";
 import InputField from "../ui/InputField";
 import ChangePassword from "./ChangePassword";
+import ChangeEmail from "./ChangeEmail";
+import ChangePhone from "./ChangePhone";
 import { toast } from "sonner";
 
 import "react-phone-number-input/style.css";
@@ -27,6 +29,8 @@ type UpdateProfilePayload = FormState & {
 
 export default function RightSide() {
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showChangeEmail, setShowChangeEmail] = useState(false);
+  const [showChangePhone, setShowChangePhone] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const [formChanges, setFormChanges] = useState<FormState>({
@@ -97,7 +101,7 @@ export default function RightSide() {
     <div>
       <ProfileImage onImageSelect={setSelectedImage} />
 
-      <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[600px]">
+      <div className="mt-6 lg:mt-12 flex flex-col gap-4 min-w-full lg:min-w-[600px] max-w-[650px]">
         <InputField
           title="Name"
           type="text"
@@ -155,17 +159,47 @@ export default function RightSide() {
         {isLoading ? "Saving..." : "Save Changes"}
       </Button>
 
-      <div>
+      <div className="flex flex-wrap gap-4 mt-6 lg:mt-8">
         <Button
           variant="outline"
-          className="mt-6 lg:mt-8 w-[200px]"
-          onClick={() => setShowChangePassword(!showChangePassword)}
+          className="w-[200px]"
+          onClick={() => {
+            setShowChangePassword(!showChangePassword);
+            setShowChangeEmail(false);
+            setShowChangePhone(false);
+          }}
         >
           {showChangePassword ? "Hide Password" : "Change Password"}
         </Button>
 
-        {showChangePassword && <ChangePassword />}
+        <Button
+          variant="outline"
+          className="w-[200px]"
+          onClick={() => {
+            setShowChangeEmail(!showChangeEmail);
+            setShowChangePassword(false);
+            setShowChangePhone(false);
+          }}
+        >
+          {showChangeEmail ? "Hide Email Change" : "Change Email"}
+        </Button>
+
+        <Button
+          variant="outline"
+          className="w-[200px]"
+          onClick={() => {
+            setShowChangePhone(!showChangePhone);
+            setShowChangePassword(false);
+            setShowChangeEmail(false);
+          }}
+        >
+          {showChangePhone ? "Hide Phone Change" : "Change Phone"}
+        </Button>
       </div>
+
+      {showChangePassword && <ChangePassword />}
+      {showChangeEmail && <ChangeEmail currentEmail={displayValues.email} />}
+      {showChangePhone && <ChangePhone currentPhone={displayValues.phone} />}
     </div>
   );
 }
