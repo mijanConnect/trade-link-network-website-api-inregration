@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import InputField from "../ui/InputField";
 import {
   useCreateCustomerMutation,
   useVerifyPhoneMutation,
+  useResendOtpMutation,
 } from "@/store/slice/authSlice";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,16 @@ export default function NewAccount({
   const [createCustomer, { isLoading: isCreating }] =
     useCreateCustomerMutation();
   const [verifyPhone, { isLoading: isVerifying }] = useVerifyPhoneMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const [resendTimer, setResendTimer] = useState(0);
+
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+    const interval = setInterval(() => {
+      setResendTimer((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   // Notify parent component whenever data changes
   const handleDataChange = (field: string, value: string) => {
@@ -72,6 +83,7 @@ export default function NewAccount({
       );
       setShowOtpInput(true);
       setIsAccountCreated(true);
+      setResendTimer(60);
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Failed to create account");
@@ -100,6 +112,17 @@ export default function NewAccount({
     } catch (error: unknown) {
       const err = error as { data?: { message?: string } };
       toast.error(err?.data?.message || "Failed to verify OTP");
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      await resendOtp({ phone: phoneValue, email }).unwrap();
+      toast.success("OTP resent successfully!");
+      setResendTimer(60);
+    } catch (error: unknown) {
+      const err = error as { data?: { message?: string } };
+      toast.error(err?.data?.message || "Failed to resend OTP");
     }
   };
   return (
@@ -207,13 +230,25 @@ export default function NewAccount({
                   }}
                 />
               </div>
-              <div className="pt-2">
+              <div className="pt-2 space-y-3">
                 <Button
                   onClick={handleVerifyOtp}
                   disabled={isVerifying || otp.length !== 6}
                   className="w-full h-[58px] bg-primary hover:bg-primary/90 text-white font-semibold text-[16px] rounded-md disabled:opacity-50"
                 >
                   {isVerifying ? "Verifying..." : "Verify OTP"}
+                </Button>
+                <Button
+                  onClick={handleResendOtp}
+                  disabled={isResending || resendTimer > 0}
+                  variant="outline"
+                  className="w-full h-[58px] font-semibold text-[16px] rounded-md disabled:opacity-50"
+                >
+                  {resendTimer > 0
+                    ? `Resend OTP in ${resendTimer}s`
+                    : isResending
+                      ? "Resending..."
+                      : "Resend OTP"}
                 </Button>
               </div>
             </>
