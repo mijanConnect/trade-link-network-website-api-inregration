@@ -33,7 +33,6 @@ export default function PostService() {
   // Ensure we have a valid ObjectId, not a slug
   const categoryId = selectedCategory?._id;
 
-  console.log("Category Id: " + categoryId);
 
   // Only fetch services if we have a valid categoryId - use skipToken to skip the query
   const { data: servicesData } = useGetCategoriesServicesQuery(
@@ -101,8 +100,6 @@ export default function PostService() {
   const { data: questionsData } = useGetCategoriesServicesQuestionsQuery(
     selectedServiceId || skipToken,
   );
-
-  console.log("questionsData", questionsData);
 
   return (
     <>

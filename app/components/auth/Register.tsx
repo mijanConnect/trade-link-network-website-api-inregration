@@ -106,7 +106,6 @@ export default function RegisterPage() {
 
       const response = await register(payload).unwrap();
 
-      console.log("Registration successful:", response);
       if (typeof window !== "undefined") {
         localStorage.setItem("otpContext", "signup");
         localStorage.setItem("signupEmail", email);

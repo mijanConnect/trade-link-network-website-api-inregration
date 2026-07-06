@@ -16,9 +16,6 @@ export default function ProfileCheckModal() {
     if (!isLoading && profileData) {
       const isProfileCompleted = profileData?.isProfileCompleted;
 
-      console.log("Profile data:", profileData);
-      console.log("Is profile completed:", isProfileCompleted);
-
       // Show warning if profile is not completed
       if (isProfileCompleted === false) {
         setTimeout(() => {

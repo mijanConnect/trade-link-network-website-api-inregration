@@ -44,8 +44,6 @@ export default function RightSide() {
     { skip: !id || !jobPostId },
   );
 
-  console.log(reviewResponse);
-
   const profile = response as ProfileResponse;
 
   if (!id || !jobPostId) {

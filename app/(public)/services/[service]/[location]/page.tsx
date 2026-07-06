@@ -82,7 +82,7 @@ async function fetchDynamicServiceLocationSeo(
 export async function generateStaticParams() {
   // Return empty array to disable static generation for all combinations
   // This prevents build-time errors from generating too many routes
-  console.log("ℹ️ Dynamic route - serving on-demand with ISR");
+  // console.log("ℹ️ Dynamic route - serving on-demand with ISR");
   return [];
 }
 

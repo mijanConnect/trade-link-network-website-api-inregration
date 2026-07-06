@@ -84,7 +84,6 @@ export default function CreateAccount({
       };
 
       const jobPostResponse = await createJobPost(jobPostPayload).unwrap();
-      console.log("Job post created:", jobPostResponse);
 
       setSuccess(true);
       // Reset form

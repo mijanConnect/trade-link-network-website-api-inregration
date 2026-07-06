@@ -65,11 +65,6 @@ export default function UpdatePasswordPage() {
         return;
       }
 
-      console.log(
-        "Resetting password with token:",
-        resetToken.substring(0, 20) + "...",
-      );
-
       await resetPassword({
         newPassword,
         confirmPassword,

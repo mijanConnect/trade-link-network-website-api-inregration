@@ -32,8 +32,6 @@ export default function CategoryServicesCard({
     (service) => !service.name?.trim().toLowerCase().startsWith("not sure"),
   );
 
-  console.log(services)
-
   const toSlug = (value: string) =>
     value
       .toLowerCase()

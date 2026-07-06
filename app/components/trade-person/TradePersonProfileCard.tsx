@@ -44,9 +44,7 @@ export default function TradePersonProfileCard() {
   }
 
   const professional = profileData.data.professional;
-  console.log(professional);
-  // const avatar = getImageUrl(professional?.businessImage);
-  
+
   // Extract service names for tags
   const tags = Array.isArray(professional.services)
     ? professional.services.map((service) =>

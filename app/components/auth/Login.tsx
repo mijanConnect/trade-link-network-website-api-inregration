@@ -80,7 +80,6 @@ export default function LoginPage() {
         errorMessage = errorData.message;
       }
 
-      console.log("Toast message:", errorMessage);
       toast.error(errorMessage);
     }
   };
