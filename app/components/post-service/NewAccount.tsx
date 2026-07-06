@@ -5,7 +5,7 @@ import InputField from "../ui/InputField";
 import {
   useCreateCustomerMutation,
   useVerifyPhoneMutation,
-  useResendOtpMutation,
+  useResendPhoneOtpMutation,
 } from "@/store/slice/authSlice";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -35,7 +35,7 @@ export default function NewAccount({
   const [createCustomer, { isLoading: isCreating }] =
     useCreateCustomerMutation();
   const [verifyPhone, { isLoading: isVerifying }] = useVerifyPhoneMutation();
-  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+  const [resendOtp, { isLoading: isResending }] = useResendPhoneOtpMutation();
   const [resendTimer, setResendTimer] = useState(0);
 
   useEffect(() => {
@@ -100,6 +100,7 @@ export default function NewAccount({
     try {
       const result = await verifyPhone({
         phone: phoneValue,
+        email,
         oneTimeCode: parseInt(otp),
       }).unwrap();
 

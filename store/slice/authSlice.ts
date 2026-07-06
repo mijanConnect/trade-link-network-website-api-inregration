@@ -31,6 +31,17 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     // ---------------------------------------
+    // RESEND OTP
+    // ---------------------------------------
+    resendPhoneOtp: builder.mutation({
+      query: (data) => ({
+        url: "/auth/resend-phone-otp",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    // ---------------------------------------
     // LOGIN
     // ---------------------------------------
     login: builder.mutation({
@@ -354,4 +365,5 @@ export const {
   useRequestPhoneChangeMutation,
   useVerifyPhoneChangeOtpMutation,
   useResendPhoneChangeOtpMutation,
+  useResendPhoneOtpMutation,
 } = authApi;
