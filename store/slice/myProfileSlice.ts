@@ -134,6 +134,7 @@ const myProfileSlice = baseApi.injectEndpoints({
         method: "GET",
       }),
       transformResponse: (response: MyProfileResponse) => response,
+      providesTags: ["Profile"],
     }),
 
     // UPDATE my profile (supports JSON or FormData with image)

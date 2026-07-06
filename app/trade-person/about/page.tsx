@@ -22,6 +22,7 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import { toast } from "sonner";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
+import ChangePhone from "@/app/components/profile/ChangePhone";
 
 export default function AboutPage() {
   const { data: profileData, isLoading } = useGetMyProfileQuery();
@@ -57,6 +58,7 @@ type AboutFormProps = {
 };
 
 function AboutForm({ user }: AboutFormProps) {
+  const [showChangePhone, setShowChangePhone] = useState(false);
   const professional = user.professional;
 
   // Fetch categories
@@ -111,6 +113,13 @@ function AboutForm({ user }: AboutFormProps) {
   const categoryInitialized = useRef(false);
 
   const [phone, setPhone] = useState(user.phone ?? "");
+  
+  // Sync phone when user profile updates (e.g., after changing phone number via OTP)
+  useEffect(() => {
+    if (user.phone) {
+      setPhone(user.phone);
+    }
+  }, [user.phone]);
   const [officeAddress, setOfficeAddress] = useState(
     professional?.address ?? "",
   );
@@ -514,24 +523,42 @@ function AboutForm({ user }: AboutFormProps) {
         <div className="space-y-4">
           <div>
             <p className="mb-2">Phone Number</p>
-            <PhoneInput
-              international
-              countryCallingCodeEditable={false}
-              countries={["GB"]}
-              defaultCountry="GB"
-              value={phone}
-              onChange={(value) => setPhone(value || "")}
-              placeholder="Enter your phone number"
-              className="phone-input-no-focus"
-              style={{
-                height: 58,
-                border: "1px solid #1f2933",
-                borderRadius: "6px",
-                paddingLeft: "12px",
-                fontSize: "16px",
-                fontFamily: "inherit",
-              }}
-            />
+            <div className="flex gap-3 items-center">
+              <div className="flex-1">
+                <PhoneInput
+                  international
+                  countryCallingCodeEditable={false}
+                  countries={["GB"]}
+                  defaultCountry="GB"
+                  value={phone}
+                  onChange={(value) => setPhone(value || "")}
+                  placeholder="Enter your phone number"
+                  className="phone-input-no-focus"
+                  disabled
+                  style={{
+                    height: 58,
+                    border: "1px solid #1f2933",
+                    borderRadius: "6px",
+                    paddingLeft: "12px",
+                    fontSize: "16px",
+                    fontFamily: "inherit",
+                  }}
+                />
+              </div>
+              <Button
+                variant="primary"
+                className="h-[58px] px-6 shrink-0 whitespace-nowrap"
+                onClick={() => setShowChangePhone(!showChangePhone)}
+                type="button"
+              >
+                {showChangePhone ? "Cancel Change" : "Change Phone"}
+              </Button>
+            </div>
+            {showChangePhone && (
+              <div className="mt-4">
+                <ChangePhone currentPhone={phone} />
+              </div>
+            )}
           </div>
           <InputField
             title="Office address"

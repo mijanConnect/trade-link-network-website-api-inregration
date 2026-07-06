@@ -4,6 +4,7 @@ import Image from "next/image";
 import Stars from "@/app/components/trade-person/Stars";
 import { useGetMyProfileQuery } from "@/store/slice/myProfileSlice";
 import { getImageUrl } from "../ui/ImageURL";
+import { Mail, Phone, User } from "lucide-react";
 // import { getImageUrl } from "@/app/components/ui/ImageURL";
 
 export default function TradePersonProfileCard() {
@@ -92,11 +93,28 @@ export default function TradePersonProfileCard() {
           </div>
         )}
 
-        {/* <div className="w-full flex justify-center">
-          <Button variant="primary" size="md">
-            Contact
-          </Button>
-        </div> */}
+        <div className="w-full flex justify-center">
+          <div className="flex flex-col gap-3 mt-4 text-left">
+            <div className="flex gap-3 items-center">
+              <User className="w-5 h-5 text-primaryTextLight shrink-0" />
+              <p className="text-[15px] text-primaryText break-all">
+                {profileData?.data?.name || "N/A"}
+              </p>
+            </div>
+            <div className="flex gap-3 items-center">
+              <Mail className="w-5 h-5 text-primaryTextLight shrink-0" />
+              <p className="text-[15px] text-primaryText break-all">
+                {profileData?.data?.email || "N/A"}
+              </p>
+            </div>
+            <div className="flex gap-3 items-center">
+              <Phone className="w-5 h-5 text-primaryTextLight shrink-0" />
+              <p className="text-[15px] text-primaryText break-all">
+                {profileData?.data?.phone || "N/A"}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   );
