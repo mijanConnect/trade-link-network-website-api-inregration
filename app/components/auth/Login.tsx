@@ -78,6 +78,15 @@ export default function LoginPage() {
       const errorData = error?.data as Record<string, unknown> | undefined;
       if (errorData?.message && typeof errorData.message === "string") {
         errorMessage = errorData.message;
+        
+        // Redirect if professional account is not verified
+        if (errorMessage === "Please verify your professional account, then try to login again") {
+          localStorage.setItem("otpContext", "signup");
+          localStorage.setItem("signupEmail", email);
+          toast.error(errorMessage);
+          router.push("/verify-register-otp");
+          return;
+        }
       }
 
       toast.error(errorMessage);
