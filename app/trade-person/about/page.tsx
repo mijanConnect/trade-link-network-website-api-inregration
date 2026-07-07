@@ -23,6 +23,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { toast } from "sonner";
 import { CustomSelect } from "@/app/components/ui/CustomSelect";
 import ChangePhone from "@/app/components/profile/ChangePhone";
+import ChangeEmail from "@/app/components/profile/ChangeEmail";
 
 export default function AboutPage() {
   const { data: profileData, isLoading } = useGetMyProfileQuery();
@@ -59,6 +60,7 @@ type AboutFormProps = {
 
 function AboutForm({ user }: AboutFormProps) {
   const [showChangePhone, setShowChangePhone] = useState(false);
+  const [showChangeEmail, setShowChangeEmail] = useState(false);
   const professional = user.professional;
 
   // Fetch categories
@@ -113,6 +115,7 @@ function AboutForm({ user }: AboutFormProps) {
   const categoryInitialized = useRef(false);
 
   const [phone, setPhone] = useState(user.phone ?? "");
+  const [email, setEmail] = useState(user.email ?? "");
   
   // Sync phone when user profile updates (e.g., after changing phone number via OTP)
   useEffect(() => {
@@ -120,6 +123,13 @@ function AboutForm({ user }: AboutFormProps) {
       setPhone(user.phone);
     }
   }, [user.phone]);
+
+  // Sync email when user profile updates
+  useEffect(() => {
+    if (user.email) {
+      setEmail(user.email);
+    }
+  }, [user.email]);
   const [officeAddress, setOfficeAddress] = useState(
     professional?.address ?? "",
   );
@@ -557,6 +567,36 @@ function AboutForm({ user }: AboutFormProps) {
             {showChangePhone && (
               <div className="mt-4">
                 <ChangePhone currentPhone={phone} />
+              </div>
+            )}
+          </div>
+          <div>
+            <p className="mb-2">Email</p>
+            <div className="flex gap-3 items-center">
+              <div className="flex-1">
+                <input
+                  type="email"
+                  value={email}
+                  disabled
+                  className="w-full rounded-md border border-[#1f2933] px-3 text-[16px] text-gray-500 bg-gray-50 focus:outline-none"
+                  style={{
+                    height: 58,
+                    fontFamily: "inherit",
+                  }}
+                />
+              </div>
+              <Button
+                variant="primary"
+                className="h-[58px] px-6 shrink-0 whitespace-nowrap"
+                onClick={() => setShowChangeEmail(!showChangeEmail)}
+                type="button"
+              >
+                {showChangeEmail ? "Cancel Change" : "Change Email"}
+              </Button>
+            </div>
+            {showChangeEmail && (
+              <div className="mt-4">
+                <ChangeEmail currentEmail={email} />
               </div>
             )}
           </div>
