@@ -238,7 +238,7 @@ export default function HiredJobs() {
                 variant: "outline" as const,
                 onClick: () =>
                   router.push(
-                    `/provider-profile?id=${job.sender._id}&jobPostId=${job.jobPost._id}`,
+                    `/provider-profile?id=${job?.sender?._id}&jobPostId=${job?.jobPost?._id}`,
                   ),
               },
               {

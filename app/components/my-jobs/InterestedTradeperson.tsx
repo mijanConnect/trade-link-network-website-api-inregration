@@ -139,14 +139,14 @@ export default function InterestedTradeperson() {
             title={interested?.jobPost?.service?.name}
             jobNumber={interested?.jobPost?.jobNumber}
             postedOn={`Interested on ${formatDateTime(interested.createdAt)}`}
-            description={`${interested.sender.name} is interested in your ${interested.jobPost.service.name} job. Compare their profiles and book with confidence.`}
+            description={`${interested?.sender?.name || "Someone"} is interested in your ${interested?.jobPost?.service?.name || "posted"} job. Compare their profiles and book with confidence.`}
             actions={[
               {
                 label: "View Profile",
                 variant: "outline" as const,
                 onClick: () =>
                   router.push(
-                    `/provider-profile?id=${interested.sender._id}&jobPostId=${interested.jobPost._id}`,
+                    `/provider-profile?id=${interested?.sender?._id}&jobPostId=${interested?.jobPost?._id}`,
                   ),
               },
               {
